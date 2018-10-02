@@ -1,0 +1,35 @@
+{
+  "token": {
+    "realmId": "123456789123",
+    "token_type": "bearer",
+    "access_token": "sample_access_token",
+    "refresh_token": "sample_refresh_token",
+    "expires_in": 0,
+    "x_refresh_token_expires_in": 0,
+    "id_token": "sample_id_token",
+    "latency": 60000
+  },
+  "response": {
+    "url": "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+    "headers": {
+      "content-type": "application/json;charset=UTF-8",
+      "content-length": "61",
+      "connection": "close",
+      "server": "nginx",
+      "date": "Tue, 11 Sep 2018 07:52:23 GMT",
+      "strict-transport-security": "max-age=15552000",
+      "intuit_tid":"1234-1234-1234-123",
+      "cache-control": "no-cache, no-store",
+      "pragma": "no-cache"
+    },
+    "body": "{\"error_description\":\"Token invalid\",\"error\":\"invalid_grant\"}",
+    "status": 400,
+    "statusText": "Bad Request"
+  },
+  "body": "{\"error_description\":\"Token invalid\",\"error\":\"invalid_grant\"}",
+  "json": {
+    "error_description": "Token invalid",
+    "error": "invalid_grant"
+  },
+  "intuit_tid":"1234-1234-1234-123"
+}

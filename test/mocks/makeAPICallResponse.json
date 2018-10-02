@@ -1,0 +1,86 @@
+{
+  "CompanyInfo":{
+    "CompanyName":"Sample Test",
+    "LegalName":"Sample Test",
+    "CompanyAddr":{
+      "Id":"1",
+      "Line1":"2565 Garcia Avenue",
+      "City":"Mountain View",
+      "Country":"US",
+      "CountrySubDivisionCode":"CA",
+      "PostalCode":"94063"
+    },
+    "CustomerCommunicationAddr":{
+      "Id":"1",
+      "Line1":"2565 Garcia Avenue",
+      "City":"Mountain View",
+      "Country":"US",
+      "CountrySubDivisionCode":"CA",
+      "PostalCode":"94063"
+    },
+    "LegalAddr":{
+      "Id":"1",
+      "Line1":"2565 Garcia Avenue",
+      "City":"Mountain View",
+      "Country":"US",
+      "CountrySubDivisionCode":"CA",
+      "PostalCode":"94063"
+    },
+    "PrimaryPhone":{
+
+    },
+    "CompanyStartDate":"2018-03-03",
+    "FiscalYearStartMonth":"January",
+    "Country":"US",
+    "Email":{
+      "Address":"developer.intuit.com@gmail.com"
+    },
+    "WebAddr":{
+
+    },
+    "SupportedLanguages":"en",
+    "NameValue":[
+      {
+        "Name":"NeoEnabled",
+        "Value":"true"
+      },
+      {
+        "Name":"IsQbdtMigrated",
+        "Value":"false"
+      },
+      {
+        "Name":"SubscriptionStatus",
+        "Value":"TRIAL"
+      },
+      {
+        "Name":"OfferingSku",
+        "Value":"QuickBooks Online Plus"
+      },
+      {
+        "Name":"PayrollFeature",
+        "Value":"true"
+      },
+      {
+        "Name":"AccountantFeature",
+        "Value":"false"
+      },
+      {
+        "Name":"ItemCategoriesFeature",
+        "Value":"true"
+      },
+      {
+        "Name":"AssignedTime",
+        "Value":"2018-03-05T19:38:07-08:00"
+      }
+    ],
+    "domain":"QBO",
+    "sparse":false,
+    "Id":"1",
+    "SyncToken":"21",
+    "MetaData":{
+      "CreateTime":"2018-03-03T01:05:25-08:00",
+      "LastUpdatedTime":"2018-08-23T10:46:22-07:00"
+    }
+  },
+  "time":"2018-09-04T16:53:59.490-07:00"
+}

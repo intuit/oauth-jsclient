@@ -1,0 +1,17 @@
+{
+  "url":"https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+  "headers":{
+    "content-type":"application/json;charset=UTF-8",
+    "content-length":"1636",
+    "connection":"close",
+    "server":"nginx",
+    "date":"Wed, 05 Sep 2018 05:57:09 GMT",
+    "strict-transport-security":"max-age=15552000",
+    "intuit_tid":"1234-1234-1234-123",
+    "cache-control":"no-cache, no-store",
+    "pragma":"no-cache"
+  },
+  "body":"{\"id_token\":\"sample_id_token\",\"expires_in\":3600,\"token_type\":\"bearer\",\"x_refresh_token_expires_in\":8726400,\"refresh_token\":\"sample_refresh_token\",\"access_token\":\"sample_access_token\"}",
+  "status":200,
+  "statusText":"OK"
+}

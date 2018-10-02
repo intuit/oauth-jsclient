@@ -1,0 +1,4 @@
+--reporter spec
+/test/*.js
+--ui bdd
+--slow 20

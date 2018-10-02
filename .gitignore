@@ -1,0 +1,17 @@
+# gitignore
+
+.DS_Store
+.idea
+.idea/
+.nyc_output
+coverage/
+bower_components
+npm-debug.*
+node_modules
+index.js
+src/index.js
+sample/node_modules
+sample/.env
+oauth-client.iml
+package-lock.json
+src/logs/*

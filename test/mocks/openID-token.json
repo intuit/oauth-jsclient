@@ -1,0 +1,8 @@
+{
+  "access_token": "sample_access_token",
+  "refresh_token": "sample_refresh_token",
+  "token_type": "bearer",
+  "expires_in": "3600",
+  "x_refresh_token_expires_in": "8726400",
+  "id_token": "eyJraWQiOiJyNHA1U2JMMnFhRmVoRnpoajhnSSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJiMDUzZDk5NC0wN2Q1LTQ2OGQtYjdlZS0yMmUzNDlkMmU3MzkiLCJhdWQiOlsiTDM5ZWxTdWJGeGpQT1NwZFpvWVdSS2lDQ0U2VElOanY2N1JvYUU4ekJxYkl4eGI0bEsiXSwicmVhbG1pZCI6IjExMDgwMzM0NzEiLCJhdXRoX3RpbWUiOjE0NjI1NTQ0NzUsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC1lMmUucGxhdGZvcm0uaW50dWl0LmNvbVwvb2F1dGgyXC92MVwvb3BcL3YxIiwiZXhwIjoxNDYyNTYxMzI4LCJpYXQiOjE0NjI1NTc3Mjh9.BIJ9x_WPEOZsLJfQE3mGji_Q15j_rdlTyFYELiJM-W92fWSLC-TLEwCp5IrRhDWMvyvrLSMZCEdQALYQpbVy8uKI22JgGWYvkwNEDweOjbYzyt33F4xtn3GGcW9nAwRtA3M19qquWyi7G0kcCZUDN8RfUXz2qKMJ6KPOfLVe2UQ"
+}
