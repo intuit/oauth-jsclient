@@ -59,7 +59,7 @@ Its very simple to use the Library. Follow below instructions to use the library
     });
     ```
 
-###Options :
+### Options :
 
 * `clientId` - clientID for your app. Required
 * `clientSecret` - clientSecret fpor your app. Required
@@ -107,7 +107,7 @@ OR
 res.redirect(authUri);
 
 ```
-###Scopes :
+### Scopes :
 
 The available scopes include :
 
