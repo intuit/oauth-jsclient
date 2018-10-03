@@ -1,3 +1,6 @@
+[![SDK Banner](views/SDK.png)][ss1]
+
+
 [![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.com/intuit/oauth-jsclient)
 [![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
 
@@ -21,7 +24,7 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
   - [Auto Refresh](#auto-refresh)
   - [Revoke Access Token](#revoke-access_token)
   - [Getter / Setter for Token](#getter-/-setter-for-token )
-  - [Auth Response](#auth-response)
+  - [Auth Response](#auth-response) 
   - [Error Logging](#error-logging)
 - [Contributing](#contributing)
 - [Authors](#authors)
@@ -446,7 +449,7 @@ You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if
 
 Intuit `oauth-jsclient` is licensed under the [Apache License, Version 2.0](https://github.com/intuit/oauth-jsclient/blob/master/LICENSE)
 
-
+[ss1]: https://help.developer.intuit.com/s/SDKFeedback?cid=1120
 
 
 
