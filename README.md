@@ -4,7 +4,7 @@
 
 # Intuit OAuth2.0 NodeJS Library 
 
-This client library is meant to work with Intuit's [OAuth2.0](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/oauth-2.0) and [OpenID Connect](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/openid-connect) implementations which conforms to the specifications.
+The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/oauth-2.0) and [OpenID Connect](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/openid-connect) implementations which conforms to the specifications.
 
 
 ## Table of Contents
@@ -32,24 +32,24 @@ This client library is meant to work with Intuit's [OAuth2.0](https://developer.
 
 # Requirements
 
-The node client library is tested against the `Node`  >= `7.0.0`
+The node client library is tested against the `Node`  >= `6.0.0`
 
 # Installation
 
-Its very simple to use the Library. Follow below instructions to use the library in the below environments:
+Follow the instructions below to use the library : 
 
 ## Using NodeJS
 
 1. Install the NPM package:
 
     ```sh
-    npm install intuit-jsclient --save
+    npm install intuit-oauth --save
     ```
 
 2. Require the Library:
 
     ```js
-    var OAuthClient = require('intuit-jsclient');
+    var OAuthClient = require('intuit-oauth');
 
     var oauthClient = new OAuthClient({
         clientId: '<Enter your clientId>',
@@ -144,14 +144,14 @@ oauthClient.createToken(parseRedirect)
 
 # Sample
 For more clarity, we suggest you take a look at the sample application below :  
-[sample](https://github.intuit.com/abisalehalliprasan/oauth-jsclient/tree/master/sample)
+[sample](https://github.com/intuit/oauth-jsclient/tree/master/sample)
 
 
 ## Helpers
 
 ### Is AccessToken Valid
 
-You can check if the access token associated with the `oauthClient` is valid or not using the helper method. 
+You can check if the `access_token` associated with the `oauthClient` is valid ( not expired ) or not using the helper method. 
 
 ```javascript
 
@@ -346,7 +346,7 @@ oauthClient.createToken(parseRedirect)
 
 ## FAQ
 
-You can refer to our [FAQ](https://github.intuit.com/abisalehalliprasan/oauth-jsclient/wiki/FAQ) if you have any questions.
+You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if you have any questions.
 
 ## Contributing
 
@@ -363,7 +363,7 @@ You can refer to our [FAQ](https://github.intuit.com/abisalehalliprasan/oauth-js
 
 ## License
 
-Intuit `oauth-jsclient` is licensed under the [Apache License, Version 2.0](https://github.intuit.com/abisalehalliprasan/oauth-jsclient/blob/master/LICENSE)
+Intuit `oauth-jsclient` is licensed under the [Apache License, Version 2.0](https://github.com/intuit/oauth-jsclient/blob/master/LICENSE)
 
 
 

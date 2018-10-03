@@ -1,5 +1,5 @@
 {
-  "name": "oauth-jsclient",
+  "name": "intuit-oauth",
   "version": "1.0.0",
   "description": "Intuit Node.js client for OAuth2.0 and OpenID",
   "main": "./src/OAuthClient.js",
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/abisalehalliprasan/oauth-jsclient.git"
+    "url": "git://github.com/intuit/oauth-jsclient.git"
   },
   "author": {
     "name": "Anil Kumar",
