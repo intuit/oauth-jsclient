@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.com/intuit/oauth-jsclient)
+[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.com/intuit/oauth-jsclient)
 [![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
 
 
