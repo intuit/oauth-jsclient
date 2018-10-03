@@ -44,9 +44,9 @@
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/abisalehalliprasan/oauth-jsclient/issues"
+    "url": "https://github.com/intuit/oauth-jsclient/issues"
   },
-  "homepage": "https://github.com/abisalehalliprasan/oauth-jsclient",
+  "homepage": "https://github.com/intuit/oauth-jsclient",
   "devDependencies": {
     "body-parser": "^1.15.2",
     "chai": "^4.1.2",
