@@ -12,6 +12,6 @@ index.js
 src/index.js
 sample/node_modules
 sample/.env
-oauth-client.iml
+oauth-jsclient.iml
 package-lock.json
 src/logs/*

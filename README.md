@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.com/abisalehalliprasan/oauth-jsclient.svg?branch=master)](https://travis-ci.com/abisalehalliprasan/oauth-jsclient)
-[![Coverage Status](https://coveralls.io/repos/github/abisalehalliprasan/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/abisalehalliprasan/oauth-jsclient?branch=master)
+[![Build Status](https://travis-ci.com/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.com/intuit/oauth-jsclient)
+[![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
 
 
 # Intuit OAuth2.0 NodeJS Library 
@@ -293,7 +293,7 @@ oauthClient.migrate(params)
 
 ```
 
-### Validate ID  
+### Validate ID Token 
 
 You can validate the ID token obtained from `Intuit Authorization Server` as shown below : 
 
