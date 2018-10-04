@@ -67,8 +67,8 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "atob": "^2.1.2",
     "csrf": "^3.0.4",
+    "atob": "^2.1.2",
     "es6-promise": "^4.2.5",
     "events": "^3.0.0",
     "idtoken-verifier": "^1.2.0",
