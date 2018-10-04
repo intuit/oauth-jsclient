@@ -3,6 +3,7 @@
 
 [![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient)
 [![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
+[![Dependency Status](https://img.shields.io/david/intuit/oauth-jsclient.svg?style=flat-square)](https://david-dm.org/intuit/oauth-jsclient)
 
 
 # Intuit OAuth2.0 NodeJS Library 
