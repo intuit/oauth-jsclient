@@ -266,36 +266,6 @@ oauthClient.migrate(params)
 
 ```
 
-### Migrate OAuth1.0 Tokens to OAuth2.0  
-
-You can call the below method to migrate the bearer / refresh tokens from OAuth1.0 to OAuth2.0. You  
-
-```javascript
-
-// Fill in the params object ( argument to the migrate function )
-
-var params = {
-    oauth_consumer_key : '<Enter oauth1ConsumerKey>',
-    oauth_consumer_secret : '<Enter oauth1ConsumerSecret>',
-    oauth_signature_method : 'HMAC-SHA1',
-    oauth_timestamp : Math.round(new Date().getTime()/1000),
-    oauth_nonce : 'nonce',
-    oauth_version : '1.0',
-    access_token : '<Enter OAuth1.0 access_token>',
-    access_secret : '<Enter OAuth1.0 access_secret>',
-    scope : [OAuthClient.scopes.Accounting]
-}
-
-oauthClient.migrate(params)
-    .then(function(response){
-        console.log('The response is '+ JSON.stringify(response));
-    })
-    .catch(function(e) {
-        console.log('The error is '+e.message);
-    });
-
-```
-
 ### Validate ID Token 
 
 You can validate the ID token obtained from `Intuit Authorization Server` as shown below : 
