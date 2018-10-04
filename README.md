@@ -178,6 +178,7 @@ if(!oauthClient.isAccessTokenValid()){
 ```
 ** Note: If the access_token is not valid, you can call the client's `refresh()` method to refresh the tokens for you as shown below
 
+
 ### Refresh access_token
 
 Access tokens are valid for 3600 seconds (one hour), after which time you need to get a fresh one using the latest refresh_token returned to you from the previous request. When you request a fresh access_token, always use the refresh token returned in the most recent token_endpoint response. Your previous refresh tokens expire 24 hours after you receive a new one. 
