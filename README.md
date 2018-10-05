@@ -1,9 +1,8 @@
 [![SDK Banner](views/SDK.png)][ss1]
 
 
-[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.com/intuit/oauth-jsclient)
-[![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
-
+[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient)
+[![NPM Package Version](https://img.shields.io/npm/v/intuit-oauth.svg?style=flat-square)](https://www.npmjs.com/package/intuit-oauth)
 
 # Intuit OAuth2.0 NodeJS Library 
 
@@ -101,12 +100,7 @@ var oauthClient = new OAuthClient({
 var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId],state:'testState'});  // can be an array of multiple scopes ex : {scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId]}
 
 
-// To redirect to the authorizeUri using the browser's window object
-window.location.assign(authUri); // or .replace()
-
-OR
-
-// Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
+// Redirect the authUri 
 res.redirect(authUri);
 
 ```
@@ -178,6 +172,7 @@ if(!oauthClient.isAccessTokenValid()){
 ```
 ** Note: If the access_token is not valid, you can call the client's `refresh()` method to refresh the tokens for you as shown below
 
+
 ### Refresh access_token
 
 Access tokens are valid for 3600 seconds (one hour), after which time you need to get a fresh one using the latest refresh_token returned to you from the previous request. When you request a fresh access_token, always use the refresh token returned in the most recent token_endpoint response. Your previous refresh tokens expire 24 hours after you receive a new one. 
@@ -233,36 +228,6 @@ oauthClient.getToken().getToken();
 `OR`
 
 oauthClient.token.getToken();
-
-```
-
-### Migrate OAuth1.0 Tokens to OAuth2.0  
-
-You can call the below method to migrate the bearer / refresh tokens from OAuth1.0 to OAuth2.0. You  
-
-```javascript
-
-// Fill in the params object ( argument to the migrate function )
-
-var params = {
-    oauth_consumer_key : '<Enter oauth1ConsumerKey>',
-    oauth_consumer_secret : '<Enter oauth1ConsumerSecret>',
-    oauth_signature_method : 'HMAC-SHA1',
-    oauth_timestamp : Math.round(new Date().getTime()/1000),
-    oauth_nonce : 'nonce',
-    oauth_version : '1.0',
-    access_token : '<Enter OAuth1.0 access_token>',
-    access_secret : '<Enter OAuth1.0 access_secret>',
-    scope : [OAuthClient.scopes.Accounting]
-}
-
-oauthClient.migrate(params)
-    .then(function(response){
-        console.log('The response is '+ JSON.stringify(response));
-    })
-    .catch(function(e) {
-        console.log('The error is '+e.message);
-    });
 
 ```
 

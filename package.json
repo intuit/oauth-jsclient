@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/intuit/oauth-jsclient.git"
+    "url": "https://github.com/intuit/oauth-jsclient.git"
   },
   "author": {
     "name": "Anil Kumar",
@@ -56,6 +56,7 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.9.0",
+    "cors": "^2.8.1",
     "express": "^4.14.0",
     "is-travis": "^1.0.0",
     "istanbul": "^0.4.5",
@@ -68,15 +69,15 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "atob": "^2.0.3",
     "csrf": "^3.0.4",
+    "atob": "2.1.2",
     "es6-promise": "^4.2.5",
     "events": "^3.0.0",
     "idtoken-verifier": "^1.2.0",
     "jsonwebtoken": "^8.3.0",
     "oauth-signature": "^1.3.1",
-    "popsicle": "^9.1.0",
-    "query-string": "^5.0.1",
+    "popsicle": "10.0.1",
+    "query-string": "6.2.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
   }

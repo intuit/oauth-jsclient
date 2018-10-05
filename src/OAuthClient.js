@@ -35,6 +35,7 @@ var os = require('os');
 var winston = require('winston');
 var path = require('path');
 var fs = require('fs');
+var jwt = require('jsonwebtoken');
 
 
 
@@ -490,6 +491,7 @@ OAuthClient.prototype.validateIdToken = function(params) {
     }.bind(this))).then(function(res) {
 
         this.log('info','The validateIdToken () response is : ',JSON.stringify(res, null, 2));
+        console.log('the response from jsonwebtoken is :'+JSON.stringify(res, null, 2));
         if(res) return  true;
 
     }.bind(this)).catch(function(e) {
@@ -522,7 +524,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function(id_token, kid, request) {
         var key = responseBody.keys.find(el => (el.kid == kid))
         var cert = this.getPublicKey(key.n, key.e)
 
-        return require("jsonwebtoken").verify(id_token, cert);
+        return jwt.verify(id_token, cert);
 
     }.bind(this)).catch(function(e) {
 
