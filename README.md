@@ -100,12 +100,7 @@ var oauthClient = new OAuthClient({
 var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId],state:'testState'});  // can be an array of multiple scopes ex : {scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId]}
 
 
-// To redirect to the authorizeUri using the browser's window object
-window.location.assign(authUri); // or .replace()
-
-OR
-
-// Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
+// Redirect the authUri 
 res.redirect(authUri);
 
 ```
