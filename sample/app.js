@@ -9,7 +9,7 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 var path = require('path');
-var OAuthClient = require('../src/OAuthClient');
+var OAuthClient = require('intuit-oauth');
 var bodyParser = require('body-parser');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 

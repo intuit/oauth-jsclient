@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Intuit Node.js client for OAuth2.0 and OpenID",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
+  "keywords": ["intuit-oauth", "intuit-oauth-nodejs", "intuit-nodejs", "oauth2.0", "openid", "quickbooks-accounting", "quickbooks-payment"],
   "nyc": {
     "exclude": [
       "node_modules",
@@ -63,7 +64,6 @@
     "mocha": "^5.0.4",
     "nock": "^9.2.3",
     "nyc": "^11.6.0",
-    "object-assign": "^4.1.1",
     "phantomjs-prebuilt": "^2.1.4",
     "standard": "^11.0.0",
     "watchify": "^3.7.0"
@@ -76,6 +76,7 @@
     "idtoken-verifier": "^1.2.0",
     "jsonwebtoken": "^8.3.0",
     "oauth-signature": "^1.3.1",
+    "object-assign": "^4.1.1",
     "popsicle": "10.0.1",
     "query-string": "6.2.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
