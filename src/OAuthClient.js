@@ -88,6 +88,7 @@ OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
     Accounting: 'com.intuit.quickbooks.accounting',
     Payment: 'com.intuit.quickbooks.payment',
+    Payroll: 'com.intuit.quickbooks.payroll',
     Profile: 'profile',
     Email:  'email',
     Phone: 'phone',
@@ -118,7 +119,7 @@ OAuthClient.prototype.authorizeUri = function(params) {
     });
 
     this.log('info','The Authorize Uri is :',authorizeUri);
-    return authorizeUri;1
+    return authorizeUri;
 
 };
 
@@ -184,7 +185,7 @@ OAuthClient.prototype.refresh = function() {
 
     return (new Promise(function(resolve) {
 
-        /**
+      /**
          * Check if the tokens exist and are valid
          */
         this.validateToken();
@@ -222,6 +223,57 @@ OAuthClient.prototype.refresh = function() {
         throw e;
 
     }.bind(this));
+
+};
+
+
+/**
+ * Refresh Tokens by passing refresh_token parameter explicitly { Refresh access_token by passing refresh_token }
+ * @param {Object} params.refresh_token (optional)
+ * @returns {Promise<AuthResponse>}
+ */
+OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
+
+  return (new Promise(function(resolve) {
+
+    /**
+     * Check if the tokens exist
+     */
+
+    if(!refresh_token) throw new Error('The Refresh token is missing');
+
+    var body = {};
+
+    body.grant_type = 'refresh_token';
+    body.refresh_token = refresh_token;
+
+    var request = {
+      url: OAuthClient.tokenEndpoint,
+      body: body,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + this.authHeader(),
+        'Content-Type': AuthResponse._urlencodedContentType,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
+
+    resolve(this.getTokenRequest(request));
+
+  }.bind(this))).then(function(res) {
+
+    var authResponse = res.json ? res : null;
+    this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
+    console.log('The new token pair is : ' + JSON.stringify(authResponse.getJson()));
+    return authResponse;
+
+  }.bind(this)).catch(function(e) {
+
+    this.log('error','Refresh Token () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
+
+  }.bind(this));
 
 };
 

@@ -20,6 +20,7 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
 - [Helpers](#helpers)  
   - [Is Access Token valid](#is-accesstoken-valid)
   - [Refresh Access_Token](#refresh-access_token)
+  - [Refresh Access_Token by passing the refresh_token explicitly](#refresh-access_token_explicitly)
   - [Auto Refresh](#auto-refresh)
   - [Revoke Access Token](#revoke-access_token)
   - [Getter / Setter for Token](#getter-/-setter-for-token )
@@ -189,6 +190,23 @@ Access tokens are valid for 3600 seconds (one hour), after which time you need t
         });
 ```
 
+### Refresh access_token by passing the refresh_token explicitly 
+
+You can call the below helper method to refresh tokens by explictly passing the refresh_token.  
+**Note : `refresh_token` should be of the type `string`     
+
+```javascript
+
+    oauthClient.refreshUsingToken('<Enter the refresh token>')
+        .then(function(authResponse) {
+            console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json()));
+        })
+        .catch(function(e) {
+            console.error("The error message is :"+e.originalMessage);
+            console.error(e.intuit_tid);
+        });
+```
+
 
 ### Revoke access_token
 
@@ -204,8 +222,19 @@ oauthClient.revoke(params)
             console.error("The error message is :"+e.originalMessage);
             console.error(e.intuit_tid);
         });
+```
+** Note ** : `params` is the Token JSON object as shown below :  
 
 ```
+{
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "refresh_token":"<refresh_token>",
+    "x_refresh_token_expires_in":15552000,
+    "access_token":"<access_token>"
+} 
+``` 
+** Note ** : If you do not pass the `params` then the token object of the client would be considered.   
 
 ### Getter / Setter for Token 
 
