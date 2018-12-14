@@ -417,12 +417,20 @@ OAuthClient.prototype.migrate = function(params) {
 
         var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
 
+        console.log('The Auth header is :'+ authHeader);
+
+      console.log('The params is :'+ JSON.stringify(params));
+
+      console.log('The uri is :'+ uri);
+
         var body = {
             'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
             'redirect_uri':this.redirectUri,
             'client_id': this.clientId,
             'client_secret': this.clientSecret
         };
+
+      console.log('The body  is :'+ JSON.stringify(body));
 
         var request = {
             url: uri,
@@ -647,6 +655,8 @@ OAuthClient.prototype.validateToken = function() {
 OAuthClient.prototype.loadResponse = function (request) {
 
     return popsicle.get(request).then(function (response) {
+
+      console.log('The response is :'+ JSON.stringify(response));
         return response;
     });
 };
