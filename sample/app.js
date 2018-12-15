@@ -9,7 +9,7 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 var path = require('path');
-var OAuthClient = require('../src/OAuthClient');
+var OAuthClient = require('intuit-oauth');
 var bodyParser = require('body-parser');
 var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
@@ -117,7 +117,9 @@ app.get('/getCompanyInfo', function(req,res){
 
     var companyID = oauthClient.getToken().realmId;
 
-    oauthClient.makeApiCall({url:'https://quickbooks.api.intuit.com/v3/company/'+companyID+'/companyinfo/'+companyID})
+    var url = oauthClient.environment == 'sandbox' ? oauthClient.environment.sandbox : oauthClient.environment.production ;
+
+    oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
         .then(function(authResponse){
             console.log("The response for API call is :"+JSON.stringify(authResponse));
             res.send(JSON.parse(authResponse.text()));

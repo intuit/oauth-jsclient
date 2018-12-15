@@ -80,7 +80,8 @@ OAuthClient.cacheId = 'cacheID';
 OAuthClient.authorizeEndpoint = 'https://appcenter.intuit.com/connect/oauth2';
 OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
 OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
-OAuthClient.userinfo_endpoint = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
+OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo'
+OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
 OAuthClient.migrate_sandbox = 'https://developer-sandbox.api.intuit.com/v2/oauth2/tokens/migrate';
 OAuthClient.migrate_production = 'https://developer.api.intuit.com/v2/oauth2/tokens/migrate';
 OAuthClient.environment = {sandbox:'https://sandbox-quickbooks.api.intuit.com/', production:'https://quickbooks.api.intuit.com/'};
@@ -339,7 +340,7 @@ OAuthClient.prototype.getUserInfo = function(params) {
         params = params || {};
 
         var request = {
-            url: OAuthClient.userinfo_endpoint,
+            url: this.environment == 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + this.token.access_token,
@@ -347,6 +348,8 @@ OAuthClient.prototype.getUserInfo = function(params) {
                 'User-Agent': OAuthClient.user_agent
             }
         };
+
+        console.log('The request is :'+JSON.stringify(request));
 
         resolve(this.getTokenRequest(request));
 
@@ -417,12 +420,20 @@ OAuthClient.prototype.migrate = function(params) {
 
         var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
 
+        console.log('The Auth header is :'+ authHeader);
+
+      console.log('The params is :'+ JSON.stringify(params));
+
+      console.log('The uri is :'+ uri);
+
         var body = {
             'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
             'redirect_uri':this.redirectUri,
             'client_id': this.clientId,
             'client_secret': this.clientSecret
         };
+
+      console.log('The body  is :'+ JSON.stringify(body));
 
         var request = {
             url: uri,
@@ -647,6 +658,8 @@ OAuthClient.prototype.validateToken = function() {
 OAuthClient.prototype.loadResponse = function (request) {
 
     return popsicle.get(request).then(function (response) {
+
+      console.log('The response is :'+ JSON.stringify(response));
         return response;
     });
 };

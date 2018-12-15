@@ -248,8 +248,12 @@ oauthClient.getToken().setToken({
     "expires_in": 3600,
     "refresh_token":"<refresh_token>",
     "x_refresh_token_expires_in":15552000,
-    "access_token":"<access_token>"
+    "access_token":"<access_token>",
+    "realmId":"<realmId>",       // optional
+    "id_token":"<id_token>"      // optional
 });
+
+Note : You can also optionally pass `realmId` and `id_token` to the setToken method.  
 
 // To get the tokens 
 oauthClient.getToken().getToken();
