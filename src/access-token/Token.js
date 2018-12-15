@@ -78,7 +78,9 @@ Token.prototype.getToken = function() {
         access_token: this.access_token,
         expires_in: this.expires_in,
         refresh_token: this.refresh_token,
-        x_refresh_token_expires_in: this.x_refresh_token_expires_in
+        x_refresh_token_expires_in: this.x_refresh_token_expires_in,
+        realmId: this.realmId,
+        id_token: this.id_token
     };
 
 };
