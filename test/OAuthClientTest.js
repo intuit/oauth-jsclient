@@ -184,27 +184,53 @@ describe('Tests for OAuthClient', function()  {
     });
 
     // Get User Info ( OpenID )
-    describe('Get User Info ( OpenID )', function()  {
-        before(function()  {
-            scope = nock('https://accounts.platform.intuit.com').persist()
-                .get('/v1/openid_connect/userinfo')
-                .reply(200, expectedUserInfo , {
-                    "content-type":"application/json",
-                    "content-length":"1636",
-                    "connection":"close",
-                    "server":"nginx",
-                    "intuit_tid":"12345-123-1234-12345",
-                    "cache-control":"no-cache, no-store",
-                    "pragma":"no-cache"
-                });
+    describe('Get User Info ( OpenID )', function() {
+      describe('', function () {
+        before(function () {
+          scope = nock('https://sandbox-accounts.platform.intuit.com').persist()
+            .get('/v1/openid_connect/userinfo')
+            .reply(200, expectedUserInfo, {
+              "content-type": "application/json",
+              "content-length": "1636",
+              "connection": "close",
+              "server": "nginx",
+              "intuit_tid": "12345-123-1234-12345",
+              "cache-control": "no-cache, no-store",
+              "pragma": "no-cache"
+            });
         });
 
-        it('Get User Info', function()  {
-            return oauthClient.getUserInfo()
-                .then(function(authResponse) {
-                    expect(JSON.stringify(authResponse.getJson())).to.be.equal(JSON.stringify(expectedUserInfo));
-                });
+        it('Get User Info in Sandbox', function () {
+          return oauthClient.getUserInfo()
+            .then(function (authResponse) {
+              expect(JSON.stringify(authResponse.getJson())).to.be.equal(JSON.stringify(expectedUserInfo));
+            });
         });
+      });
+
+      describe('', function () {
+        before(function () {
+          scope = nock('https://accounts.platform.intuit.com').persist()
+            .get('/v1/openid_connect/userinfo')
+            .reply(200, expectedUserInfo, {
+              "content-type": "application/json",
+              "content-length": "1636",
+              "connection": "close",
+              "server": "nginx",
+              "intuit_tid": "12345-123-1234-12345",
+              "cache-control": "no-cache, no-store",
+              "pragma": "no-cache"
+            });
+        });
+
+        it('Get User Info in Production', function () {
+          oauthClient.environment = 'production';
+          return oauthClient.getUserInfo()
+            .then(function (authResponse) {
+              expect(JSON.stringify(authResponse.getJson())).to.be.equal(JSON.stringify(expectedUserInfo));
+            });
+        });
+      });
     });
 
     // make API Call
