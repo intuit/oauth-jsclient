@@ -35,9 +35,7 @@ var os = require('os');
 var winston = require('winston');
 var path = require('path');
 var fs = require('fs');
-var jwt = require('jsonwebtoken');
-
-
+var jwt = require('jsonwebtoken')
 
 /**
  * @constructor
@@ -52,7 +50,7 @@ function OAuthClient(config) {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
     this.redirectUri = config.redirectUri;
-    this.token = new Token(config);
+    this.token = new Token(config.token);
     this.logging =  config.hasOwnProperty('logging') && config.logging == true ? true : false;
     this.logger = null;
 
