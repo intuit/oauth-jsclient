@@ -97,7 +97,6 @@ Token.prototype.setToken = function(tokenData) {
     this.token_type = tokenData.token_type ;
     this.expires_in = Date.now() + (tokenData.expires_in * 1000);
     this.x_refresh_token_expires_in = Date.now() + (tokenData.x_refresh_token_expires_in * 1000);
-    this.realmId = tokenData.realmId || '';
     this.id_token = tokenData.id_token || '';
     return this;
 
