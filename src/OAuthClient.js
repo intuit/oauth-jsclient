@@ -264,7 +264,7 @@ OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
 
     var authResponse = res.json ? res : null;
     this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
-    console.log('The new token pair is : ' + JSON.stringify(authResponse.getJson()));
+    // console.log('The new token pair is : ' + JSON.stringify(authResponse.getJson()));
     return authResponse;
 
   }.bind(this)).catch(function(e) {
@@ -347,7 +347,7 @@ OAuthClient.prototype.getUserInfo = function(params) {
             }
         };
 
-        console.log('The request is :'+JSON.stringify(request));
+        // console.log('The request is :'+JSON.stringify(request));
 
         resolve(this.getTokenRequest(request));
 
@@ -418,11 +418,11 @@ OAuthClient.prototype.migrate = function(params) {
 
         var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
 
-        console.log('The Auth header is :'+ authHeader);
+        // console.log('The Auth header is :'+ authHeader);
 
-      console.log('The params is :'+ JSON.stringify(params));
+      // console.log('The params is :'+ JSON.stringify(params));
 
-      console.log('The uri is :'+ uri);
+      // console.log('The uri is :'+ uri);
 
         var body = {
             'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
@@ -431,7 +431,7 @@ OAuthClient.prototype.migrate = function(params) {
             'client_secret': this.clientSecret
         };
 
-      console.log('The body  is :'+ JSON.stringify(body));
+      // console.log('The body  is :'+ JSON.stringify(body));
 
         var request = {
             url: uri,
@@ -552,7 +552,7 @@ OAuthClient.prototype.validateIdToken = function(params) {
     }.bind(this))).then(function(res) {
 
         this.log('info','The validateIdToken () response is : ',JSON.stringify(res, null, 2));
-        console.log('the response from jsonwebtoken is :'+JSON.stringify(res, null, 2));
+        // console.log('the response from jsonwebtoken is :'+JSON.stringify(res, null, 2));
         if(res) return  true;
 
     }.bind(this)).catch(function(e) {
@@ -657,7 +657,7 @@ OAuthClient.prototype.loadResponse = function (request) {
 
     return popsicle.get(request).then(function (response) {
 
-      console.log('The response is :'+ JSON.stringify(response));
+      // console.log('The response is :'+ JSON.stringify(response));
         return response;
     });
 };
