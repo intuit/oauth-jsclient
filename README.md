@@ -241,7 +241,7 @@ oauthClient.revoke(params)
 You can call the below methods to set and get the tokens using the `oauthClient` instance:
 
 
-####Retrieve the Token :
+#### Retrieve the Token :
 
 ```javascript
 // To get the tokens 
@@ -253,7 +253,7 @@ var authToken = oauthClient.token.getToken();
 
 ```
 
-####Set the Token : 
+#### Set the Token : 
 ```javascript
 
 // To Set the retrieved tokens explicitly using Token Object but the same instance
