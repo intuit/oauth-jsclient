@@ -240,28 +240,46 @@ oauthClient.revoke(params)
 
 You can call the below methods to set and get the tokens using the `oauthClient` instance:
 
+
+####Retrieve the Token :
+
 ```javascript
-
-// To Set the tokens explicitly 
-oauthClient.getToken().setToken({
-    "token_type": "bearer",
-    "expires_in": 3600,
-    "refresh_token":"<refresh_token>",
-    "x_refresh_token_expires_in":15552000,
-    "access_token":"<access_token>",
-    "id_token":"<id_token>"      // optional
-});
-
-Note : You can also optionally pass `id_token` to the setToken method.  
-
 // To get the tokens 
-oauthClient.getToken().getToken();
+var authToken = oauthClient.getToken().getToken();
 
 `OR`
 
-oauthClient.token.getToken();
+var authToken = oauthClient.token.getToken();
 
 ```
+
+####Set the Token : 
+```javascript
+
+// To Set the retrieved tokens explicitly using Token Object but the same instance
+oauthClient.token = new Token(authToken);  
+
+OR 
+
+// To set the retrieved tokens using a new client instance    
+var oauthClient = new OAuthClient({
+    clientId: '<Enter your clientId>',
+    clientSecret: '<Enter your clientSecret>',
+    environment: 'sandbox',
+    redirectUri: '<http://localhost:8000/callback>',
+    token: authToken
+});
+
+```
+**Note** :   
+
+The OAuth Client library converts the accessToken and refreshToken expiry time to `TimeStamp` for better maintainability as shown below :   
+
+    this.expires_in = Date.now() + (tokenData.expires_in * 1000);
+    this.x_refresh_token_expires_in = Date.now() + (tokenData.x_refresh_token_expires_in * 1000);
+    
+so if you're providing the token that was returned from `createToken` or `refresh` then be sure you set the token as shown above.
+   
 
 ### Migrate OAuth1.0 Tokens to OAuth2.0  
 
