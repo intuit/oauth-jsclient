@@ -117,7 +117,7 @@ app.get('/getCompanyInfo', function(req,res){
 
     var companyID = oauthClient.getToken().realmId;
 
-    var url = oauthClient.environment == 'sandbox' ? oauthClient.environment.sandbox : oauthClient.environment.production ;
+    var url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
 
     oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
         .then(function(authResponse){

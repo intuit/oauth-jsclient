@@ -85,14 +85,17 @@ OAuthClient.migrate_production = 'https://developer.api.intuit.com/v2/oauth2/tok
 OAuthClient.environment = {sandbox:'https://sandbox-quickbooks.api.intuit.com/', production:'https://quickbooks.api.intuit.com/'};
 OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
-    Accounting: 'com.intuit.quickbooks.accounting',
-    Payment: 'com.intuit.quickbooks.payment',
-    Payroll: 'com.intuit.quickbooks.payroll',
-    Profile: 'profile',
-    Email:  'email',
-    Phone: 'phone',
-    Address: 'address',
-    OpenId: 'openid'
+  Accounting: 'com.intuit.quickbooks.accounting',
+  Payment: 'com.intuit.quickbooks.payment',
+  Payroll: 'com.intuit.quickbooks.payroll',
+  TimeTracking: 'com.intuit.quickbooks.payroll.timetracking',
+  Benefits: 'com.intuit.quickbooks.payroll.benefits',
+  Profile: 'profile',
+  Email:  'email',
+  Phone: 'phone',
+  Address: 'address',
+  OpenId: 'openid',
+  Intuit_name: 'intuit_name'
 }
 OAuthClient.user_agent = 'Intuit-OAuthClient-JS'+ '_' + package.version + '_' + os.type() + '_' + os.release() + '_' + os.platform();
 
@@ -264,7 +267,6 @@ OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
 
     var authResponse = res.json ? res : null;
     this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
-    console.log('The new token pair is : ' + JSON.stringify(authResponse.getJson()));
     return authResponse;
 
   }.bind(this)).catch(function(e) {
@@ -347,8 +349,6 @@ OAuthClient.prototype.getUserInfo = function(params) {
             }
         };
 
-        console.log('The request is :'+JSON.stringify(request));
-
         resolve(this.getTokenRequest(request));
 
     }.bind(this))).then(function(res) {
@@ -418,20 +418,12 @@ OAuthClient.prototype.migrate = function(params) {
 
         var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
 
-        console.log('The Auth header is :'+ authHeader);
-
-      console.log('The params is :'+ JSON.stringify(params));
-
-      console.log('The uri is :'+ uri);
-
         var body = {
             'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
             'redirect_uri':this.redirectUri,
             'client_id': this.clientId,
             'client_secret': this.clientSecret
         };
-
-      console.log('The body  is :'+ JSON.stringify(body));
 
         var request = {
             url: uri,
@@ -526,6 +518,7 @@ OAuthClient.prototype.validateIdToken = function(params) {
         var token_parts = id_token.split('.')
         var id_token_header = JSON.parse(atob(token_parts[0]));
         var id_token_payload = JSON.parse(atob(token_parts[1]));
+
         var id_token_signature = atob(token_parts[2]);
         //
         // Step 1 : First check if the issuer is as mentioned in "issuer"
@@ -552,7 +545,6 @@ OAuthClient.prototype.validateIdToken = function(params) {
     }.bind(this))).then(function(res) {
 
         this.log('info','The validateIdToken () response is : ',JSON.stringify(res, null, 2));
-        console.log('the response from jsonwebtoken is :'+JSON.stringify(res, null, 2));
         if(res) return  true;
 
     }.bind(this)).catch(function(e) {
@@ -656,8 +648,6 @@ OAuthClient.prototype.validateToken = function() {
 OAuthClient.prototype.loadResponse = function (request) {
 
     return popsicle.get(request).then(function (response) {
-
-      console.log('The response is :'+ JSON.stringify(response));
         return response;
     });
 };
