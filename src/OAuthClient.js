@@ -178,6 +178,7 @@ OAuthClient.prototype.createToken = function(uri) {
 
 };
 
+
 /**
  * Refresh Token { Refresh access_token }
  * @param {Object} params.refresh_token (optional)
@@ -704,6 +705,19 @@ OAuthClient.prototype.isAccessTokenValid = function() {
 OAuthClient.prototype.getToken = function() {
     return this.token;
 };
+
+
+/**
+ * Set Token
+ * @param {Object}
+ * @returns {Token}
+ */
+OAuthClient.prototype.setToken = function(params) {
+
+  this.token = new Token(params);
+  return this.token;
+};
+
 
 /**
  * Get AuthHeader
