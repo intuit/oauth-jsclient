@@ -257,7 +257,8 @@ var authToken = oauthClient.token.getToken();
 ```javascript
 
 // To Set the retrieved tokens explicitly using Token Object but the same instance
-oauthClient.token = new Token(authToken);  
+oauthClient.setToken(authToken);        
+
 
 OR 
 
@@ -278,7 +279,11 @@ The OAuth Client library converts the accessToken and refreshToken expiry time t
     this.expires_in = Date.now() + (tokenData.expires_in * 1000);
     this.x_refresh_token_expires_in = Date.now() + (tokenData.x_refresh_token_expires_in * 1000);
     
-so if you're providing the token that was returned from `createToken` or `refresh` then be sure you set the token as shown above.
+so if you're providing the token that was returned from `createToken` or `refresh` then be sure you set the token as shown above or refer below :
+
+```javascript
+oauthClient.setToken(authToken);
+```
    
 
 ### Migrate OAuth1.0 Tokens to OAuth2.0  
