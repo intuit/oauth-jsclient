@@ -271,15 +271,21 @@ var oauthClient = new OAuthClient({
     token: authToken
 });
 
+The authToken parameters are as follows:
 ```
+{
+    token_type: '<String>',
+    access_token: '<String>',
+    expires_in: '<Int> Seconds',
+    refresh_token: '<String>',
+    x_refresh_token_expires_in: '<Int>  Seconds',
+    id_token: "(Optional Default = '') <String>",
+    createdAt: '(Optional Default = Date.now()) <Milliseconds> from the unix epoch'
+}
+```
+
 **Note** :   
-
-The OAuth Client library converts the accessToken and refreshToken expiry time to `TimeStamp` for better maintainability as shown below :   
-
-    this.expires_in = Date.now() + (tokenData.expires_in * 1000);
-    this.x_refresh_token_expires_in = Date.now() + (tokenData.x_refresh_token_expires_in * 1000);
-    
-so if you're providing the token that was returned from `createToken` or `refresh` then be sure you set the token as shown above or refer below :
+The OAuth Client library converts the accessToken and refreshToken expiry time to `TimeStamp`. If you are setting a stored token, please pass in the `createdAt` for accurate experiations. 
 
 ```javascript
 oauthClient.setToken(authToken);
