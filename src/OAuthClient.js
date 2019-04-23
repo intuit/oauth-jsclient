@@ -695,7 +695,7 @@ OAuthClient.prototype.createError = function(e, authResponse) {
  * @private
  */
 OAuthClient.prototype.isAccessTokenValid = function() {
-    return (this.token.expires_in > Date.now());
+    return this.token.isAccessTokenValid();
 };
 
 /**
