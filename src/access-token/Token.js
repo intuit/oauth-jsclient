@@ -104,7 +104,6 @@ Token.prototype.setToken = function(tokenData) {
 
 };
 
-
 /**
  * Helper Method to check token expiry { set Token Object }
  * @param seconds
@@ -125,7 +124,6 @@ Token.prototype.isAccessTokenValid = function() {
 
 };
 
-
 /**
  * Check if there is a valid (not expired) access token
  * @return {boolean}
@@ -135,6 +133,5 @@ Token.prototype.isRefreshTokenValid = function() {
     return this._checkExpiry(this.x_refresh_token_expires_in);
 
 };
-
 
 module.exports = Token;
