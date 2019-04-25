@@ -270,7 +270,7 @@ var oauthClient = new OAuthClient({
     redirectUri: '<http://localhost:8000/callback>',
     token: authToken
 });
-
+````
 The authToken parameters are as follows:
 ```
 {
