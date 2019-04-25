@@ -29,6 +29,37 @@ describe('Tests for Token', function() {
         expect(token).to.have.property('id_token');
     });
 
+    it('Set Token using Constructor', function() {
+        var oauthClient = new OAuthClientTest({
+            clientId: 'clientID',
+            clientSecret: 'clientSecret',
+            environment: 'sandbox',
+            redirectUri: 'http://localhost:8000/callback',
+            token: expectedAccessToken
+        });
+        var token = oauthClient.getToken();
+
+        expect(token.access_token).to.equal(expectedAccessToken.access_token);
+        expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
+        expect(token.token_type).to.equal(expectedAccessToken.token_type);
+        expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
+        expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+
+    })
+
+    it('Set Token using Helper Method', function() {
+
+        oauthClient.token.setToken(expectedAccessToken);
+        var token = oauthClient.getToken();
+
+        expect(token.access_token).to.equal(expectedAccessToken.access_token);
+        expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
+        expect(token.token_type).to.equal(expectedAccessToken.token_type);
+        expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
+        expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+
+    });
+
     it('Get Access Token using Helper Method', function() {
 
         oauthClient.token.setToken(expectedAccessToken);
