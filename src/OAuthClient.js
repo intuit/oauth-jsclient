@@ -675,7 +675,12 @@ OAuthClient.prototype.createError = function(e, authResponse) {
 
     if(!authResponse || authResponse.body == ""){
 
-        e.error = e.originalMessage;
+        e.error = e.originalMessage || '';
+        e.authResponse = authResponse || ''
+        e.intuit_tid = authResponse.headers()['intuit_tid'] || '';
+        e.originalMessage = authResponse.response.statusText || '';
+        e.error = authResponse.response.statusText || '';
+        e.error_description = authResponse.response.statusText || '';
         return e;
     }
 
