@@ -104,7 +104,13 @@ Token.prototype.setToken = function(tokenData) {
 
 };
 
-Token.prototype._checkExpiry = function(seconds) {
+
+/**
+ * Helper Method to check token expiry { set Token Object }
+ * @param seconds
+ * @returns {boolean}
+ */
+Token.prototype.checkExpiry = function(seconds) {
     var expiry = this.createdAt + (seconds * 1000);
     return (expiry  - this.latency > Date.now());
 }
@@ -115,7 +121,7 @@ Token.prototype._checkExpiry = function(seconds) {
  */
 Token.prototype.isAccessTokenValid = function() {
 
-    return this._checkExpiry(this.expires_in);
+    return this.checkExpiry(this.expires_in);
 
 };
 
