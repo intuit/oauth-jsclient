@@ -17,6 +17,6 @@
     "ejs": "^2.5.2",
     "dotenv": "^5.0.1",
     "ngrok": "^2.2.9",
-    "intuit-oauth": "1.1.1"
+    "intuit-oauth": "1.2.0"
   }
 }
