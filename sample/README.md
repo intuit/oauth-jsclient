@@ -53,18 +53,20 @@ $ npm start
 ### Without ngrok (if you are using localhost i.e `NGROK_ENABLED`=`false` in `.env`)
 You will see an URL as below:
 ```bash
-💳 See the Sample App in your browser : http://localhost:8000 
-💳 Copy this into Redirect URI on the browser : http://localhost:8000/callback
-💻 Make Sure this redirect URI is also copied on your app in : https://developer.intuit.com
+💳 Step 1 : Paste this URL in your browser : http://localhost:8000
+💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com
+💳 Step 3 : Copy Paste this callback URL into `redirectURI` : http://localhost:8000/callback
+💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com
 ```
 
 ### With ngrok (if you are using ngrok i.e `NGROK_ENABLED`=`true` in `.env`)
 
 Your will see an URL as below : 
 ```bash
-💻 See the Sample App in your browser: https://9b4ee833.ngrok.io 
-💳 Copy and paste this Redirect URI on the browser : https://9b4ee833.ngrok.io/callback
-💻 Make Sure this redirect URI is also copied on your app in : https://developer.intuit.com
+💳 Step 1 : Paste this URL in your browser :  https://9b4ee833.ngrok.io 
+💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com
+💳 Step 3 : Copy Paste this callback URL into `redirectURI` : https://9b4ee833.ngrok.io/callback
+💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com
 ```
 
 Click on the URL and follow through the instructions given in the sample app.
@@ -74,7 +76,7 @@ Click on the URL and follow through the instructions given in the sample app.
 
 Project Repo
 
-* https://github.intuit.com/abisalehalliprasan/oauth-jsclient
+* https://github.com/intuit/oauth-jsclient
 
 Intuit OAuth2.0 API Reference
 
@@ -82,13 +84,13 @@ Intuit OAuth2.0 API Reference
 
 Intuit OAuth2.0 Playground
 
-* https://developer.intuit.com/v2/ui#/playground
+* https://developer.intuit.com/app/developer/playground
 
 ## Contributions
 
 Any reports of problems, comments or suggestions are most welcome.
 
-Please report these on [Issue Tracker in Github](https://github.intuit.com/abisalehalliprasan/oauth-jsclient/issues).
+Please report these on [Issue Tracker in Github](https://github.com/intuit/oauth-jsclient/issues).
 
 
 [ss1]: https://help.developer.intuit.com/s/samplefeedback?cid=9010&repoName=Intuit-OAuth2.0-Sample-NodeJS
