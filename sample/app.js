@@ -129,6 +129,18 @@ app.get('/getCompanyInfo', function(req,res){
         });
 });
 
+/**
+ * disconnect ()
+ */
+app.get('/disconnect', function(req,res){
+
+  console.log('The disconnect called ');
+  var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.OpenId,OAuthClient.scopes.Email],state:'intuit-test'});
+  res.redirect(authUri);
+
+});
+
+
 
 /**
  * Start server on HTTP (will use ngrok for HTTPS forwarding)

@@ -210,8 +210,21 @@ You can call the below helper method to refresh tokens by explictly passing the 
 
 ### Revoke access_token
 
-When you no longer need the access_token, you could use the below helper method to revoke the tokens. You can also optionally pass the `access_token` or `refresh_token` to this helper method : 
+When you no longer need the access_token, you could use the below helper method to revoke the tokens.  
 
+```javascript
+
+oauthClient.revoke()
+        .then(function(authResponse) {
+            console.log('Tokens revoked : ' + JSON.stringify(authResponse.json()));
+        })
+        .catch(function(e) {
+            console.error("The error message is :"+e.originalMessage);
+            console.error(e.intuit_tid);
+        });
+```
+
+Alternatively you can also pass `access_token` or `refresh_token` to this helper method using the `params` object: refer to   - [Getter / Setter for Token](#getter-/-setter-for-token ) section to know how to retrieve the `token` object 
 ```javascript
 
 oauthClient.revoke(params)
@@ -223,7 +236,7 @@ oauthClient.revoke(params)
             console.error(e.intuit_tid);
         });
 ```
-** Note ** : `params` is the Token JSON object as shown below :  
+** Note ** : `params` is the Token JSON object as shown below :  ( _If you do not pass the `params` then the token object of the client would be considered._)
 
 ```
 {
@@ -231,10 +244,15 @@ oauthClient.revoke(params)
     "expires_in": 3600,
     "refresh_token":"<refresh_token>",
     "x_refresh_token_expires_in":15552000,
-    "access_token":"<access_token>"
+    "access_token":"<access_token>",
+    "createdAt": "(Optional Default = Date.now()) <Milliseconds> from the unix epoch"
+    
 } 
 ``` 
-** Note ** : If you do not pass the `params` then the token object of the client would be considered.   
+
+
+
+** Note ** :    
 
 ### Getter / Setter for Token 
 
