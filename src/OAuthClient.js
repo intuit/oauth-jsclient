@@ -267,7 +267,11 @@ OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
   }.bind(this))).then(function(res) {
 
     var authResponse = res.json ? res : null;
-    this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
+
+    //New changes that are added
+    var json = authResponse && authResponse.getJson() || res;
+    this.token.setToken(json);
+    this.log('info','Refresh usingToken () response is : ',JSON.stringify(authResponse, null, 2));
     return authResponse;
 
   }.bind(this)).catch(function(e) {
@@ -290,11 +294,6 @@ OAuthClient.prototype.revoke = function(params) {
     return (new Promise(function(resolve) {
 
         params = params || {};
-
-        /**
-         * Check if the tokens exist and are valid
-         */
-        this.validateToken();
 
         var body = {};
 

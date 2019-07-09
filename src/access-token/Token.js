@@ -81,7 +81,8 @@ Token.prototype.getToken = function() {
         refresh_token: this.refresh_token,
         x_refresh_token_expires_in: this.x_refresh_token_expires_in,
         realmId: this.realmId,
-        id_token: this.id_token
+        id_token: this.id_token,
+        createdAt: this.createdAt
     };
 
 };
@@ -119,9 +120,7 @@ Token.prototype._checkExpiry = function(seconds) {
  * @returns {boolean}
  */
 Token.prototype.isAccessTokenValid = function() {
-
     return this._checkExpiry(this.expires_in);
-
 };
 
 /**
@@ -129,9 +128,7 @@ Token.prototype.isAccessTokenValid = function() {
  * @return {boolean}
  */
 Token.prototype.isRefreshTokenValid = function() {
-
     return this._checkExpiry(this.x_refresh_token_expires_in);
-
 };
 
 module.exports = Token;
