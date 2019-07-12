@@ -379,7 +379,7 @@ OAuthClient.prototype.makeApiCall = function(params)  {
 
         var request = {
             url: params.url,
-            method: params.method ? params.method || 'GET',
+            method: params.method ? params.method : 'GET',
             headers: {
                 'Authorization': 'Bearer ' + this.getToken().access_token,
                 'Accept': AuthResponse._jsonContentType,
