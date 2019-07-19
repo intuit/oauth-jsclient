@@ -46,31 +46,31 @@ var jwt = require('jsonwebtoken')
  */
 function OAuthClient(config) {
 
-    this.environment = config.environment;
-    this.clientId = config.clientId;
-    this.clientSecret = config.clientSecret;
-    this.redirectUri = config.redirectUri;
-    this.token = new Token(config.token);
-    this.logging =  config.hasOwnProperty('logging') && config.logging == true ? true : false;
-    this.logger = null;
+  this.environment = config.environment;
+  this.clientId = config.clientId;
+  this.clientSecret = config.clientSecret;
+  this.redirectUri = config.redirectUri;
+  this.token = new Token(config.token);
+  this.logging =  config.hasOwnProperty('logging') && config.logging == true ? true : false;
+  this.logger = null;
 
-    if(this.logging) {
+  if(this.logging) {
 
-        var dir = './logs';
-        if (!fs.existsSync(dir)){
-            fs.mkdirSync(dir);
-        }
-        this.logger = winston.createLogger({
-            level: 'info',
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                winston.format.printf(info => {
-                    return `${info.timestamp} ${info.level}: ${info.message}`;
-                })
-            ),
-            transports: [new winston.transports.File({filename: path.join(dir , 'oAuthClient-log.log')})]
-        });
+    var dir = './logs';
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
     }
+    this.logger = winston.createLogger({
+      level: 'info',
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(info => {
+          return `${info.timestamp} ${info.level}: ${info.message}`;
+        })
+      ),
+      transports: [new winston.transports.File({filename: path.join(dir , 'oAuthClient-log.log')})]
+    });
+  }
 }
 
 
@@ -107,21 +107,21 @@ OAuthClient.user_agent = 'Intuit-OAuthClient-JS'+ '_' + package.version + '_' + 
  */
 OAuthClient.prototype.authorizeUri = function(params) {
 
-    params = params || {};
+  params = params || {};
 
-    // check if the scopes is provided
-    if(!params.scope) throw new Error('Provide the scopes');
+  // check if the scopes is provided
+  if(!params.scope) throw new Error('Provide the scopes');
 
-    var authorizeUri = OAuthClient.authorizeEndpoint + '?' + queryString.stringify({
-        'response_type': 'code',
-        'redirect_uri': this.redirectUri ,
-        'client_id': this.clientId,
-        'scope': (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
-        'state': params.state || csrf.create(csrf.secretSync())
-    });
+  var authorizeUri = OAuthClient.authorizeEndpoint + '?' + queryString.stringify({
+    'response_type': 'code',
+    'redirect_uri': this.redirectUri ,
+    'client_id': this.clientId,
+    'scope': (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
+    'state': params.state || csrf.create(csrf.secretSync())
+  });
 
-    this.log('info','The Authorize Uri is :',authorizeUri);
-    return authorizeUri;
+  this.log('info','The Authorize Uri is :',authorizeUri);
+  return authorizeUri;
 
 };
 
@@ -133,48 +133,48 @@ OAuthClient.prototype.authorizeUri = function(params) {
  */
 OAuthClient.prototype.createToken = function(uri) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        if(!uri) throw new Error('Provide the Uri');
-        var params = queryString.parse(uri.split('?').reverse()[0]);
-        this.getToken().realmId = (params['realmId'] ? params['realmId'] : '');
+    if(!uri) throw new Error('Provide the Uri');
+    var params = queryString.parse(uri.split('?').reverse()[0]);
+    this.getToken().realmId = (params['realmId'] ? params['realmId'] : '');
 
-        var body = {};
-        if (params.code) {
+    var body = {};
+    if (params.code) {
 
-            body.grant_type = 'authorization_code';
-            body.code = params.code;
-            body.redirect_uri = params.redirectUri || this.redirectUri;
-        }
+      body.grant_type = 'authorization_code';
+      body.code = params.code;
+      body.redirect_uri = params.redirectUri || this.redirectUri;
+    }
 
-        var request = {
-            url: OAuthClient.tokenEndpoint,
-            body: body,
-            method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + this.authHeader(),
-                'Content-Type': AuthResponse._urlencodedContentType,
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: OAuthClient.tokenEndpoint,
+      body: body,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + this.authHeader(),
+        'Content-Type': AuthResponse._urlencodedContentType,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
-    }.bind(this))).then(function(res) {
+  }.bind(this))).then(function(res) {
 
-        var authResponse = res.json ? res : null;
-        var json = authResponse && authResponse.getJson() || res;
-        this.token.setToken(json);
-        this.log('info','Create Token response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
+    var authResponse = res.json ? res : null;
+    var json = authResponse && authResponse.getJson() || res;
+    this.token.setToken(json);
+    this.log('info','Create Token response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','Create Token () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','Create Token () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 };
 
@@ -186,53 +186,53 @@ OAuthClient.prototype.createToken = function(uri) {
  */
 OAuthClient.prototype.refresh = function() {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-      /**
-         * Check if the tokens exist and are valid
-         */
-        this.validateToken();
+    /**
+     * Check if the tokens exist and are valid
+     */
+    this.validateToken();
 
-        var body = {};
+    var body = {};
 
-        body.grant_type = 'refresh_token';
-        body.refresh_token = this.getToken().refresh_token;
+    body.grant_type = 'refresh_token';
+    body.refresh_token = this.getToken().refresh_token;
 
-        var request = {
-            url: OAuthClient.tokenEndpoint,
-            body: body,
-            method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + this.authHeader(),
-                'Content-Type': AuthResponse._urlencodedContentType,
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: OAuthClient.tokenEndpoint,
+      body: body,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + this.authHeader(),
+        'Content-Type': AuthResponse._urlencodedContentType,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
-    }.bind(this))).then(function(res) {
+  }.bind(this))).then(function(res) {
 
-        var authResponse = res.json ? res : null;
-        var json = authResponse && authResponse.getJson() || res;
-        this.token.setToken(json);
-        this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
+    var authResponse = res.json ? res : null;
+    var json = authResponse && authResponse.getJson() || res;
+    this.token.setToken(json);
+    this.log('info','Refresh Token () response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','Refresh Token () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','Refresh Token () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 };
 
 
 /**
  * Refresh Tokens by passing refresh_token parameter explicitly { Refresh access_token by passing refresh_token }
- * @param {Object} params.refresh_token (optional)
+ * @param {Object} params.refresh_token (refresh_token)
  * @returns {Promise<AuthResponse>}
  */
 OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
@@ -291,40 +291,40 @@ OAuthClient.prototype.refreshUsingToken = function(refresh_token) {
  */
 OAuthClient.prototype.revoke = function(params) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        params = params || {};
+    params = params || {};
 
-        var body = {};
+    var body = {};
 
-        body.token = params.access_token || params.refresh_token || (this.getToken().isAccessTokenValid() ? this.getToken().access_token : this.getToken().refresh_token);
+    body.token = params.access_token || params.refresh_token || (this.getToken().isAccessTokenValid() ? this.getToken().access_token : this.getToken().refresh_token);
 
-        var request = {
-            url: OAuthClient.revokeEndpoint,
-            body: body,
-            method: 'POST',
-            headers: {
-                'Authorization': 'Basic ' + this.authHeader(),
-                'Accept': AuthResponse._jsonContentType,
-                'Content-Type': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: OAuthClient.revokeEndpoint,
+      body: body,
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + this.authHeader(),
+        'Accept': AuthResponse._jsonContentType,
+        'Content-Type': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
+  }.bind(this))).then(function(authResponse) {
 
-    }.bind(this))).then(function(authResponse) {
+    this.token.clearToken();
+    this.log('info','Revoke Token () response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
 
-        this.log('info','Revoke Token () response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
+  }.bind(this)).catch(function(e) {
 
-    }.bind(this)).catch(function(e) {
+    this.log('error','Revoke Token () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-        this.log('error','Revoke Token () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
-
-    }.bind(this));
+  }.bind(this));
 
 };
 
@@ -335,34 +335,34 @@ OAuthClient.prototype.revoke = function(params) {
  */
 OAuthClient.prototype.getUserInfo = function(params) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        params = params || {};
+    params = params || {};
 
-        var request = {
-            url: this.environment == 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + this.token.access_token,
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: this.environment == 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + this.token.access_token,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
-    }.bind(this))).then(function(res) {
+  }.bind(this))).then(function(res) {
 
-        var authResponse = res.json ? res : null;
-        this.log('info','The Get User Info () response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
+    var authResponse = res.json ? res : null;
+    this.log('info','The Get User Info () response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','Get User Info ()  threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','Get User Info ()  threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 };
 
@@ -373,33 +373,33 @@ OAuthClient.prototype.getUserInfo = function(params) {
  */
 OAuthClient.prototype.makeApiCall = function(params)  {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        params = params || {};
+    params = params || {};
 
-        var request = {
-            url: params.url,
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + this.getToken().access_token,
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: params.url,
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + this.getToken().access_token,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
-    }.bind(this))).then(function(authResponse) {
+  }.bind(this))).then(function(authResponse) {
 
-        this.log('info','The makeAPICall () response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
+    this.log('info','The makeAPICall () response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','Get makeAPICall ()  threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','Get makeAPICall ()  threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 };
 
@@ -410,48 +410,48 @@ OAuthClient.prototype.makeApiCall = function(params)  {
  */
 OAuthClient.prototype.migrate = function(params) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        params = params || {};
+    params = params || {};
 
-        var uri = this.environment.toLowerCase() == 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
+    var uri = this.environment.toLowerCase() == 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
 
-        var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
+    var authHeader = this.generateOauth1Sign(objectAssign({}, {method: 'POST', uri: uri}, params));
 
-        var body = {
-            'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
-            'redirect_uri':this.redirectUri,
-            'client_id': this.clientId,
-            'client_secret': this.clientSecret
-        };
+    var body = {
+      'scope':(Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
+      'redirect_uri':this.redirectUri,
+      'client_id': this.clientId,
+      'client_secret': this.clientSecret
+    };
 
-        var request = {
-            url: uri,
-            method: 'POST',
-            body: body,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'OAuth ' + authHeader,
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: uri,
+      method: 'POST',
+      body: body,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'OAuth ' + authHeader,
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request));
 
-    }.bind(this))).then(function(res) {
+  }.bind(this))).then(function(res) {
 
-        var authResponse = res.json ? res : null;
-        var json = authResponse && authResponse.getJson() || res;
-        this.token.setToken(json);
-        this.log('info','The migrate () response is : ',JSON.stringify(authResponse, null, 2));
-        return authResponse;
-    }.bind(this)).catch(function(e) {
+    var authResponse = res.json ? res : null;
+    var json = authResponse && authResponse.getJson() || res;
+    this.token.setToken(json);
+    this.log('info','The migrate () response is : ',JSON.stringify(authResponse, null, 2));
+    return authResponse;
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','The migrate () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','The migrate () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 
 };
@@ -464,38 +464,38 @@ OAuthClient.prototype.migrate = function(params) {
 OAuthClient.prototype.generateOauth1Sign = function(params) {
 
 
-    var timestamp = Math.round(new Date().getTime()/1000);
+  var timestamp = Math.round(new Date().getTime()/1000);
 
-    var parameters = {
-        oauth_consumer_key : params.oauth_consumer_key,
-        oauth_token : params.access_token,
-        oauth_signature_method : 'HMAC-SHA1',
-        oauth_timestamp : timestamp,
-        oauth_nonce : 'nonce',
-        oauth_version : '1.0'
-    };
+  var parameters = {
+    oauth_consumer_key : params.oauth_consumer_key,
+    oauth_token : params.access_token,
+    oauth_signature_method : 'HMAC-SHA1',
+    oauth_timestamp : timestamp,
+    oauth_nonce : 'nonce',
+    oauth_version : '1.0'
+  };
 
-    var encodedSignature = oauthSignature.generate (params.method, params.uri, parameters, params.oauth_consumer_secret, params.access_secret);
+  var encodedSignature = oauthSignature.generate (params.method, params.uri, parameters, params.oauth_consumer_secret, params.access_secret);
 
-    parameters ['oauth_signature'] = encodedSignature;
-    var keys = Object.keys(parameters);
-    var authHeader = '';
+  parameters ['oauth_signature'] = encodedSignature;
+  var keys = Object.keys(parameters);
+  var authHeader = '';
 
-    for (key in parameters) {
+  for (key in parameters) {
 
-        // Add this for Accounting API minorversion url query parameter
-        if (key === 'minorversion') {
-            continue;
-        }
-        if (key === keys[keys.length-1]) {
-            authHeader += key + '=' + '"'+parameters[key]+'"';
-        }
-        else {
-            authHeader += key + '=' + '"'+parameters[key]+'",';
-        }
+    // Add this for Accounting API minorversion url query parameter
+    if (key === 'minorversion') {
+      continue;
     }
+    if (key === keys[keys.length-1]) {
+      authHeader += key + '=' + '"'+parameters[key]+'"';
+    }
+    else {
+      authHeader += key + '=' + '"'+parameters[key]+'",';
+    }
+  }
 
-    return authHeader;
+  return authHeader;
 
 };
 
@@ -506,53 +506,53 @@ OAuthClient.prototype.generateOauth1Sign = function(params) {
  */
 OAuthClient.prototype.validateIdToken = function(params) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        if(!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
+    if(!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
 
-        var id_token = this.getToken().id_token || params.id_token;
+    var id_token = this.getToken().id_token || params.id_token;
 
-        params = params || {};
+    params = params || {};
 
-        // Decode ID Token
-        var token_parts = id_token.split('.')
-        var id_token_header = JSON.parse(atob(token_parts[0]));
-        var id_token_payload = JSON.parse(atob(token_parts[1]));
+    // Decode ID Token
+    var token_parts = id_token.split('.')
+    var id_token_header = JSON.parse(atob(token_parts[0]));
+    var id_token_payload = JSON.parse(atob(token_parts[1]));
 
-        var id_token_signature = atob(token_parts[2]);
-        //
-        // Step 1 : First check if the issuer is as mentioned in "issuer"
-        if(id_token_payload.iss != 'https://oauth.platform.intuit.com/op/v1') return false;
+    var id_token_signature = atob(token_parts[2]);
+    //
+    // Step 1 : First check if the issuer is as mentioned in "issuer"
+    if(id_token_payload.iss != 'https://oauth.platform.intuit.com/op/v1') return false;
 
-        // Step 2 : check if the aud field in idToken is same as application's clientId
-        if(id_token_payload.aud != this.clientId) return false;
+    // Step 2 : check if the aud field in idToken is same as application's clientId
+    if(id_token_payload.aud != this.clientId) return false;
 
 
-        // Step 3 : ensure the timestamp has not elapsed
-        if(id_token_payload.exp < Date.now() / 1000) return false;
+    // Step 3 : ensure the timestamp has not elapsed
+    if(id_token_payload.exp < Date.now() / 1000) return false;
 
-        var request = {
-            url: OAuthClient.jwks_uri,
-            method: 'GET',
-            headers: {
-                'Accept': AuthResponse._jsonContentType,
-                'User-Agent': OAuthClient.user_agent
-            }
-        };
+    var request = {
+      url: OAuthClient.jwks_uri,
+      method: 'GET',
+      headers: {
+        'Accept': AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent
+      }
+    };
 
-        resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
+    resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
 
-    }.bind(this))).then(function(res) {
+  }.bind(this))).then(function(res) {
 
-        this.log('info','The validateIdToken () response is : ',JSON.stringify(res, null, 2));
-        if(res) return  true;
+    this.log('info','The validateIdToken () response is : ',JSON.stringify(res, null, 2));
+    if(res) return  true;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        this.log('error','The validateIdToken () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    this.log('error','The validateIdToken () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 }
 
 /**
@@ -564,28 +564,28 @@ OAuthClient.prototype.validateIdToken = function(params) {
  */
 OAuthClient.prototype.getKeyFromJWKsURI = function(id_token, kid, request) {
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        resolve(this.loadResponse(request));
+    resolve(this.loadResponse(request));
 
-    }.bind(this))).then(function(response) {
+  }.bind(this))).then(function(response) {
 
-        if(response.status != "200") throw new Error('Could not reach JWK endpoint');
+    if(response.status != "200") throw new Error('Could not reach JWK endpoint');
 
-        // Find the key by KID
-        var responseBody = JSON.parse(response.body);
-        var key = responseBody.keys.find(el => (el.kid == kid))
-        var cert = this.getPublicKey(key.n, key.e)
+    // Find the key by KID
+    var responseBody = JSON.parse(response.body);
+    var key = responseBody.keys.find(el => (el.kid == kid))
+    var cert = this.getPublicKey(key.n, key.e)
 
-        return jwt.verify(id_token, cert);
+    return jwt.verify(id_token, cert);
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        e = this.createError(e);
-        this.log('error','The getKeyFromJWKsURI () threw an exception : ',JSON.stringify(e, null, 2));
-        throw e;
+    e = this.createError(e);
+    this.log('error','The getKeyFromJWKsURI () threw an exception : ',JSON.stringify(e, null, 2));
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 }
 
@@ -595,9 +595,9 @@ OAuthClient.prototype.getKeyFromJWKsURI = function(id_token, kid, request) {
  * @param exponent
  */
 OAuthClient.prototype.getPublicKey = function(modulus, exponent) {
-    var getPem = require('rsa-pem-from-mod-exp');
-    var pem = getPem(modulus, exponent);
-    return pem
+  var getPem = require('rsa-pem-from-mod-exp');
+  var pem = getPem(modulus, exponent);
+  return pem
 };
 
 /**
@@ -607,26 +607,26 @@ OAuthClient.prototype.getPublicKey = function(modulus, exponent) {
  */
 OAuthClient.prototype.getTokenRequest = function(request) {
 
-    var authResponse = new AuthResponse({token:this.token});
+  var authResponse = new AuthResponse({token:this.token});
 
-    return (new Promise(function(resolve) {
+  return (new Promise(function(resolve) {
 
-        resolve(this.loadResponse(request));
+    resolve(this.loadResponse(request));
 
-    }.bind(this))).then(function(response) {
+  }.bind(this))).then(function(response) {
 
-        authResponse.processResponse(response);
+    authResponse.processResponse(response);
 
-        if (!authResponse.valid()) throw new Error('Response has an Error');
+    if (!authResponse.valid()) throw new Error('Response has an Error');
 
-        return authResponse;
+    return authResponse;
 
-    }.bind(this)).catch(function(e) {
+  }.bind(this)).catch(function(e) {
 
-        if (!e.authResponse) e = this.createError(e, authResponse);
-        throw e;
+    if (!e.authResponse) e = this.createError(e, authResponse);
+    throw e;
 
-    }.bind(this));
+  }.bind(this));
 
 };
 
@@ -635,8 +635,8 @@ OAuthClient.prototype.getTokenRequest = function(request) {
  */
 OAuthClient.prototype.validateToken = function() {
 
-    if(!this.token.refreshToken()) throw new Error('The Refresh token is missing');
-    if(!this.token.isRefreshTokenValid()) throw new Error('The Refresh token is invalid, please Authorize again.');
+  if(!this.token.refreshToken()) throw new Error('The Refresh token is missing');
+  if(!this.token.isRefreshTokenValid()) throw new Error('The Refresh token is invalid, please Authorize again.');
 };
 
 
@@ -647,9 +647,9 @@ OAuthClient.prototype.validateToken = function() {
  */
 OAuthClient.prototype.loadResponse = function (request) {
 
-    return popsicle.get(request).then(function (response) {
-        return response;
-    });
+  return popsicle.get(request).then(function (response) {
+    return response;
+  });
 };
 
 /**
@@ -659,9 +659,9 @@ OAuthClient.prototype.loadResponse = function (request) {
  */
 OAuthClient.prototype.loadResponseFromJWKsURI = function (request) {
 
-    return popsicle.get(request).then(function (response) {
-        return response;
-    });
+  return popsicle.get(request).then(function (response) {
+    return response;
+  });
 };
 
 /**
@@ -672,24 +672,24 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function (request) {
  */
 OAuthClient.prototype.createError = function(e, authResponse) {
 
-    if(!authResponse || authResponse.body == ""){
+  if(!authResponse || authResponse.body == ""){
 
-        e.error = e.originalMessage || '';
-        e.authResponse = authResponse || ''
-        e.intuit_tid = authResponse.headers()['intuit_tid'] || '';
-        e.originalMessage = authResponse.response.statusText || '';
-        e.error = authResponse.response.statusText || '';
-        e.error_description = authResponse.response.statusText || '';
-        return e;
-    }
-
-    e.authResponse = authResponse ? authResponse : null;
-    e.originalMessage = e.message;
-    e.error =  ('error' in authResponse.getJson() ? authResponse.getJson().error : '');
-    e.error_description = ('error_description' in authResponse.getJson() ? authResponse.getJson().error_description : '');
-    e.intuit_tid = authResponse.headers()['intuit_tid'];
-
+    e.error = e.originalMessage || '';
+    e.authResponse = authResponse || ''
+    e.intuit_tid = authResponse.headers()['intuit_tid'] || '';
+    e.originalMessage = authResponse.response.statusText || '';
+    e.error = authResponse.response.statusText || '';
+    e.error_description = authResponse.response.statusText || '';
     return e;
+  }
+
+  e.authResponse = authResponse ? authResponse : null;
+  e.originalMessage = e.message;
+  e.error =  ('error' in authResponse.getJson() ? authResponse.getJson().error : '');
+  e.error_description = ('error_description' in authResponse.getJson() ? authResponse.getJson().error_description : '');
+  e.intuit_tid = authResponse.headers()['intuit_tid'];
+
+  return e;
 
 };
 
@@ -699,7 +699,7 @@ OAuthClient.prototype.createError = function(e, authResponse) {
  * @private
  */
 OAuthClient.prototype.isAccessTokenValid = function() {
-    return this.token.isAccessTokenValid();
+  return this.token.isAccessTokenValid();
 };
 
 /**
@@ -707,7 +707,7 @@ OAuthClient.prototype.isAccessTokenValid = function() {
  * @returns {Token}
  */
 OAuthClient.prototype.getToken = function() {
-    return this.token;
+  return this.token;
 };
 
 
@@ -728,14 +728,14 @@ OAuthClient.prototype.setToken = function(params) {
  * @returns {string} authHeader
  */
 OAuthClient.prototype.authHeader = function() {
-    var apiKey = this.clientId + ':' + this.clientSecret;
-    return (typeof btoa == 'function') ? btoa(apiKey) : new Buffer(apiKey).toString('base64');
+  var apiKey = this.clientId + ':' + this.clientSecret;
+  return (typeof btoa == 'function') ? btoa(apiKey) : new Buffer(apiKey).toString('base64');
 };
 
 OAuthClient.prototype.log = function(level,message,messageData) {
-    if (this.logging) {
-        this.logger.log(level,message + messageData);
-    }
+  if (this.logging) {
+    this.logger.log(level,message + messageData);
+  }
 };
 
 module.exports = OAuthClient;

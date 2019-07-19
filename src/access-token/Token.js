@@ -30,17 +30,17 @@
  */
 function Token(params) {
 
-    params = params || {};
+  params = params || {};
 
-    this.realmId = params.realmId || '';
-    this.token_type = params.token_type || '';
-    this.access_token = params.access_token || '';
-    this.refresh_token = params.refresh_token || '';
-    this.expires_in = params.expires_in || 0;
-    this.x_refresh_token_expires_in = params.x_refresh_token_expires_in || 0;
-    this.id_token = params.id_token || '';
-    this.latency = params.latency || 60 * 1000;
-    this.createdAt = params.createdAt || Date.now();
+  this.realmId = params.realmId || '';
+  this.token_type = params.token_type || '';
+  this.access_token = params.access_token || '';
+  this.refresh_token = params.refresh_token || '';
+  this.expires_in = params.expires_in || 0;
+  this.x_refresh_token_expires_in = params.x_refresh_token_expires_in || 0;
+  this.id_token = params.id_token || '';
+  this.latency = params.latency || 60 * 1000;
+  this.createdAt = params.createdAt || Date.now();
 }
 
 /**
@@ -48,7 +48,7 @@ function Token(params) {
  * @returns {string} access_token
  */
 Token.prototype.accessToken = function() {
-    return this.getToken().access_token;
+  return this.getToken().access_token;
 };
 
 /**
@@ -56,7 +56,7 @@ Token.prototype.accessToken = function() {
  * @returns {string} refresh_token
  */
 Token.prototype.refreshToken = function() {
-    return this.getToken().refresh_token;
+  return this.getToken().refresh_token;
 };
 
 /**
@@ -64,7 +64,7 @@ Token.prototype.refreshToken = function() {
  * @returns {string} token_type
  */
 Token.prototype.tokenType = function() {
-    return this.getToken().token_type;
+  return this.getToken().token_type;
 };
 
 
@@ -74,16 +74,16 @@ Token.prototype.tokenType = function() {
  */
 Token.prototype.getToken = function() {
 
-    return  {
-        token_type: this.token_type,
-        access_token: this.access_token,
-        expires_in: this.expires_in,
-        refresh_token: this.refresh_token,
-        x_refresh_token_expires_in: this.x_refresh_token_expires_in,
-        realmId: this.realmId,
-        id_token: this.id_token,
-        createdAt: this.createdAt
-    };
+  return  {
+    token_type: this.token_type,
+    access_token: this.access_token,
+    expires_in: this.expires_in,
+    refresh_token: this.refresh_token,
+    x_refresh_token_expires_in: this.x_refresh_token_expires_in,
+    realmId: this.realmId,
+    id_token: this.id_token,
+    createdAt: this.createdAt
+  };
 
 };
 
@@ -94,16 +94,32 @@ Token.prototype.getToken = function() {
  */
 Token.prototype.setToken = function(tokenData) {
 
-    this.access_token = tokenData.access_token;
-    this.refresh_token = tokenData.refresh_token;
-    this.token_type = tokenData.token_type ;
-    this.expires_in = tokenData.expires_in;
-    this.x_refresh_token_expires_in = tokenData.x_refresh_token_expires_in;
-    this.id_token = tokenData.id_token || '';
-    this.createdAt = tokenData.createdAt || Date.now();
-    return this;
+  this.access_token = tokenData.access_token;
+  this.refresh_token = tokenData.refresh_token;
+  this.token_type = tokenData.token_type ;
+  this.expires_in = tokenData.expires_in;
+  this.x_refresh_token_expires_in = tokenData.x_refresh_token_expires_in;
+  this.id_token = tokenData.id_token || '';
+  this.createdAt = tokenData.createdAt || Date.now();
+  return this;
 
 };
+
+/**
+ * Helper Method to clear accessToken { clear Token Object }
+ * @param
+ * @returns {Token}
+ */
+Token.prototype.clearToken = function() {
+  this.access_token = '';
+  this.refresh_token = '';
+  this.token_type = '';
+  this.expires_in = 0;
+  this.x_refresh_token_expires_in = 0;
+  this.id_token = '';
+  this.createdAt = 0;
+  return this;
+}
 
 /**
  * Helper Method to check token expiry { set Token Object }
@@ -111,8 +127,8 @@ Token.prototype.setToken = function(tokenData) {
  * @returns {boolean}
  */
 Token.prototype._checkExpiry = function(seconds) {
-    var expiry = this.createdAt + (seconds * 1000);
-    return (expiry  - this.latency > Date.now());
+  var expiry = this.createdAt + (seconds * 1000);
+  return (expiry  - this.latency > Date.now());
 }
 
 /**
@@ -120,7 +136,7 @@ Token.prototype._checkExpiry = function(seconds) {
  * @returns {boolean}
  */
 Token.prototype.isAccessTokenValid = function() {
-    return this._checkExpiry(this.expires_in);
+  return this._checkExpiry(this.expires_in);
 };
 
 /**
@@ -128,7 +144,7 @@ Token.prototype.isAccessTokenValid = function() {
  * @return {boolean}
  */
 Token.prototype.isRefreshTokenValid = function() {
-    return this._checkExpiry(this.x_refresh_token_expires_in);
+  return this._checkExpiry(this.x_refresh_token_expires_in);
 };
 
 module.exports = Token;
