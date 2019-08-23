@@ -51,9 +51,9 @@ Follow the instructions below to use the library :
 2. Require the Library:
 
     ```js
-    var OAuthClient = require('intuit-oauth');
+    const OAuthClient = require('intuit-oauth');
 
-    var oauthClient = new OAuthClient({
+    const oauthClient = new OAuthClient({
         clientId: '<Enter your clientId>',
         clientSecret: '<Enter your clientSecret>',
         environment: 'sandbox' || 'production',
@@ -89,7 +89,7 @@ The Authorization Code flow is made up of two parts :
 ```javascript
 
 // Instance of client
-var oauthClient = new OAuthClient({
+const oauthClient = new OAuthClient({
     clientId: '<Enter your clientId>',
     clientSecret: '<Enter your clientSecret>',
     environment: 'sandbox',
@@ -97,7 +97,7 @@ var oauthClient = new OAuthClient({
 });
 
 // AuthorizationUri
-var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId],state:'testState'});  // can be an array of multiple scopes ex : {scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId]}
+const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId],state:'testState'});  // can be an array of multiple scopes ex : {scope:[OAuthClient.scopes.Accounting,OAuthClient.scopes.OpenId]}
 
 
 // Redirect the authUri 
@@ -125,7 +125,7 @@ OpenID Scopes :
 ```javascript
 
 // Parse the redirect URL for authCode and exchange them for tokens
-var parseRedirect = req.url;
+const parseRedirect = req.url;
 
 // Exchange the auth code retrieved from the **req.url** on the redirectUri
 oauthClient.createToken(parseRedirect)
@@ -262,11 +262,11 @@ You can call the below methods to set and get the tokens using the `oauthClient`
 
 ```javascript
 // To get the tokens 
-var authToken = oauthClient.getToken().getToken();
+let authToken = oauthClient.getToken().getToken();
 
 `OR`
 
-var authToken = oauthClient.token.getToken();
+let authToken = oauthClient.token.getToken();
 
 ```
 
@@ -280,7 +280,7 @@ oauthClient.setToken(authToken);
 OR 
 
 // To set the retrieved tokens using a new client instance    
-var oauthClient = new OAuthClient({
+const oauthClient = new OAuthClient({
     clientId: '<Enter your clientId>',
     clientSecret: '<Enter your clientSecret>',
     environment: 'sandbox',
@@ -317,7 +317,7 @@ You can call the below method to migrate the bearer / refresh tokens from OAuth1
 
 // Fill in the params object ( argument to the migrate function )
 
-var params = {
+let params = {
     oauth_consumer_key : '<Enter oauth1ConsumerKey>',
     oauth_consumer_secret : '<Enter oauth1ConsumerSecret>',
     oauth_signature_method : 'HMAC-SHA1',
@@ -423,10 +423,10 @@ You can use the below helper methods to make full use of the Auth Response Objec
 oauthClient.createToken(parseRedirect)
     .then(function(authResponse) {
         console.log('The Token in JSON is  '+ JSON.stringify(authResponse.getJson()));
-        var status = authResponse.status();
-        var body = authResponse.text();
-        var jsonResponse = authResponse.getJson();
-        var intuit_tid = authResponse.get_intuit_tid();
+        let status = authResponse.status();
+        let body = authResponse.text();
+        let jsonResponse = authResponse.getJson();
+        let intuit_tid = authResponse.get_intuit_tid();
     });
 
 ```
@@ -439,7 +439,7 @@ oauthClient.createToken(parseRedirect)
 By default the logging is `disabled` i.e set to `false`. However, to enable logging, pass `logging=true` when you create the `oauthClient` instance :
 
 ```javascript
-var oauthClient = new OAuthClient({
+const oauthClient = new OAuthClient({
     clientId: '<Enter your clientId>',
     clientSecret: '<Enter your clientSecret>',
     environment: 'sandbox',
@@ -487,6 +487,9 @@ You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if
 * Run `npm install` for dependencies.
 * Run `npm test` to execute all specs.
 
+## Changelog
+
+See the changelog [here]()
 
 ## License
 

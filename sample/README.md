@@ -12,7 +12,7 @@ This is a `sample` app built using Node.js and Express Framework to showcase how
 
 ### Requirements
 
-* [Node.js](http://nodejs.org) >= 8.x.
+* [Node.js](http://nodejs.org) >= 6.0.0
 * [Intuit Developer](https://developer.intuit.com) Account
 
 ### Via Github Repo (Recommended)

@@ -1,18 +1,28 @@
 {
   "name": "intuit-oauth",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Intuit Node.js client for OAuth2.0 and OpenID",
   "main": "./src/OAuthClient.js",
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
     "test": "nyc mocha",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
     "posttest": "nyc check-coverage",
     "test-watch": "mocha --watch --reporter=spec",
-    "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
-  "keywords": ["intuit-oauth", "intuit-oauth-nodejs", "intuit-nodejs", "oauth2.0", "openid", "openidConnect", "quickbooks-accounting", "quickbooks-payment"],
+  "keywords": [
+    "intuit-oauth",
+    "intuit-oauth-nodejs",
+    "intuit-nodejs",
+    "oauth2.0",
+    "openid",
+    "openidConnect",
+    "quickbooks-accounting",
+    "quickbooks-payment"
+  ],
   "nyc": {
     "exclude": [
       "node_modules",
@@ -67,11 +77,10 @@
     "chai": "^4.1.2",
     "chance": "^1.0.13",
     "cors": "^2.8.1",
-    "coveralls": "^3.0.1",
+    "coveralls": "^3.0.6",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.9.0",
-    "cors": "^2.8.1",
     "express": "^4.14.0",
     "is-travis": "^1.0.0",
     "mocha": "^5.0.4",
