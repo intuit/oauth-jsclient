@@ -6,12 +6,12 @@ require('dotenv').config();
  * Require the dependencies
  * @type {*|createApplication}
  */
-var express = require('express');
-var app = express();
-var path = require('path');
-var OAuthClient = require('intuit-oauth');
-var bodyParser = require('body-parser');
-var ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
+const express = require('express');
+const app = express();
+const path = require('path');
+const OAuthClient = require('intuit-oauth');
+const bodyParser = require('body-parser');
+const ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
 
 /**
@@ -23,13 +23,13 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(bodyParser.json())
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 /**
  * App Variables
  * @type {null}
  */
-var oauth2_token_json = null,
+let oauth2_token_json = null,
     redirectUri = '';
 
 
@@ -38,7 +38,7 @@ var oauth2_token_json = null,
  * @type {OAuthClient}
  */
 
-var oauthClient = null;
+let oauthClient = null;
 
 
 /**
@@ -61,7 +61,7 @@ app.get('/authUri', urlencodedParser, function(req,res) {
         redirectUri: req.query.json.redirectUri
     });
 
-    var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
+    const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
     res.send(authUri);
 });
 
@@ -115,9 +115,9 @@ app.get('/refreshAccessToken', function(req,res){
 app.get('/getCompanyInfo', function(req,res){
 
 
-    var companyID = oauthClient.getToken().realmId;
+    const companyID = oauthClient.getToken().realmId;
 
-    var url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
+    const url = oauthClient.environment == 'sandbox' ? OAuthClient.environment.sandbox : OAuthClient.environment.production ;
 
     oauthClient.makeApiCall({url: url + 'v3/company/' + companyID +'/companyinfo/' + companyID})
         .then(function(authResponse){
@@ -135,7 +135,7 @@ app.get('/getCompanyInfo', function(req,res){
 app.get('/disconnect', function(req,res){
 
   console.log('The disconnect called ');
-  var authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.OpenId,OAuthClient.scopes.Email],state:'intuit-test'});
+  const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.OpenId,OAuthClient.scopes.Email],state:'intuit-test'});
   res.redirect(authUri);
 
 });
