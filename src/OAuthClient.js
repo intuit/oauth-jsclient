@@ -22,20 +22,20 @@
  */
 
 var atob = require('atob');
-var Tokens = require('csrf');
-var csrf = new Tokens()
-var AuthResponse = require("./response/AuthResponse");
+var csrf = require('csrf');
 var oauthSignature = require('oauth-signature');
 var objectAssign = require('object-assign');
 var queryString = require('query-string');
 var popsicle = require('popsicle');
-var Token = require("./access-token/Token");
-var package = require('../package.json');
 var os = require('os');
 var winston = require('winston');
 var path = require('path');
 var fs = require('fs');
 var jwt = require('jsonwebtoken')
+var AuthResponse = require("./response/AuthResponse");
+var Token = require("./access-token/Token");
+var version = require('../package.json');
+
 
 /**
  * @constructor
@@ -53,6 +53,7 @@ function OAuthClient(config) {
   this.token = new Token(config.token);
   this.logging =  config.hasOwnProperty('logging') && config.logging == true ? true : false;
   this.logger = null;
+  this.state = new csrf();
 
   if(this.logging) {
 
@@ -97,7 +98,7 @@ OAuthClient.scopes = {
   OpenId: 'openid',
   Intuit_name: 'intuit_name'
 }
-OAuthClient.user_agent = 'Intuit-OAuthClient-JS'+ '_' + package.version + '_' + os.type() + '_' + os.release() + '_' + os.platform();
+OAuthClient.user_agent = 'Intuit-OAuthClient-JS'+ '_' + version + '_' + os.type() + '_' + os.release() + '_' + os.platform();
 
 
 /**
@@ -117,7 +118,7 @@ OAuthClient.prototype.authorizeUri = function(params) {
     'redirect_uri': this.redirectUri ,
     'client_id': this.clientId,
     'scope': (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
-    'state': params.state || csrf.create(csrf.secretSync())
+    'state': params.state || this.state.create(this.state.secretSync())
   });
 
   this.log('info','The Authorize Uri is :',authorizeUri);
