@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 var nock = require('nock');
 var { expect } = require('chai');
