@@ -20,6 +20,8 @@
  * @namespace AuthResponse
  */
 
+'use strict';
+
 /**
  * AuthResponse
  * @property {Token} token
@@ -29,65 +31,61 @@
  * @property {string} intuit_tid
  */
 function AuthResponse(params) {
-
-    this.token = params.token || '';
-    this.response = params.response || '';
-    this.body = params.responseText || '';
-    this.json = null;
-    this.intuit_tid = params.intuit_tid || '';
+  this.token = params.token || '';
+  this.response = params.response || '';
+  this.body = params.responseText || '';
+  this.json = null;
+  this.intuit_tid = params.intuit_tid || '';
 }
 
 /**
  * Process Response
  * @param response
  */
-AuthResponse.prototype.processResponse = function(response) {
-
-    this.response = response || '';
-    this.body = response.body || '';
-    this.json = this.body ? JSON.parse(this.body) : null;
-    this.intuit_tid = response.headers['intuit_tid'] || '';
-}
+AuthResponse.prototype.processResponse = function (response) {
+  this.response = response || '';
+  this.body = response.body || '';
+  this.json = this.body ? JSON.parse(this.body) : null;
+  this.intuit_tid = response.headers.intuit_tid || '';
+};
 
 /**
  * @return {AuthResponse}
  */
-AuthResponse.prototype.getToken = function() {
-    return this.token.getToken();
+AuthResponse.prototype.getToken = function () {
+  return this.token.getToken();
 };
 
 
-
 /**
  * @return {AuthResponse}
  */
-AuthResponse.prototype.text = function() {
-    return this.body;
+AuthResponse.prototype.text = function () {
+  return this.body;
 };
 
 /**
  *
  * @returns {*}
  */
-AuthResponse.prototype.status = function() {
-    return this.response.status;
+AuthResponse.prototype.status = function () {
+  return this.response.status;
 };
 
 /**
  * Get response headers
  * @returns {Object} headers
  */
-AuthResponse.prototype.headers = function() {
-    return this.response.headers;
+AuthResponse.prototype.headers = function () {
+  return this.response.headers;
 };
 
 /**
  * valid { response is valid ? }
  * @returns {*|boolean}
  */
-AuthResponse.prototype.valid = function() {
-
-    return (this.response && this.response.status == '200');
+AuthResponse.prototype.valid = function () {
+  return (this.response && this.response.status == '200');
 };
 
 
@@ -95,43 +93,42 @@ AuthResponse.prototype.valid = function() {
  * Get Json () { returns token as JSON }
  * @return {object} this.json
  */
-AuthResponse.prototype.getJson = function() {
-    if (!this.isJson()) throw new Error('AuthResponse is not JSON');
-    if (!this.json) {
-        this.json = this.body ? JSON.parse(this.body) : null;
-    }
-    return this.json;
+AuthResponse.prototype.getJson = function () {
+  if (!this.isJson()) throw new Error('AuthResponse is not JSON');
+  if (!this.json) {
+    this.json = this.body ? JSON.parse(this.body) : null;
+  }
+  return this.json;
 };
 
 /**
  * Get Intuit tid
  * @returns {string} intuit_tid
  */
-AuthResponse.prototype.get_intuit_tid = function() {
-
-    return this.intuit_tid;
+AuthResponse.prototype.get_intuit_tid = function () {
+  return this.intuit_tid;
 };
 
 
 /**
  * @private
  */
-AuthResponse.prototype.isContentType = function(contentType) {
-    return this.getContentType().indexOf(contentType) > -1;
+AuthResponse.prototype.isContentType = function (contentType) {
+  return this.getContentType().indexOf(contentType) > -1;
 };
 
 /**
  * @private
  */
-AuthResponse.prototype.getContentType = function() {
-    return this.response.get(AuthResponse._contentType) || '';
+AuthResponse.prototype.getContentType = function () {
+  return this.response.get(AuthResponse._contentType) || '';
 };
 
 /**
  * @private
  */
-AuthResponse.prototype.isJson = function() {
-    return this.isContentType('application/json');
+AuthResponse.prototype.isJson = function () {
+  return this.isContentType('application/json');
 };
 
 

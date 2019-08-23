@@ -20,6 +20,7 @@
  * @namespace Token
  */
 
+'use strict';
 
 /**
  * @param {Cache} options.cache
@@ -29,7 +30,6 @@
  * @property {string} _cacheId
  */
 function Token(params) {
-
   params = params || {};
 
   this.realmId = params.realmId || '';
@@ -47,7 +47,7 @@ function Token(params) {
  * get accessToken()
  * @returns {string} access_token
  */
-Token.prototype.accessToken = function() {
+Token.prototype.accessToken = function () {
   return this.getToken().access_token;
 };
 
@@ -55,7 +55,7 @@ Token.prototype.accessToken = function() {
  * get refreshToken()
  * @returns {string} refresh_token
  */
-Token.prototype.refreshToken = function() {
+Token.prototype.refreshToken = function () {
   return this.getToken().refresh_token;
 };
 
@@ -63,7 +63,7 @@ Token.prototype.refreshToken = function() {
  * get tokenType()
  * @returns {string} token_type
  */
-Token.prototype.tokenType = function() {
+Token.prototype.tokenType = function () {
   return this.getToken().token_type;
 };
 
@@ -72,9 +72,8 @@ Token.prototype.tokenType = function() {
  * Helper Method to get accessToken { get Token Object }
  * @returns {{token_type: *, access_token: *, expires_in: *, refresh_token: *, x_refresh_token_expires_in: *}}
  */
-Token.prototype.getToken = function() {
-
-  return  {
+Token.prototype.getToken = function () {
+  return {
     token_type: this.token_type,
     access_token: this.access_token,
     expires_in: this.expires_in,
@@ -82,9 +81,8 @@ Token.prototype.getToken = function() {
     x_refresh_token_expires_in: this.x_refresh_token_expires_in,
     realmId: this.realmId,
     id_token: this.id_token,
-    createdAt: this.createdAt
+    createdAt: this.createdAt,
   };
-
 };
 
 /**
@@ -92,17 +90,15 @@ Token.prototype.getToken = function() {
  * @param tokenData
  * @returns {Token}
  */
-Token.prototype.setToken = function(tokenData) {
-
+Token.prototype.setToken = function (tokenData) {
   this.access_token = tokenData.access_token;
   this.refresh_token = tokenData.refresh_token;
-  this.token_type = tokenData.token_type ;
+  this.token_type = tokenData.token_type;
   this.expires_in = tokenData.expires_in;
   this.x_refresh_token_expires_in = tokenData.x_refresh_token_expires_in;
   this.id_token = tokenData.id_token || '';
   this.createdAt = tokenData.createdAt || Date.now();
   return this;
-
 };
 
 /**
@@ -110,7 +106,7 @@ Token.prototype.setToken = function(tokenData) {
  * @param
  * @returns {Token}
  */
-Token.prototype.clearToken = function() {
+Token.prototype.clearToken = function () {
   this.access_token = '';
   this.refresh_token = '';
   this.token_type = '';
@@ -119,23 +115,23 @@ Token.prototype.clearToken = function() {
   this.id_token = '';
   this.createdAt = 0;
   return this;
-}
+};
 
 /**
  * Helper Method to check token expiry { set Token Object }
  * @param seconds
  * @returns {boolean}
  */
-Token.prototype._checkExpiry = function(seconds) {
-  var expiry = this.createdAt + (seconds * 1000);
-  return (expiry  - this.latency > Date.now());
-}
+Token.prototype._checkExpiry = function (seconds) {
+  const expiry = this.createdAt + (seconds * 1000);
+  return (expiry - this.latency > Date.now());
+};
 
 /**
  * Check if access_token is valid
  * @returns {boolean}
  */
-Token.prototype.isAccessTokenValid = function() {
+Token.prototype.isAccessTokenValid = function () {
   return this._checkExpiry(this.expires_in);
 };
 
@@ -143,7 +139,7 @@ Token.prototype.isAccessTokenValid = function() {
  * Check if there is a valid (not expired) access token
  * @return {boolean}
  */
-Token.prototype.isRefreshTokenValid = function() {
+Token.prototype.isRefreshTokenValid = function () {
   return this._checkExpiry(this.x_refresh_token_expires_in);
 };
 
