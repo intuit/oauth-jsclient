@@ -22,9 +22,9 @@
  */
 
 var atob = require('atob');
-var csrf = require('csrf');
 var oauthSignature = require('oauth-signature');
 var objectAssign = require('object-assign');
+var csrf = require('csrf');
 var queryString = require('query-string');
 var popsicle = require('popsicle');
 var os = require('os');
