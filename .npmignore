@@ -5,6 +5,8 @@
 # Samples
 sample
 test
+logs
+src/index.js
 
 # Configuration files
 .travis.yml
