@@ -116,6 +116,7 @@ OAuthClient.prototype.authorizeUri = function (params) {
     client_id: this.clientId,
     scope: (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
     state: params.state || this.state.create(this.state.secretSync()),
+    claims: '{"id_token":{"realmId":null}}'
   })}`;
 
   this.log('info', 'The Authorize Uri is :', authorizeUri);
