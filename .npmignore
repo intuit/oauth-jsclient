@@ -1,0 +1,14 @@
+# IDE
+.idea
+.vscode
+
+# Samples
+sample
+test
+
+# Configuration files
+.travis.yml
+.eslintrc.json
+.eslintignore
+
+

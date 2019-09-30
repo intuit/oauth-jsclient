@@ -4,7 +4,7 @@
 .idea
 .idea/
 .nyc_output
-coverage/
+coverage
 bower_components
 npm-debug.*
 node_modules
@@ -16,3 +16,4 @@ oauth-jsclient.iml
 package-lock.json
 yarn.lock
 src/logs/*
+npmignore
