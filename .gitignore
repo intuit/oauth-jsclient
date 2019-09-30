@@ -16,4 +16,3 @@ oauth-jsclient.iml
 package-lock.json
 yarn.lock
 src/logs/*
-.npmignore
