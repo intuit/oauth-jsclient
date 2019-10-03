@@ -68,7 +68,7 @@ declare class OAuthClient {
     refreshUsingToken(refresh_token: string): Promise<AuthResponse>;
     revoke(params?: OAuthClient.RevokeParams): Promise<AuthResponse>;
     setToken(params: Token.TokenData): Token;
-    validateIdToken(params: OAuthClient.ValidateIdTokenParams): Promise<any>;
+    validateIdToken(params: OAuthClient.ValidateIdTokenParams): Promise<Response>;
     validateToken(): void;
 }
 
