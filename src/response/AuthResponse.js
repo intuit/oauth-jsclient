@@ -42,7 +42,7 @@ function AuthResponse(params) {
  * Process Response
  * @param response
  */
-AuthResponse.prototype.processResponse = function (response) {
+AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
   this.body = response.body || '';
   this.json = this.body ? JSON.parse(this.body) : null;
@@ -52,7 +52,7 @@ AuthResponse.prototype.processResponse = function (response) {
 /**
  * @return {AuthResponse}
  */
-AuthResponse.prototype.getToken = function () {
+AuthResponse.prototype.getToken = function getToken() {
   return this.token.getToken();
 };
 
@@ -60,7 +60,7 @@ AuthResponse.prototype.getToken = function () {
 /**
  * @return {AuthResponse}
  */
-AuthResponse.prototype.text = function () {
+AuthResponse.prototype.text = function text() {
   return this.body;
 };
 
@@ -68,7 +68,7 @@ AuthResponse.prototype.text = function () {
  *
  * @returns {*}
  */
-AuthResponse.prototype.status = function () {
+AuthResponse.prototype.status = function status() {
   return this.response.status;
 };
 
@@ -76,7 +76,7 @@ AuthResponse.prototype.status = function () {
  * Get response headers
  * @returns {Object} headers
  */
-AuthResponse.prototype.headers = function () {
+AuthResponse.prototype.headers = function headers() {
   return this.response.headers;
 };
 
@@ -84,8 +84,8 @@ AuthResponse.prototype.headers = function () {
  * valid { response is valid ? }
  * @returns {*|boolean}
  */
-AuthResponse.prototype.valid = function () {
-  return (this.response && this.response.status == '200');
+AuthResponse.prototype.valid = function valid() {
+  return (this.response && this.response.status === '200');
 };
 
 
@@ -93,7 +93,7 @@ AuthResponse.prototype.valid = function () {
  * Get Json () { returns token as JSON }
  * @return {object} this.json
  */
-AuthResponse.prototype.getJson = function () {
+AuthResponse.prototype.getJson = function getJson() {
   if (!this.isJson()) throw new Error('AuthResponse is not JSON');
   if (!this.json) {
     this.json = this.body ? JSON.parse(this.body) : null;
@@ -105,7 +105,7 @@ AuthResponse.prototype.getJson = function () {
  * Get Intuit tid
  * @returns {string} intuit_tid
  */
-AuthResponse.prototype.get_intuit_tid = function () {
+AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
   return this.intuit_tid;
 };
 
@@ -113,21 +113,21 @@ AuthResponse.prototype.get_intuit_tid = function () {
 /**
  * @private
  */
-AuthResponse.prototype.isContentType = function (contentType) {
+AuthResponse.prototype.isContentType = function isContentType(contentType) {
   return this.getContentType().indexOf(contentType) > -1;
 };
 
 /**
  * @private
  */
-AuthResponse.prototype.getContentType = function () {
+AuthResponse.prototype.getContentType = function getContentType() {
   return this.response.get(AuthResponse._contentType) || '';
 };
 
 /**
  * @private
  */
-AuthResponse.prototype.isJson = function () {
+AuthResponse.prototype.isJson = function isJson() {
   return this.isContentType('application/json');
 };
 
