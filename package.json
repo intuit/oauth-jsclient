@@ -4,7 +4,7 @@
   "description": "Intuit Node.js client for OAuth2.0 and OpenID",
   "main": "./src/OAuthClient.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --harmony index.js",
     "karma": "karma start karma.conf.js",
     "test": "nyc mocha",
     "lint": "eslint .",
