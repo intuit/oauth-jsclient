@@ -47,7 +47,7 @@ function Token(params) {
  * get accessToken()
  * @returns {string} access_token
  */
-Token.prototype.accessToken = function () {
+Token.prototype.accessToken = function accessToken() {
   return this.getToken().access_token;
 };
 
@@ -55,7 +55,7 @@ Token.prototype.accessToken = function () {
  * get refreshToken()
  * @returns {string} refresh_token
  */
-Token.prototype.refreshToken = function () {
+Token.prototype.refreshToken = function refreshToken() {
   return this.getToken().refresh_token;
 };
 
@@ -63,16 +63,22 @@ Token.prototype.refreshToken = function () {
  * get tokenType()
  * @returns {string} token_type
  */
-Token.prototype.tokenType = function () {
+Token.prototype.tokenType = function tokenType() {
   return this.getToken().token_type;
 };
 
 
 /**
  * Helper Method to get accessToken { get Token Object }
- * @returns {{token_type: *, access_token: *, expires_in: *, refresh_token: *, x_refresh_token_expires_in: *}}
+ * @returns {{
+ *  token_type: *,
+ *  access_token: *,
+ *  expires_in: *,
+ *  refresh_token: *,
+ *  x_refresh_token_expires_in: *
+ * }}
  */
-Token.prototype.getToken = function () {
+Token.prototype.getToken = function getToken() {
   return {
     token_type: this.token_type,
     access_token: this.access_token,
@@ -90,7 +96,7 @@ Token.prototype.getToken = function () {
  * @param tokenData
  * @returns {Token}
  */
-Token.prototype.setToken = function (tokenData) {
+Token.prototype.setToken = function setToken(tokenData) {
   this.access_token = tokenData.access_token;
   this.refresh_token = tokenData.refresh_token;
   this.token_type = tokenData.token_type;
@@ -106,7 +112,7 @@ Token.prototype.setToken = function (tokenData) {
  * @param
  * @returns {Token}
  */
-Token.prototype.clearToken = function () {
+Token.prototype.clearToken = function clearToken() {
   this.access_token = '';
   this.refresh_token = '';
   this.token_type = '';
@@ -122,7 +128,7 @@ Token.prototype.clearToken = function () {
  * @param seconds
  * @returns {boolean}
  */
-Token.prototype._checkExpiry = function (seconds) {
+Token.prototype._checkExpiry = function _checkExpiry(seconds) {
   const expiry = this.createdAt + (seconds * 1000);
   return (expiry - this.latency > Date.now());
 };
@@ -131,7 +137,7 @@ Token.prototype._checkExpiry = function (seconds) {
  * Check if access_token is valid
  * @returns {boolean}
  */
-Token.prototype.isAccessTokenValid = function () {
+Token.prototype.isAccessTokenValid = function isAccessTokenValid() {
   return this._checkExpiry(this.expires_in);
 };
 
@@ -139,7 +145,7 @@ Token.prototype.isAccessTokenValid = function () {
  * Check if there is a valid (not expired) access token
  * @return {boolean}
  */
-Token.prototype.isRefreshTokenValid = function () {
+Token.prototype.isRefreshTokenValid = function isRefreshTokenValid() {
   return this._checkExpiry(this.x_refresh_token_expires_in);
 };
 

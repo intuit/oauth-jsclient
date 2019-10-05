@@ -27,20 +27,21 @@ describe('Tests for Token', () => {
   });
 
   it('Set Token using Constructor', () => {
-    const oauthClient = new OAuthClientTest({
+    const oauthClientWithToken = new OAuthClientTest({
       clientId: 'clientID',
       clientSecret: 'clientSecret',
       environment: 'sandbox',
       redirectUri: 'http://localhost:8000/callback',
       token: expectedAccessToken,
     });
-    const token = oauthClient.getToken();
+    const token = oauthClientWithToken.getToken();
 
     expect(token.access_token).to.equal(expectedAccessToken.access_token);
     expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
     expect(token.token_type).to.equal(expectedAccessToken.token_type);
     expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
-    expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+    expect(token.x_refresh_token_expires_in)
+      .to.equal(expectedAccessToken.x_refresh_token_expires_in);
   });
 
   it('Set Token using Helper Method', () => {
@@ -51,7 +52,8 @@ describe('Tests for Token', () => {
     expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
     expect(token.token_type).to.equal(expectedAccessToken.token_type);
     expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
-    expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+    expect(token.x_refresh_token_expires_in)
+      .to.equal(expectedAccessToken.x_refresh_token_expires_in);
   });
 
   it('Get Access Token using Helper Method', () => {

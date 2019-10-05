@@ -26,9 +26,6 @@ const authResponse = new AuthResponse({ token: oauthClient.getToken() });
 authResponse.processResponse(expectedResponse);
 
 describe('Tests for AuthResponse', () => {
-  let scope;
-  let result;
-
   it('Creates a new auth response instance', () => {
     expect(authResponse).to.have.property('token');
     expect(authResponse).to.have.property('response');
