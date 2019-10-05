@@ -11,30 +11,40 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
 
 ## Table of Contents
 
+- [Intuit OAuth2.0 NodeJS Library](#intuit-oauth20-nodejs-library)
+  - [Table of Contents](#table-of-contents)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Using NodeJS](#using-nodejs)
+    - [Options :](#options)
 - [Usage](#usage)
-  - [Authorization Code flow](#authorization-code-flow)
-- [Sample](#sample)  
-- [Helpers](#helpers)  
-  - [Is Access Token valid](#is-accesstoken-valid)
-  - [Refresh Access_Token](#refresh-access_token)
-  - [Refresh Access_Token by passing the refresh_token explicitly](#refresh-access_token_explicitly)
-  - [Revoke Access Token](#revoke-access_token)
-  - [Getter / Setter for Token](#getter-/-setter-for-token )
-  - [Auth Response](#auth-response) 
-  - [Error Logging](#error-logging)
-- [Contributing](#contributing)
-- [Authors](#authors)
-  - [Contributors](#contributors)
-- [Changelog](#changelog)
-- [License](#license)
+  - [Authorization Code Flow](#authorization-code-flow)
+    - [Step 1](#step-1)
+    - [Scopes :](#scopes)
+    - [Step 2](#step-2)
+- [Sample](#sample)
+  - [Helpers](#helpers)
+    - [Is AccessToken Valid](#is-accesstoken-valid)
+    - [Refresh access_token](#refresh-accesstoken)
+    - [Refresh access_token by passing the refresh_token explicitly](#refresh-accesstoken-by-passing-the-refreshtoken-explicitly)
+    - [Revoke access_token](#revoke-accesstoken)
+    - [Getter / Setter for Token](#getter--setter-for-token)
+      - [Retrieve the Token :](#retrieve-the-token)
+      - [Set the Token :](#set-the-token)
+    - [Migrate OAuth1.0 Tokens to OAuth2.0](#migrate-oauth10-tokens-to-oauth20)
+    - [Validate ID Token](#validate-id-token)
+    - [Auth-Response](#auth-response)
+    - [Error Logging](#error-logging)
+  - [FAQ](#faq)
+  - [Contributing](#contributing)
+    - [Steps](#steps)
+  - [Changelog](#changelog)
+  - [License](#license)
 
 
 # Requirements
 
-The Node.js client library is tested against the `Node`  >= `6.0.0`
+The Node.js client library is tested against the `Node`  >= `7.0.0`
 
 # Installation
 
