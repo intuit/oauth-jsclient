@@ -337,13 +337,19 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
 
     const request = {
       url: params.url,
-      method: 'GET',
+      method: params.method || 'GET',
       headers: {
         Authorization: `Bearer ${this.getToken().access_token}`,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
       },
     };
+
+    if (params.headers && typeof params.headers === 'object') {
+      request.headers = { ...request.headers, ...params.headers };
+    }
+
+    params.body && (request.body = params.body);
 
     resolve(this.getTokenRequest(request));
   }))).then((authResponse) => {
