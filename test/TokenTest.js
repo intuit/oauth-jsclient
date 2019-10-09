@@ -81,7 +81,7 @@ describe('Tests for Token', () => {
     expect(token_type).to.deep.equal(expectedAccessToken.token_type);
   });
 
-  it('Get Token  using Helper Method', () => {
+  it('Get Token using Helper Method', () => {
     oauthClient.token.setToken(expectedAccessToken);
     const token = oauthClient.getToken().getToken();
 
