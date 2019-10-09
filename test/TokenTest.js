@@ -88,5 +88,16 @@ describe('Tests for Token', () => {
     expect(token).to.be.a('Object');
     expect(token.access_token).to.deep.equal('sample_access_token');
   });
+
+  it('Clear Token using Helper Method', () => {
+    oauthClient.token.setToken(expectedAccessToken);
+    const token = oauthClient.getToken().clearToken();
+
+    expect(token.access_token).to.equal('');
+    expect(token.refresh_token).to.equal('');
+    expect(token.token_type).to.equal('');
+    expect(token.expires_in).to.equal(0);
+    expect(token.x_refresh_token_expires_in).to.equal(0);
+  });
 });
 
