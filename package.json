@@ -11,6 +11,8 @@
     "fix": "eslint . --fix",
     "posttest": "nyc check-coverage",
     "test-watch": "mocha --watch --reporter=spec",
+    "test-debug": "mocha --inspect-brk --watch test",
+    "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
     "clean-install": "rm -rf node_modules && npm install"
   },
   "keywords": [
@@ -30,16 +32,20 @@
       "coverage",
       ".nyc_output",
       "sample",
-      "sample/node_modules"
+      "sample/node_modules",
+      "test"
     ],
     "check-coverage": true,
-    "lines": 85,
-    "statements": 80,
-    "functions": 80,
+    "lines": 75,
+    "statements": 75,
+    "functions": 71,
     "branches": 56,
     "reporter": [
       "lcov",
-      "text-summary"
+      "text",
+      "text-summary",
+      "html",
+      "json"
     ]
   },
   "engines": {
@@ -88,6 +94,7 @@
     "nyc": "^11.6.0",
     "phantomjs-prebuilt": "^2.1.4",
     "standard": "^11.0.0",
+    "sinon": "^7.5.0",
     "watchify": "^3.7.0"
   }
 }
