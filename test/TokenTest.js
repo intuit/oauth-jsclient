@@ -1,5 +1,8 @@
+/* eslint-disable camelcase */
+
 'use strict';
 
+const { describe, it } = require('mocha');
 const { expect } = require('chai');
 
 const OAuthClientTest = require('../src/OAuthClient');
@@ -78,12 +81,23 @@ describe('Tests for Token', () => {
     expect(token_type).to.deep.equal(expectedAccessToken.token_type);
   });
 
-  it('Get Token  using Helper Method', () => {
+  it('Get Token using Helper Method', () => {
     oauthClient.token.setToken(expectedAccessToken);
     const token = oauthClient.getToken().getToken();
 
     expect(token).to.be.a('Object');
     expect(token.access_token).to.deep.equal('sample_access_token');
+  });
+
+  it('Clear Token using Helper Method', () => {
+    oauthClient.token.setToken(expectedAccessToken);
+    const token = oauthClient.getToken().clearToken();
+
+    expect(token.access_token).to.equal('');
+    expect(token.refresh_token).to.equal('');
+    expect(token.token_type).to.equal('');
+    expect(token.expires_in).to.equal(0);
+    expect(token.x_refresh_token_expires_in).to.equal(0);
   });
 });
 

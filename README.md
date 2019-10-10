@@ -234,7 +234,7 @@ oauthClient.revoke()
         });
 ```
 
-Alternatively you can also pass `access_token` or `refresh_token` to this helper method using the `params` object: refer to   - [Getter / Setter for Token](#getter-/-setter-for-token ) section to know how to retrieve the `token` object 
+Alternatively you can also pass `access_token` or `refresh_token` to this helper method using the `params` object: refer to   - [Getter / Setter for Token](#getter--setter-for-token ) section to know how to retrieve the `token` object 
 ```javascript
 
 oauthClient.revoke(params)
@@ -500,7 +500,7 @@ You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if
 
 ## Changelog
 
-See the changelog [here]()
+See the changelog [here](https://github.com/intuit/oauth-jsclient/blob/master/CHANGELOG.md)
 
 ## License
 
