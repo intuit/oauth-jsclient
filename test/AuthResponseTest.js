@@ -55,9 +55,13 @@ describe('Tests for AuthResponse', () => {
     expect(text).to.be.equal('{"id_token":"sample_id_token","expires_in":3600,"token_type":"bearer","x_refresh_token_expires_in":8726400,"refresh_token":"sample_refresh_token","access_token":"sample_access_token"}');
   });
 
+  it('Process headers() when there is header ', () => {
+    const headers = authResponse.headers();
+    expect(headers).to.be.a('object');
+  });
+
   it('Process Status of AuthResponse', () => {
     const status = authResponse.status();
     expect(status).to.be.equal(200);
   });
 });
-
