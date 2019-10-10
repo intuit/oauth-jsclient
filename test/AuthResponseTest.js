@@ -1,17 +1,19 @@
 'use strict';
 
 // var nock = require('nock');
-const { describe, it } = require('mocha');
+const {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+} = require('mocha');
 const { expect } = require('chai');
+const sinon = require('sinon');
 
 const OAuthClientTest = require('../src/OAuthClient');
 const AuthResponse = require('../src/response/AuthResponse');
 const expectedAccessToken = require('./mocks/bearer-token.json');
-// var expectedTokenResponse = require("./mocks/tokenResponse.json");
-// var expectedUserInfo = require("./mocks/userInfo.json");
-// var expectedMakeAPICall = require("./mocks/makeAPICallResponse.json");
-const expectedResponse = require('./mocks/response.json');
-// var expectedAuthResponse = require("./mocks/authResponse.json");
+const expectedResponseMock = require('./mocks/response.json');
 
 
 const oauthClient = new OAuthClientTest({
@@ -23,10 +25,24 @@ const oauthClient = new OAuthClientTest({
 
 oauthClient.getToken().setToken(expectedAccessToken);
 
-const authResponse = new AuthResponse({ token: oauthClient.getToken() });
-authResponse.processResponse(expectedResponse);
-
 describe('Tests for AuthResponse', () => {
+  let authResponse;
+  let getStub;
+  let expectedResponse;
+
+  beforeEach(() => {
+    expectedResponse = JSON.parse(JSON.stringify(expectedResponseMock));
+    getStub = sinon.stub().returns('application/json;charset=UTF-8');
+    expectedResponse.get = getStub;
+
+    authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.processResponse(expectedResponse);
+  });
+
+  afterEach(() => {
+    getStub.reset();
+  });
+
   it('Creates a new auth response instance', () => {
     expect(authResponse).to.have.property('token');
     expect(authResponse).to.have.property('response');
@@ -58,6 +74,50 @@ describe('Tests for AuthResponse', () => {
   it('Process Status of AuthResponse', () => {
     const status = authResponse.status();
     expect(status).to.be.equal(200);
+  });
+
+  it('Process Headers of AuthResponse', () => {
+    const headers = authResponse.headers();
+    expect(headers).to.be.equal(expectedResponse.headers);
+  });
+
+  it('Process Get Json', () => {
+    const json = authResponse.getJson();
+    expect(JSON.stringify(json)).to.be.equal(JSON.stringify(JSON.parse(expectedResponse.body)));
+  });
+
+  it('Process Get Json when content type is not correct to throw an error', () => {
+    getStub.returns('blah');
+    authResponse.processResponse(expectedResponse);
+    expect(() => authResponse.getJson()).to.throw(Error);
+  });
+
+  it('Process Get Json empty Body', () => {
+    delete expectedResponse.body;
+    authResponse = new AuthResponse({});
+    authResponse.processResponse(expectedResponse);
+    expect(authResponse.getJson()).to.be.equal(null);
+
+    // Test putting the body back for branch coverage
+    authResponse.body = expectedResponseMock.body;
+    const json = authResponse.getJson();
+    expect(JSON.stringify(json)).to.be.equal(JSON.stringify(JSON.parse(expectedResponseMock.body)));
+  });
+
+  it('GetContentType should handle False', () => {
+    getStub.returns(false);
+    authResponse.processResponse(expectedResponse);
+    const contentType = authResponse.getContentType();
+    expect(contentType).to.be.equal('');
+  });
+
+  it('Process get_intuit_tid', () => {
+    const intuitTid = authResponse.get_intuit_tid();
+    expect(intuitTid).to.be.equal(expectedResponseMock.headers.intuit_tid);
+  });
+
+  it('ProcessResponse should handle empty response', () => {
+    expect(() => authResponse.processResponse(null)).to.not.throw();
   });
 });
 
