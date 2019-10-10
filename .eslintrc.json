@@ -22,37 +22,6 @@
         "_contentType"
       ]
     }],
-    "camelcase": ["error", {
-      "allow": [
-        "access_secret",
-        "access_token",
-        "client_id",
-        "client_secret",
-        "error_description",
-        "expires_in",
-        "grant_type",
-        "id_token",
-        "Intuit_name",
-        "intuit_tid",
-        "jwks_uri",
-        "migrate_production",
-        "migrate_sandbox",
-        "oauth_consumer_key",
-        "oauth_consumer_secret",
-        "oauth_nonce",
-        "oauth_signature",
-        "oauth_timestamp",
-        "oauth_token",
-        "oauth_version",
-        "redirect_uri",
-        "refresh_token",
-        "response_type",
-        "token_parts",
-        "token_type",
-        "user_agent",
-        "userinfo_endpoint_production",
-        "userinfo_endpoint_sandbox"
-      ]
-    }]
+    "camelcase": ["error", { "properties": "never" }]
   }
 }
