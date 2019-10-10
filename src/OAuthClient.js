@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 /**
 
  Copyright (c) 2018 Intuit
