@@ -346,7 +346,9 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
     };
 
     if (params.headers && typeof params.headers === 'object') {
-      request.headers = { ...request.headers, ...params.headers };
+      for (const header in params.headers) {
+        request.headers[header] = params.headers[header];
+      }
     }
 
     params.body && (request.body = params.body);
