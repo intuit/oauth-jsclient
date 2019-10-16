@@ -36,10 +36,10 @@
       "test"
     ],
     "check-coverage": true,
-    "lines": 75,
-    "statements": 75,
-    "functions": 71,
-    "branches": 56,
+    "lines": 85,
+    "statements": 85,
+    "functions": 80,
+    "branches": 75,
     "reporter": [
       "lcov",
       "text",
@@ -81,6 +81,7 @@
   "devDependencies": {
     "body-parser": "^1.15.2",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "chance": "^1.0.13",
     "cors": "^2.8.1",
     "coveralls": "^3.0.6",

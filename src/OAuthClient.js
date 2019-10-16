@@ -583,19 +583,32 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI
  */
 OAuthClient.prototype.createError = function createError(e, authResponse) {
   if (!authResponse || authResponse.body === '') {
-    e.error = e.originalMessage || '';
+    e.error = (authResponse && authResponse.response.statusText) || e.message || '';
     e.authResponse = authResponse || '';
-    e.intuit_tid = authResponse.headers().intuit_tid || '';
-    e.originalMessage = authResponse.response.statusText || '';
-    e.error = authResponse.response.statusText || '';
-    e.error_description = authResponse.response.statusText || '';
+    e.intuit_tid = (authResponse && authResponse.headers().intuit_tid) || '';
+    e.originalMessage = e.message || '';
+    e.error_description = (authResponse && authResponse.response.statusText) || '';
     return e;
   }
 
-  e.authResponse = authResponse || null;
+  e.authResponse = authResponse;
   e.originalMessage = e.message;
-  e.error = ('error' in authResponse.getJson() ? authResponse.getJson().error : '');
-  e.error_description = ('error_description' in authResponse.getJson() ? authResponse.getJson().error_description : '');
+
+  e.error = '';
+  if ('error' in authResponse.getJson()) {
+    e.error = authResponse.getJson().error;
+  } else if (authResponse.response.statusText) {
+    e.error = authResponse.response.statusText;
+  } else if (e.message) {
+    e.error = e.message;
+  }
+
+  e.error_description = '';
+  if ('error_description' in authResponse.getJson()) {
+    e.error_description = authResponse.getJson().error_description;
+  } else if (authResponse.response.statusText) {
+    e.error_description = authResponse.response.statusText;
+  }
   e.intuit_tid = authResponse.headers().intuit_tid;
 
   return e;
