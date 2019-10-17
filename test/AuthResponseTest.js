@@ -120,4 +120,3 @@ describe('Tests for AuthResponse', () => {
     expect(() => authResponse.processResponse(null)).to.not.throw();
   });
 });
-
