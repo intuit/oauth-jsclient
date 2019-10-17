@@ -27,6 +27,7 @@ const expectedvalidateIdToken = require('./mocks/validateIdToken.json');
 const expectedOpenIDToken = require('./mocks/openID-token.json');
 // var expectedErrorResponse = require('./mocks/errorResponse.json');
 const expectedMigrationResponse = require('./mocks/authResponse.json');
+const refreshAccessToken = require('./mocks/refreshResponse.json');
 
 const oauthClient = new OAuthClientTest({
   clientId: 'clientID',
@@ -93,8 +94,8 @@ describe('Tests for OAuthClient', () => {
       const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
       return oauthClient.createToken(parseRedirect)
         .then((authResponse) => {
-          expect(authResponse.getToken().access_token)
-            .to.be.equal(expectedAccessToken.access_token);
+          expect(authResponse.getToken().access_token).to.be
+            .equal(expectedAccessToken.access_token);
         });
     });
 
@@ -122,8 +123,6 @@ describe('Tests for OAuthClient', () => {
   // Refresh bearer tokens
   describe('Refresh Bearer Token', () => {
     before(() => {
-      // eslint-disable-next-line global-require
-      const refreshAccessToken = require('./mocks/refreshResponse.json');
       nock('https://oauth.platform.intuit.com').persist()
         .post('/oauth2/v1/tokens/bearer')
         .reply(200, refreshAccessToken, {
@@ -139,8 +138,8 @@ describe('Tests for OAuthClient', () => {
 
     it('Refresh the existing tokens', () => oauthClient.refresh()
       .then((authResponse) => {
-        expect(authResponse.getToken().refresh_token)
-          .to.be.equal(expectedAccessToken.refresh_token);
+        expect(authResponse.getToken().refresh_token).to.be
+          .equal(expectedAccessToken.refresh_token);
       }));
 
     it('Refresh : refresh token is missing', () => {
@@ -279,7 +278,7 @@ describe('Tests for OAuthClient', () => {
     it('Make API Call in Sandbox Environment', () => {
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
-      return oauthClient.makeApiCall({ url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345' })
+      return oauthClient.makeApiCall({ url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345' })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.getJson()))
             .to.be.equal(JSON.stringify(expectedMakeAPICall));
@@ -314,7 +313,7 @@ describe('Tests for OAuthClient', () => {
       oauthClient.environment = 'production';
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
-      return oauthClient.makeApiCall({ url: 'https://quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345' })
+      return oauthClient.makeApiCall({ url: 'https://quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345' })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.getJson()))
             .to.be.equal(JSON.stringify(expectedMakeAPICall));

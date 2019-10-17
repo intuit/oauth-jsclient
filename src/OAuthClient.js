@@ -28,7 +28,7 @@
 const atob = require('atob');
 const oauthSignature = require('oauth-signature');
 const objectAssign = require('object-assign');
-const csrf = require('csrf');
+const Csrf = require('csrf');
 const queryString = require('query-string');
 const popsicle = require('popsicle');
 const os = require('os');
@@ -39,7 +39,7 @@ const jwt = require('jsonwebtoken');
 const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
-
+const getPem = require('rsa-pem-from-mod-exp');
 
 /**
  * @constructor
@@ -56,7 +56,7 @@ function OAuthClient(config) {
   this.token = new Token(config.token);
   this.logging = !!(Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true);
   this.logger = null;
-  this.state = new csrf(); // eslint-disable-line new-cap
+  this.state = new Csrf();
 
   if (this.logging) {
     const dir = './logs';
@@ -98,8 +98,8 @@ OAuthClient.scopes = {
   OpenId: 'openid',
   Intuit_name: 'intuit_name',
 };
-OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version}_${os.type()}_${os.release()}_${os.platform()}`;
 
+OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version}_${os.type()}_${os.release()}_${os.platform()}`;
 
 /**
  * Redirect  User to Authorization Page
@@ -218,18 +218,18 @@ OAuthClient.prototype.refresh = function refresh() {
  * @param {Object} params.refresh_token (refresh_token)
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_token) {
+OAuthClient.prototype.refreshUsingToken = function (refreshToken) {
   return (new Promise(((resolve) => {
     /**
      * Check if the tokens exist
      */
 
-    if (!refresh_token) throw new Error('The Refresh token is missing');
+    if (!refreshToken) throw new Error('The Refresh token is missing');
 
     const body = {};
 
     body.grant_type = 'refresh_token';
-    body.refresh_token = refresh_token;
+    body.refresh_token = refreshToken;
 
     const request = {
       url: OAuthClient.tokenEndpoint,
@@ -270,10 +270,10 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
     const body = {};
 
-    body.token = params.access_token || params.refresh_token ||
-      (this.getToken().isAccessTokenValid()
-        ? this.getToken().access_token
-        : this.getToken().refresh_token);
+    body.token = params.access_token || params.refresh_token
+        || (this.getToken().isAccessTokenValid() ?
+          this.getToken().access_token :
+          this.getToken().refresh_token);
 
     const request = {
       url: OAuthClient.revokeEndpoint,
@@ -442,6 +442,7 @@ OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
     if (key === 'minorversion') {
       return header;
     }
+
     if (idx === array.length - 1) {
       return `${header}${key}="${val}"`;
     }
@@ -460,12 +461,12 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
   return (new Promise(((resolve) => {
     if (!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
 
-    const id_token = this.getToken().id_token || params.id_token;
+    const idToken = this.getToken().id_token || params.id_token;
 
     // Decode ID Token
-    const token_parts = id_token.split('.');
-    const id_token_header = JSON.parse(atob(token_parts[0]));
-    const id_token_payload = JSON.parse(atob(token_parts[1]));
+    const tokenParts = idToken.split('.');
+    const idTokenHeader = JSON.parse(atob(tokenParts[0]));
+    const idTokenPayload = JSON.parse(atob(tokenParts[1]));
 
     // Step 1 : First check if the issuer is as mentioned in "issuer"
     if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
@@ -474,7 +475,7 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     if (id_token_payload.aud !== this.clientId) return false;
 
     // Step 3 : ensure the timestamp has not elapsed
-    if (id_token_payload.exp < Date.now() / 1000) return false;
+    if (idTokenPayload.exp < Date.now() / 1000) return false;
 
     const request = {
       url: OAuthClient.jwks_uri,
@@ -498,12 +499,12 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
 
 /**
  *
- * @param id_token
+ * @param idToken
  * @param kid
  * @param request
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, kid, request) {
+OAuthClient.prototype.getKeyFromJWKsURI = function (idToken, kid, request) {
   return (new Promise(((resolve) => {
     resolve(this.loadResponse(request));
   }))).then((response) => {
@@ -514,7 +515,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
     const key = responseBody.keys.find(el => (el.kid === kid));
     const cert = this.getPublicKey(key.n, key.e);
 
-    return jwt.verify(id_token, cert);
+    return jwt.verify(idToken, cert);
   }).catch((e) => {
     e = this.createError(e);
     this.log('error', 'The getKeyFromJWKsURI () threw an exception : ', JSON.stringify(e, null, 2));
@@ -527,9 +528,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
  * @param modulus
  * @param exponent
  */
-OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
-  // eslint-disable-next-line global-require
-  const getPem = require('rsa-pem-from-mod-exp');
+OAuthClient.prototype.getPublicKey = function (modulus, exponent) {
   const pem = getPem(modulus, exponent);
   return pem;
 };
@@ -657,7 +656,7 @@ OAuthClient.prototype.setToken = function setToken(params) {
  */
 OAuthClient.prototype.authHeader = function authHeader() {
   const apiKey = `${this.clientId}:${this.clientSecret}`;
-  return (typeof btoa === 'function') ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
+  return (typeof btoa === 'function') ? btoa(apiKey) : new Buffer(apiKey).toString('base64');
 };
 
 OAuthClient.prototype.log = function log(level, message, messageData) {
