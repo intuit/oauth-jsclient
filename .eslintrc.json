@@ -5,12 +5,37 @@
   },
   "rules": {
     "no-param-reassign": "off",
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "never"
-    }]
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": "off",
+    "func-names": "off",
+    "no-mixed-operators": "off",
+    "eqeqeq": "off",
+    "function-paren-newline": "off",
+    "consistent-return": "off",
+    "no-continue": "off",
+    "no-prototype-builtins": "off"
+  },
+  "globals": {
+    "sinon": true,
+    "describe": true,
+    "it": true,
+    "expect": true,
+    "test": true,
+    "require": true
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
   }
 }

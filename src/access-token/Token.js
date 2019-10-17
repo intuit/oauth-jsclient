@@ -70,7 +70,8 @@ Token.prototype.tokenType = function () {
 
 /**
  * Helper Method to get accessToken { get Token Object }
- * @returns {{token_type: *, access_token: *, expires_in: *, refresh_token: *, x_refresh_token_expires_in: *}}
+ * @returns {{token_type: *, access_token: *, expires_in: *, refresh_token: *,
+ * x_refresh_token_expires_in: *}}
  */
 Token.prototype.getToken = function () {
   return {

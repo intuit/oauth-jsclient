@@ -6,7 +6,7 @@ const OAuthClientTest = require('../src/OAuthClient');
 const expectedAccessToken = require('./mocks/bearer-token.json');
 
 
-const oauthClient = new OAuthClientTest({
+let oauthClient = new OAuthClientTest({
   clientId: 'clientID',
   clientSecret: 'clientSecret',
   environment: 'sandbox',
@@ -27,7 +27,7 @@ describe('Tests for Token', () => {
   });
 
   it('Set Token using Constructor', () => {
-    const oauthClient = new OAuthClientTest({
+    oauthClient = new OAuthClientTest({
       clientId: 'clientID',
       clientSecret: 'clientSecret',
       environment: 'sandbox',
@@ -40,7 +40,8 @@ describe('Tests for Token', () => {
     expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
     expect(token.token_type).to.equal(expectedAccessToken.token_type);
     expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
-    expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+    expect(token.x_refresh_token_expires_in)
+      .to.equal(expectedAccessToken.x_refresh_token_expires_in);
   });
 
   it('Set Token using Helper Method', () => {
@@ -51,29 +52,30 @@ describe('Tests for Token', () => {
     expect(token.refresh_token).to.equal(expectedAccessToken.refresh_token);
     expect(token.token_type).to.equal(expectedAccessToken.token_type);
     expect(token.expires_in).to.equal(expectedAccessToken.expires_in);
-    expect(token.x_refresh_token_expires_in).to.equal(expectedAccessToken.x_refresh_token_expires_in);
+    expect(token.x_refresh_token_expires_in)
+      .to.equal(expectedAccessToken.x_refresh_token_expires_in);
   });
 
   it('Get Access Token using Helper Method', () => {
     oauthClient.token.setToken(expectedAccessToken);
-    const access_token = oauthClient.getToken().accessToken();
+    const accessToken = oauthClient.getToken().accessToken();
 
-    expect(access_token).to.deep.equal(expectedAccessToken.access_token);
+    expect(accessToken).to.deep.equal(expectedAccessToken.access_token);
   });
 
 
   it('Get Refresh Token using Helper Method', () => {
     oauthClient.token.setToken(expectedAccessToken);
-    const refresh_token = oauthClient.getToken().refreshToken();
+    const refreshToken = oauthClient.getToken().refreshToken();
 
-    expect(refresh_token).to.deep.equal(expectedAccessToken.refresh_token);
+    expect(refreshToken).to.deep.equal(expectedAccessToken.refresh_token);
   });
 
   it('Get TokenType using Helper Method', () => {
     oauthClient.token.setToken(expectedAccessToken);
-    const token_type = oauthClient.getToken().tokenType();
+    const tokenType = oauthClient.getToken().tokenType();
 
-    expect(token_type).to.deep.equal(expectedAccessToken.token_type);
+    expect(tokenType).to.deep.equal(expectedAccessToken.token_type);
   });
 
   it('Get Token  using Helper Method', () => {
@@ -84,4 +86,3 @@ describe('Tests for Token', () => {
     expect(token.access_token).to.deep.equal('sample_access_token');
   });
 });
-
