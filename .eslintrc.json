@@ -18,13 +18,7 @@
       }
     ],
     "no-underscore-dangle": "off",
-    "no-unused-expressions": "off",
-    "func-names": "off",
-    "no-mixed-operators": "off",
-    "eqeqeq": "off",
-    "function-paren-newline": "off",
-    "consistent-return": "off",
-    "no-prototype-builtins": "off"
+    "no-unused-expressions": "off"
   },
   "globals": {
     "sinon": true,
