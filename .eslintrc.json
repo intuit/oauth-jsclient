@@ -7,21 +7,30 @@
     "strict": ["error", "safe"],
     "prefer-object-spread": "off",
     "no-param-reassign": "off",
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "never"
-    }],
-    "no-underscore-dangle": ["error", {
-      "allow": [
-        "_checkExpiry",
-        "_urlencodedContentType",
-        "_jsonContentType",
-        "_contentType"
-      ]
-    }],
-    "camelcase": ["error", { "properties": "never" }]
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": "off"
+  },
+  "globals": {
+    "sinon": true,
+    "describe": true,
+    "it": true,
+    "expect": true,
+    "test": true,
+    "require": true
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
   }
 }
