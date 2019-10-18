@@ -26,12 +26,12 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
 - [Sample](#sample)
   - [Helpers](#helpers)
     - [Is AccessToken Valid](#is-accesstoken-valid)
-    - [Refresh access_token](#refresh-accesstoken)
-    - [Refresh access_token by passing the refresh_token explicitly](#refresh-accesstoken-by-passing-the-refreshtoken-explicitly)
-    - [Revoke access_token](#revoke-accesstoken)
+    - [Refresh access_token](#refresh-access_token)
+    - [Refresh access_token by passing the refresh_token explicitly](#refresh-access_token-by-passing-the-refresh_token-explicitly)
+    - [Revoke access_token](#retrieve-the-token-)
     - [Getter / Setter for Token](#getter--setter-for-token)
       - [Retrieve the Token :](#retrieve-the-token)
-      - [Set the Token :](#set-the-token)
+      - [Set the Token :](#set-the-token-)
     - [Migrate OAuth1.0 Tokens to OAuth2.0](#migrate-oauth10-tokens-to-oauth20)
     - [Validate ID Token](#validate-id-token)
     - [Auth-Response](#auth-response)
@@ -72,7 +72,7 @@ Follow the instructions below to use the library :
     });
     ```
 
-### Options :
+### Options 
 
 * `clientId` - clientID for your app. Required
 * `clientSecret` - clientSecret fpor your app. Required
@@ -115,7 +115,7 @@ const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,O
 res.redirect(authUri);
 
 ```
-### Scopes :
+### Scopes 
 
 The available scopes include :
 
