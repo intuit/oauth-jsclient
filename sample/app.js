@@ -163,19 +163,17 @@ if(!ngrok){
 if (ngrok) {
 
     console.log("NGROK Enabled");
-    ngrok.connect({addr: process.env.PORT || 8000}, (err, url) => {
-            if (err) {
-                process.exit(1);
-            }
-            else {
-                redirectUri = url + '/callback';
-                console.log(`💳 Step 1 : Paste this URL in your browser :  ${url}`);
-                console.log('💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com')
-                console.log(`💳 Step 3 : Copy Paste this callback URL into redirectURI :  ${redirectUri}`);
-                console.log(`💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`);
+    ngrok.connect({addr: process.env.PORT || 8000})
+        .then(url => {
+            redirectUri = url + '/callback';
+            console.log(`💳 Step 1 : Paste this URL in your browser :  ${url}`);
+            console.log('💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com')
+            console.log(`💳 Step 3 : Copy Paste this callback URL into redirectURI :  ${redirectUri}`);
+            console.log(`💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`);
 
-            }
-        }
-    );
+        })
+        .catch(() => {
+            process.exit(1);
+        });
 }
 

@@ -3,6 +3,7 @@
 
 [![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient)
 [![NPM Package Version](https://img.shields.io/npm/v/intuit-oauth.svg?style=flat-square)](https://www.npmjs.com/package/intuit-oauth)
+[![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
 
 # Intuit OAuth2.0 NodeJS Library 
 
@@ -11,30 +12,43 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
 
 ## Table of Contents
 
+- [Intuit OAuth2.0 NodeJS Library](#intuit-oauth20-nodejs-library)
+  - [Table of Contents](#table-of-contents)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Using NodeJS](#using-nodejs)
+    - [Options :](#options)
 - [Usage](#usage)
-  - [Authorization Code flow](#authorization-code-flow)
-- [Sample](#sample)  
-- [Helpers](#helpers)  
-  - [Is Access Token valid](#is-accesstoken-valid)
-  - [Refresh Access_Token](#refresh-access_token)
-  - [Refresh Access_Token by passing the refresh_token explicitly](#refresh-access_token_explicitly)
-  - [Revoke Access Token](#revoke-access_token)
-  - [Getter / Setter for Token](#getter-/-setter-for-token )
-  - [Auth Response](#auth-response) 
-  - [Error Logging](#error-logging)
-- [Contributing](#contributing)
-- [Authors](#authors)
-  - [Contributors](#contributors)
-- [Changelog](#changelog)
-- [License](#license)
+  - [Authorization Code Flow](#authorization-code-flow)
+    - [Step 1](#step-1)
+    - [Scopes :](#scopes)
+    - [Step 2](#step-2)
+- [Sample](#sample)
+  - [Helpers](#helpers)
+    - [Is AccessToken Valid](#is-accesstoken-valid)
+    - [Refresh access_token](#refresh-access_token)
+    - [Refresh access_token by passing the refresh_token explicitly](#refresh-access_token-by-passing-the-refresh_token-explicitly)
+    - [Revoke access_token](#retrieve-the-token-)
+    - [Getter / Setter for Token](#getter--setter-for-token)
+      - [Retrieve the Token :](#retrieve-the-token)
+      - [Set the Token :](#set-the-token-)
+    - [Migrate OAuth1.0 Tokens to OAuth2.0](#migrate-oauth10-tokens-to-oauth20)
+    - [Validate ID Token](#validate-id-token)
+    - [Make API call](#make-api-call)
+    - [Auth-Response](#auth-response)
+    - [Error Logging](#error-logging)
+  - [FAQ](#faq)
+  - [Contributing](#contributing)
+    - [Steps](#steps)
+  - [Changelog](#changelog)
+  - [License](#license)
 
 
 # Requirements
 
-The Node.js client library is tested against the `Node`  >= `6.0.0`
+The Node.js client library is tested against the `Node`  >= `7.0.0`
+
+To use in node 6, please use [intuit-oauth@1.x.](https://github.com/intuit/oauth-jsclient/tree/1.5.0) Older node versions are unsupported.
 
 # Installation
 
@@ -61,7 +75,7 @@ Follow the instructions below to use the library :
     });
     ```
 
-### Options :
+### Options 
 
 * `clientId` - clientID for your app. Required
 * `clientSecret` - clientSecret fpor your app. Required
@@ -104,7 +118,7 @@ const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting,O
 res.redirect(authUri);
 
 ```
-### Scopes :
+### Scopes 
 
 The available scopes include :
 
@@ -223,7 +237,7 @@ oauthClient.revoke()
         });
 ```
 
-Alternatively you can also pass `access_token` or `refresh_token` to this helper method using the `params` object: refer to   - [Getter / Setter for Token](#getter-/-setter-for-token ) section to know how to retrieve the `token` object 
+Alternatively you can also pass `access_token` or `refresh_token` to this helper method using the `params` object: refer to   - [Getter / Setter for Token](#getter--setter-for-token ) section to know how to retrieve the `token` object 
 ```javascript
 
 oauthClient.revoke(params)
@@ -359,6 +373,52 @@ You can validate the ID token obtained from `Intuit Authorization Server` as sho
 The client validates the ID Token and returns boolean `true` if validates successfully else it would throw an exception. 
 
 
+### Make API Call
+
+You can make API call using the token generated from the client as shown below : 
+
+```javascript
+
+// Body sample from API explorer examples
+const body = {
+  TrackQtyOnHand: true,
+  Name: "Garden Supplies",
+  QtyOnHand: 10,
+  InvStartDate: "2015-01-01",
+  Type: "Inventory",
+  IncomeAccountRef: {
+    name: "Sales of Product Income",
+    value: "79"
+  },
+  AssetAccountRef: {
+    name: "Inventory Asset",
+    value: "81"
+  },
+  ExpenseAccountRef: {
+    name: "Cost of Goods Sold",
+    value: "80"
+  }
+};
+
+  oauthClient.makeApiCall({
+    url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/1234/item',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(function(response){
+              console.log('The API response is  : ' + response);
+          })
+          .catch(function(e) {
+              console.log('The error is '+ JSON.stringify(e));
+          });
+
+```
+
+The client validates the ID Token and returns boolean `true` if validates successfully else it would throw an exception. 
+
+
 
 ### Auth-Response 
 
@@ -489,7 +549,7 @@ You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if
 
 ## Changelog
 
-See the changelog [here]()
+See the changelog [here](https://github.com/intuit/oauth-jsclient/blob/master/CHANGELOG.md)
 
 ## License
 
