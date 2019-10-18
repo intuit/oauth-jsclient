@@ -1,12 +1,17 @@
 # IDE
-.idea
+.idea/
 .vscode
 
 # Samples
 sample
 test
 
+# Source files
+src/index.js
+src/logs
+
 # Configuration files
 .travis.yml
 .eslintrc.json
 .eslintignore
+

@@ -1,7 +1,7 @@
 {
   "name": "intuit-oauth",
-  "version": "1.5.0",
-  "description": "Intuit Node.js client for OAuth2.0 and OpenID",
+  "version": "2.0.0",
+  "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
     "start": "node index.js",
@@ -11,6 +11,8 @@
     "fix": "eslint . --fix",
     "posttest": "nyc check-coverage",
     "test-watch": "mocha --watch --reporter=spec",
+    "test-debug": "mocha --inspect-brk --watch test",
+    "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
     "clean-install": "rm -rf node_modules && npm install"
   },
   "keywords": [
@@ -30,20 +32,24 @@
       "coverage",
       ".nyc_output",
       "sample",
-      "sample/node_modules"
+      "sample/node_modules",
+      "test"
     ],
     "check-coverage": true,
     "lines": 85,
-    "statements": 80,
+    "statements": 85,
     "functions": 80,
-    "branches": 56,
+    "branches": 75,
     "reporter": [
       "lcov",
-      "text-summary"
+      "text",
+      "text-summary",
+      "html",
+      "json"
     ]
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.0.0"
   },
   "repository": {
     "type": "git",
@@ -70,11 +76,13 @@
     "popsicle": "10.0.1",
     "query-string": "6.2.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "coveralls": "3.0.2"
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
     "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "chance": "^1.0.13",
     "cors": "^2.8.1",
     "coveralls": "^3.0.6",
@@ -88,6 +96,7 @@
     "nyc": "^11.6.0",
     "phantomjs-prebuilt": "^2.1.4",
     "standard": "^11.0.0",
+    "sinon": "^7.5.0",
     "watchify": "^3.7.0"
   }
 }
