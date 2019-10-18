@@ -407,6 +407,15 @@ describe('Validate Id Token ', () => {
   });
 });
 
+describe('Get key from JWK URI', () => {
+  it('getKeyFromJWKsURI', () => {
+    oauthClient.getKeyFromJWKsURI()
+      .then((response) => {
+        expect(response).not.to.be.null;
+      });
+  });
+});
+
 // Validate Refresh Token
 describe('Validate Refresh Token', () => {
   it('Validate should handle expired token', () => {
