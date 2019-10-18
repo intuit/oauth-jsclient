@@ -285,6 +285,20 @@ describe('Tests for OAuthClient', () => {
             .to.be.equal(JSON.stringify(expectedMakeAPICall));
         });
     });
+    it('Make API Call in Sandbox Environment with headers as parameters', () => {
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient.makeApiCall({
+          url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
+          headers: {
+            Accept: "application/json",
+          }
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.getJson()))
+            .to.be.equal(JSON.stringify(expectedMakeAPICall));
+        });
+    });
     it('loadResponseFromJWKsURI', () => {
       const request = {
         url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
@@ -474,6 +488,10 @@ describe('Generate OAuth1Sign', () => {
 
     const oauth1Sign = oauthClient.generateOauth1Sign(params);
     expect(oauth1Sign).to.be.a('String');
+    expect(oauth1Sign).to.have.string('oauth_consumer_key="qyprdFsHNQtdRupMKmYnDt6MOjWBW9');
+    expect(oauth1Sign).to.have.string('oauth_nonce="nonce');
+    expect(oauth1Sign).to.have.string('oauth_version="1.0');
+    expect(oauth1Sign).to.have.string('oauth_token', 'oauth_timestamp', 'oauth_signature');
   });
 });
 
