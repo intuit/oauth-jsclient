@@ -9,7 +9,7 @@ before_script:
   - npm install
 
 script:
-  - npm test-coveralls
+  - npm test
 
 after_script: make test-coveralls
 

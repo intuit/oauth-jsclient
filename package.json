@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
-    "test": "snyk test && nyc mocha",
-    "test-coveralls": "nyc mocha",
+    "test": "nyc mocha",
+    "snyk": "snyk test",
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "posttest": "nyc check-coverage",
