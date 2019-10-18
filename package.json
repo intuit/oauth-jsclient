@@ -76,8 +76,7 @@
     "popsicle": "10.0.1",
     "query-string": "6.2.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
-    "winston": "^3.1.0",
-    "coveralls": "3.0.2"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
