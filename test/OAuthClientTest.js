@@ -262,7 +262,7 @@ describe('Tests for OAuthClient', () => {
   });
 
   // make API Call
-  describe('Make API Call ', () => {
+  describe('Make API Call', () => {
     before(() => {
       nock('https://sandbox-quickbooks.api.intuit.com').persist()
         .get('/v3/company/12345/companyinfo/12345')
@@ -403,15 +403,6 @@ describe('Validate Id Token ', () => {
     oauthClient.validateIdToken()
       .then((response) => {
         expect(response).to.be.equal(expectedOpenIDToken);
-      });
-  });
-});
-
-describe('Get key from JWK URI', () => {
-  it('getKeyFromJWKsURI', () => {
-    oauthClient.getKeyFromJWKsURI()
-      .then((response) => {
-        expect(response).not.to.be.null;
       });
   });
 });
