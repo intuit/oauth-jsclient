@@ -34,6 +34,7 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
       - [Set the Token :](#set-the-token-)
     - [Migrate OAuth1.0 Tokens to OAuth2.0](#migrate-oauth10-tokens-to-oauth20)
     - [Validate ID Token](#validate-id-token)
+    - [Make API call](#make-api-call)
     - [Auth-Response](#auth-response)
     - [Error Logging](#error-logging)
   - [FAQ](#faq)
@@ -46,6 +47,8 @@ The OAuth2 Nodejs Client library is meant to work with Intuit's [OAuth2.0](https
 # Requirements
 
 The Node.js client library is tested against the `Node`  >= `7.0.0`
+
+To use in node 6, please use [intuit-oauth@1.x.](https://github.com/intuit/oauth-jsclient/tree/1.5.0) Older node versions are unsupported.
 
 # Installation
 
@@ -365,6 +368,52 @@ You can validate the ID token obtained from `Intuit Authorization Server` as sho
         });
 
         // Is my ID token validated : true
+```
+
+The client validates the ID Token and returns boolean `true` if validates successfully else it would throw an exception. 
+
+
+### Make API Call
+
+You can make API call using the token generated from the client as shown below : 
+
+```javascript
+
+// Body sample from API explorer examples
+const body = {
+  TrackQtyOnHand: true,
+  Name: "Garden Supplies",
+  QtyOnHand: 10,
+  InvStartDate: "2015-01-01",
+  Type: "Inventory",
+  IncomeAccountRef: {
+    name: "Sales of Product Income",
+    value: "79"
+  },
+  AssetAccountRef: {
+    name: "Inventory Asset",
+    value: "81"
+  },
+  ExpenseAccountRef: {
+    name: "Cost of Goods Sold",
+    value: "80"
+  }
+};
+
+  oauthClient.makeApiCall({
+    url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/1234/item',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(function(response){
+              console.log('The API response is  : ' + response);
+          })
+          .catch(function(e) {
+              console.log('The error is '+ JSON.stringify(e));
+          });
+
 ```
 
 The client validates the ID Token and returns boolean `true` if validates successfully else it would throw an exception. 
