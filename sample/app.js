@@ -9,8 +9,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-// const OAuthClient = require('intuit-oauth');
-const OAuthClient = require('/Users/sthangavel/work/hacktober/oauth-jsclient');
+const OAuthClient = require('intuit-oauth');
 const bodyParser = require('body-parser');
 const ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
