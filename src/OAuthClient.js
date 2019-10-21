@@ -53,6 +53,9 @@ function OAuthClient(config) {
   this.clientId = config.clientId;
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
+  this.autoRefresh = config.autoRefresh || false;
+  // If autoRefreshInterval is not choosen by user, defaults to 3300 seconds (55 minutes) since tokens expire after 60 minutes.
+  this.autoRefreshInterval = config.autoRefreshInterval || 3300;
   this.token = new Token(config.token);
   this.logging = !!(Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true);
   this.logger = null;
@@ -160,6 +163,11 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     const authResponse = res.json ? res : null;
     const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
+    if (this.autoRefresh) {
+      this.log('info', 'Setting AutoRefresh of tokens every: ', this.autoRefreshInterval + ' seconds');
+      // Set auto refresh call
+      this.autoRefreshHandle = setInterval(() => this.refresh(), this.autoRefreshInterval * 1000);
+    }
     this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
     return authResponse;
   }).catch((e) => {
@@ -648,6 +656,17 @@ OAuthClient.prototype.getToken = function getToken() {
 OAuthClient.prototype.setToken = function setToken(params) {
   this.token = new Token(params);
   return this.token;
+};
+
+/**
+ * Stops auto refresh of tokens
+ */
+OAuthClient.prototype.stopAutoRefresh = function () {
+  if (this.autoRefreshHandle) {
+    clearInterval(this.autoRefreshHandle);
+  } else {
+    this.log('info', 'AutoRefresh is not set so it cannot be cleared');
+  }
 };
 
 
