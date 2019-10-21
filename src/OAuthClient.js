@@ -53,7 +53,7 @@ function OAuthClient(config) {
   this.clientId = config.clientId;
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
-  this.autoRefresh = config.autoRefresh;
+  this.autoRefresh = config.autoRefresh || false;
   // If autoRefreshInterval is not choosen by user, defaults to 3300 seconds (55 minutes) since tokens expire after 60 minutes.
   this.autoRefreshInterval = config.autoRefreshInterval || 3300;
   this.token = new Token(config.token);
