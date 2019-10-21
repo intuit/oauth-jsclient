@@ -60,7 +60,7 @@ app.get('/authUri', urlencodedParser, function(req,res) {
         environment: req.query.json.environment,
         redirectUri: req.query.json.redirectUri,
         autoRefresh: req.query.json.autoRefresh,
-        autoRefreshInterval: 30,
+        autoRefreshIntervalInSeconds: 30,
         logging: true
     });
 

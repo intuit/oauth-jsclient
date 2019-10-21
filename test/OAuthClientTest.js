@@ -51,7 +51,7 @@ const oauthClientWithAutoRefreshAndInterval = new OAuthClientTest({
   environment: 'sandbox',
   redirectUri: 'http://localhost:8000/callback',
   autoRefresh: true,
-  autoRefreshInterval: 3,
+  autoRefreshIntervalInSeconds: 3,
   logging: false,
 });
 
@@ -61,11 +61,11 @@ chai.use(chaiAsPromised);
 describe('Tests for AutoRefresh', () => {
   it('Checks if autoRefresh configs are set right', () => {
     expect(oauthClient.autoRefresh).to.equal(false);
-    expect(oauthClient.autoRefreshInterval).to.equal(3300);
+    expect(oauthClient.autoRefreshIntervalInSeconds).to.equal(3300);
     expect(oauthClientWithAutoRefresh.autoRefresh).to.equal(true);
-    expect(oauthClientWithAutoRefresh.autoRefreshInterval).to.equal(3300);
+    expect(oauthClientWithAutoRefresh.autoRefreshIntervalInSeconds).to.equal(3300);
     expect(oauthClientWithAutoRefreshAndInterval.autoRefresh).to.equal(true);
-    expect(oauthClientWithAutoRefreshAndInterval.autoRefreshInterval).to.equal(3);
+    expect(oauthClientWithAutoRefreshAndInterval.autoRefreshIntervalInSeconds).to.equal(3);
   });
 
   // Test AutoRefresh when set
@@ -130,7 +130,7 @@ describe('Tests for AutoRefresh', () => {
       this.clock.restore();
     });
 
-    it('Verify setInterval fires at autoRefreshInterval with default 55 minutes', () => {
+    it('Verify setInterval fires at autoRefreshIntervalInSeconds with default 55 minutes', () => {
       var refreshCallSpy = sinon.spy(oauthClientWithAutoRefresh, "refresh");
 
       const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
@@ -156,7 +156,7 @@ describe('Tests for AutoRefresh', () => {
         });
     });
 
-    it('Verify setInterval fires at autoRefreshInterval with userSet minutes', () => {
+    it('Verify setInterval fires at autoRefreshIntervalInSeconds with userSet minutes', () => {
       var refreshCallSpy = sinon.spy(oauthClientWithAutoRefreshAndInterval, "refresh");
 
       const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
