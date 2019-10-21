@@ -9,7 +9,8 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-const OAuthClient = require('intuit-oauth');
+// const OAuthClient = require('intuit-oauth');
+const OAuthClient = require('/Users/sthangavel/work/hacktober/oauth-jsclient');
 const bodyParser = require('body-parser');
 const ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
 
@@ -58,7 +59,10 @@ app.get('/authUri', urlencodedParser, function(req,res) {
         clientId: req.query.json.clientId,
         clientSecret: req.query.json.clientSecret,
         environment: req.query.json.environment,
-        redirectUri: req.query.json.redirectUri
+        redirectUri: req.query.json.redirectUri,
+        autoRefresh: req.query.json.autoRefresh,
+        autoRefreshInterval: 30,
+        logging: true
     });
 
     const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'intuit-test'});
@@ -90,6 +94,14 @@ app.get('/retrieveToken', function(req, res) {
     res.send(oauth2_token_json);
 });
 
+
+/**
+ * Stop auto refresh of tokens if it `autoRefresh` is set to true while creating the oauth client
+ */
+app.get('/stopAutoRefresh', function(req, res) {
+  oauthClient.stopAutoRefresh();
+  res.send('');
+});
 
 /**
  * Refresh the access-token

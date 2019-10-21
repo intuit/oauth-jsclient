@@ -28,11 +28,15 @@
     <form>
         <div class="form-group">
             <label for="clientId">ClientID</label>
-            <input type="text" class="form-control" placeholder="enter the clientId"  id="clientId" />
+            <input type="text" class="form-control" placeholder="enter the clientId"  id="clientId" value="ABYb8fbCIUDX79Iu79rKsRAPXf0UDcHGY4RCASUYfLXiq7Z0lH"/>
         </div>
         <div class="form-group">
             <label for="clientSecret">ClientSecret</label>
-            <input type="text"  class="form-control" placeholder="enter the clientSecret"  id="clientSecret" />
+            <input type="text"  class="form-control" placeholder="enter the clientSecret"  id="clientSecret" value="rQlQNh6mX678PqLrcaWmp7RSs2RmaDeZCoqJNYPI" />
+        </div>
+        <div class="form-group">
+            <label for="autoRefresh">AutoRefresh</label>
+            <input type="checkbox" id="autoRefresh" name="autoRefreshSelected" checked/>
         </div>
         <div class="form-group">
             <label for="environment">Environment</label>
@@ -43,7 +47,7 @@
         </div>
         <div class="form-group">
             <label for="redirectUri">Redirect URI</label>
-            <input type="text" class="form-control" placeholder="enter the redirectUri"  id="redirectUri" /><br>
+            <input type="text" class="form-control" placeholder="enter the redirectUri"  id="redirectUri" value="http://localhost:8909/callback"/><br>
         </div>
     </form>
     <p>Now click the <b>Connect to QuickBooks</b> button below.</p>
@@ -51,6 +55,7 @@
     <a class="imgLink" href="#" id="authorizeUri" ><img src="./images/C2QB_green_btn_lg_default.png" width="178" /></a>
     <button  type="button" id="retrieveToken" class="btn btn-success">Display Access Token</button>
     <button  type="button" id="refreshToken" class="btn btn-success">Refresh Token</button>
+    <button  type="button" id="stopAutoRefresh" class="btn btn-success">Stop AutoRefresh</button>
     <hr />
 
     <h2>Make an API call</h2><h4>( Please refer to our <a target="_balnk" href="https://developer.intuit.com/v2/apiexplorer?apiname=V3QBO#?id=Account">API Explorer</a> )</h4>
@@ -84,6 +89,7 @@
             jsonBody.clientSecret = $('#clientSecret').val();
             jsonBody.environment = $('#environment').val();
             jsonBody.redirectUri = $('#redirectUri').val();
+            jsonBody.autoRefresh = $('#autoRefresh').is(':checked')
 
             $.get('/authUri', {json:jsonBody}, function (uri) {
                 console.log('The Auth Uris is :'+uri);
@@ -116,6 +122,13 @@
             });
         }
 
+        function stopAutoRefresh() {
+          // Stop AutoRefresh of the token
+          $.get('/stopAutoRefresh', function () {
+            $("#stopAutoRefresh").html();
+          });
+        }
+
         function refreshToken() {
 
             // Generate the authUri
@@ -141,6 +154,11 @@
         document.getElementById('retrieveToken').addEventListener('click', function response(e) {
             e.preventDefault();
             retrieveToken();
+        });
+
+        document.getElementById('stopAutoRefresh').addEventListener('click', function response(e) {
+            e.preventDefault();
+            stopAutoRefresh();
         });
 
         document.getElementById('refreshToken').addEventListener('click', function response(e) {

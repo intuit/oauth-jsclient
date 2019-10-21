@@ -57,18 +57,22 @@ Follow the instructions below to use the library :
         clientId: '<Enter your clientId>',
         clientSecret: '<Enter your clientSecret>',
         environment: 'sandbox' || 'production',
-        redirectUri: '<Enter your callback URL>'
+        redirectUri: '<Enter your callback URL>',
+        autoRefresh: true,
+        autoRefreshInterval: 55 * 60
     });
     ```
 
 ### Options :
 
 * `clientId` - clientID for your app. Required
-* `clientSecret` - clientSecret fpor your app. Required
+* `clientSecret` - clientSecret for your app. Required
 * `environment` - environment for the client. Required
     * `sandbox` - for authorizing in sandbox.
     * `production` -  for authorizing in production.
-* `redirectUri` - redirectUri on your app to get the `authorizationCode` from Intuit Servers. Required    
+* `redirectUri` - redirectUri on your app to get the `authorizationCode` from Intuit Servers. Required 
+* `autoRefresh` - by default, autoRefresh is disabled i.e `false`. To enable provide `true`. If set to true, authclient would refresh the tokens every `autoRefreshInterval` specified so clients do not have to manually call refresh after the first `createToken` call.
+* `autoRefreshInterval` - only if `autoRefresh` is set to true, config will use `autoRefreshInterval`. It is set in seconds. If user does not specify a value but has set `autoRefresh` as true, it would default to 55 minutes.  Use `stopAutoRefresh` method on OAuthClient anytime to stop auto Refresh.
 * `logging` - by default, logging is disabled i.e `false`. To enable provide`true`.
 
  
