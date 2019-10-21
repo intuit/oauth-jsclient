@@ -98,6 +98,7 @@ describe('Tests for AutoRefresh', () => {
           expect(authResponse.getToken().access_token)
             .to.be.equal(expectedAccessToken.access_token);
           expect(oauthClientWithAutoRefresh.autoRefreshHandle).to.not.equal(undefined);
+          oauthClientWithAutoRefresh.stopAutoRefresh();
         });
 
       oauthClientWithAutoRefreshAndInterval.createToken(parseRedirect)
@@ -105,6 +106,7 @@ describe('Tests for AutoRefresh', () => {
           expect(authResponse.getToken().access_token)
             .to.be.equal(expectedAccessToken.access_token);
           expect(oauthClientWithAutoRefreshAndInterval.autoRefreshHandle).to.not.equal(undefined);
+          oauthClientWithAutoRefreshAndInterval.stopAutoRefresh();
         });
     });
   });
@@ -154,6 +156,8 @@ describe('Tests for AutoRefresh', () => {
           // Advance clock again (55 minutes)
           this.clock.tick(55 * 60 * 1000);
           expect(refreshCallSpy.calledTwice).to.be.true;
+
+          oauthClientWithAutoRefresh.stopAutoRefresh();
         });
     });
   });
@@ -199,6 +203,8 @@ describe('Tests for AutoRefresh', () => {
           // Advance clock again (3 seconds)
           this.clock.tick(3 * 1000);
           expect(refreshCallSpy.calledTwice).to.be.true;
+
+          oauthClientWithAutoRefreshAndInterval.stopAutoRefresh();
         });
     });
   });
@@ -251,6 +257,8 @@ describe('Tests for AutoRefresh', () => {
           // Advance clock again (55 minutes)
           this.clock.tick(55 * 60 * 1000);
           expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          oauthClientWithAutoRefresh.stopAutoRefresh();
         });
     });
   });
