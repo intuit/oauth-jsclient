@@ -95,7 +95,7 @@ app.get('/retrieveToken', function(req, res) {
 
 
 /**
- * Stop auto refresh of tokens if it `autoRefresh` is set to true while creating the oauth client
+ * Stop auto refresh of tokens if `autoRefresh` is set to true in config while creating the OAuthClient
  */
 app.get('/stopAutoRefresh', function(req, res) {
   oauthClient.stopAutoRefresh();

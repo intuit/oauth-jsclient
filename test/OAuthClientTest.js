@@ -110,7 +110,7 @@ describe('Tests for AutoRefresh', () => {
   });
 
   // Test if setInterval calls refreshToken
-  describe('Test if setInterval calls refreshToken', () => {
+  describe('Test if setInterval calls refreshToken for Default values', () => {
     before(() => {
       this.clock = sinon.useFakeTimers();
       nock('https://oauth.platform.intuit.com').persist()
@@ -128,6 +128,7 @@ describe('Tests for AutoRefresh', () => {
 
     after(() => {
       this.clock.restore();
+      oauthClientWithAutoRefresh.refresh.restore();
     });
 
     it('Verify setInterval fires at autoRefreshIntervalInSeconds with default 55 minutes', () => {
@@ -155,6 +156,29 @@ describe('Tests for AutoRefresh', () => {
           expect(refreshCallSpy.calledTwice).to.be.true;
         });
     });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls refreshToken for user set values', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefreshAndInterval.refresh.restore();
+    });
 
     it('Verify setInterval fires at autoRefreshIntervalInSeconds with userSet minutes', () => {
       var refreshCallSpy = sinon.spy(oauthClientWithAutoRefreshAndInterval, "refresh");
@@ -176,6 +200,29 @@ describe('Tests for AutoRefresh', () => {
           this.clock.tick(3 * 1000);
           expect(refreshCallSpy.calledTwice).to.be.true;
         });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls are not made after stopRefresh', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefresh.refresh.restore();
     });
 
     it('Test stopAutoRefresh for default values', () => {
@@ -205,6 +252,29 @@ describe('Tests for AutoRefresh', () => {
           this.clock.tick(55 * 60 * 1000);
           expect(refreshCallSpy.calledOnce).to.not.be.true;
         });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls are not made after stopRefresh for user set values', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefreshAndInterval.refresh.restore();
     });
 
     it('Test stopAutoRefresh for user set values', () => {
