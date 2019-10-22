@@ -470,8 +470,8 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     // Step 1 : First check if the issuer is as mentioned in "issuer"
     if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
 
-    // Step 2 : check if the aud field in idToken is same as application's clientId
-    if (id_token_payload.aud !== this.clientId) return false;
+    // Step 2 : check if the aud field in idToken contains application's clientId
+    if (!id_token_payload.aud.find(audience => (audience === this.clientId))) return false;
 
     // Step 3 : ensure the timestamp has not elapsed
     if (id_token_payload.exp < Date.now() / 1000) return false;
@@ -484,6 +484,7 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
         'User-Agent': OAuthClient.user_agent,
       },
     };
+
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   }))).then((res) => {
     this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
@@ -506,12 +507,12 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
   return (new Promise(((resolve) => {
     resolve(this.loadResponse(request));
   }))).then((response) => {
-    if (response.status !== 200) throw new Error('Could not reach JWK endpoint');
-
+    if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
     // Find the key by KID
     const responseBody = JSON.parse(response.body);
-    const key = JSON.parse(responseBody.body).keys[0]
+    const key = responseBody.keys.find(el => (el.kid === kid));
     const cert = this.getPublicKey(key.n, key.e);
+
     return jwt.verify(id_token, cert);
   }).catch((e) => {
     e = this.createError(e);
