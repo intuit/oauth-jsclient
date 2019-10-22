@@ -484,7 +484,6 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
         'User-Agent': OAuthClient.user_agent,
       },
     };
-
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   }))).then((res) => {
     this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
@@ -507,13 +506,12 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
   return (new Promise(((resolve) => {
     resolve(this.loadResponse(request));
   }))).then((response) => {
-    if (response.status !== '200') throw new Error('Could not reach JWK endpoint');
+    if (response.status !== 200) throw new Error('Could not reach JWK endpoint');
 
     // Find the key by KID
     const responseBody = JSON.parse(response.body);
-    const key = responseBody.keys.find(el => (el.kid === kid));
+    const key = JSON.parse(responseBody.body).keys[0]
     const cert = this.getPublicKey(key.n, key.e);
-
     return jwt.verify(id_token, cert);
   }).catch((e) => {
     e = this.createError(e);
