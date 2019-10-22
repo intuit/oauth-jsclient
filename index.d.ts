@@ -23,6 +23,14 @@ declare namespace AuthResponse {
 
 declare class Token implements Token.TokenData {
     latency: number;
+    realmId: string;
+    token_type: string;
+    access_token: string;
+    refresh_token: string;
+    expires_in: number;
+    x_refresh_token_expires_in: number;
+    id_token: string;
+    createdAt: string;
     accessToken(): string;
     refreshToken(): string;
     tokenType(): string;
@@ -74,18 +82,18 @@ declare class OAuthClient {
 
 declare namespace OAuthClient {
     export interface OAuthClientConfig {
-        environment: string;
-        appSecret: string;
-        appKey: string;
-        cachePrefix?: string;
+        clientId: string;
+        clientSecret: string;
+        redirectUri?: string;
+        environment?: string;
     }
 
-    export enum Environment {
+    export enum environment {
         sandbox = 'https://sandbox-quickbooks.api.intuit.com/',
         production = 'https://quickbooks.api.intuit.com/'
     }
 
-    export enum AuthorizeScope {
+    export enum scopes {
         Accounting = 'com.intuit.quickbooks.accounting',
         Payment = 'com.intuit.quickbooks.payment',
         Payroll = 'com.intuit.quickbooks.payroll',
@@ -100,7 +108,7 @@ declare namespace OAuthClient {
     }
 
     export interface AuthorizeParams {
-        scope: AuthorizeScope | AuthorizeScope[] | string;
+        scope: scopes | scopes[] | string;
         state?: csrf;
     }
 
@@ -116,7 +124,7 @@ declare namespace OAuthClient {
     }
 
     export interface MigrateParams extends GenerateOAuth1SignParams {
-        scope?: AuthorizeScope | AuthorizeScope[] | string;
+        scope?: scopes | scopes[] | string;
     }
 
     export interface GenerateOAuth1SignParams {
