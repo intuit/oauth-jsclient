@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 /**
 
  Copyright (c) 2018 Intuit
@@ -53,9 +55,9 @@ function OAuthClient(config) {
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
   this.token = new Token(config.token);
-  this.logging = !!(config.hasOwnProperty('logging') && config.logging == true);
+  this.logging = !!(Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true);
   this.logger = null;
-  this.state = new csrf();
+  this.state = new csrf(); // eslint-disable-line new-cap
 
   if (this.logging) {
     const dir = './logs';
@@ -97,7 +99,7 @@ OAuthClient.scopes = {
   OpenId: 'openid',
   Intuit_name: 'intuit_name',
 };
-OAuthClient.user_agent = `${'Intuit-OAuthClient-JS' + '_'}${version}_${os.type()}_${os.release()}_${os.platform()}`;
+OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version}_${os.type()}_${os.release()}_${os.platform()}`;
 
 
 /**
@@ -105,13 +107,13 @@ OAuthClient.user_agent = `${'Intuit-OAuthClient-JS' + '_'}${version}_${os.type()
  * @param params
  * @returns {string} authorize Uri
  */
-OAuthClient.prototype.authorizeUri = function (params) {
+OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
   params = params || {};
 
   // check if the scopes is provided
   if (!params.scope) throw new Error('Provide the scopes');
 
-  const authorizeUri = `${OAuthClient.authorizeEndpoint}?${queryString.stringify({
+  const authUri = `${OAuthClient.authorizeEndpoint}?${queryString.stringify({
     response_type: 'code',
     redirect_uri: this.redirectUri,
     client_id: this.clientId,
@@ -119,8 +121,8 @@ OAuthClient.prototype.authorizeUri = function (params) {
     state: params.state || this.state.create(this.state.secretSync()),
   })}`;
 
-  this.log('info', 'The Authorize Uri is :', authorizeUri);
-  return authorizeUri;
+  this.log('info', 'The Authorize Uri is :', authUri);
+  return authUri;
 };
 
 
@@ -129,7 +131,7 @@ OAuthClient.prototype.authorizeUri = function (params) {
  * @param options
  * @returns {Promise<any>}
  */
-OAuthClient.prototype.createToken = function (uri) {
+OAuthClient.prototype.createToken = function createToken(uri) {
   return (new Promise(((resolve) => {
     if (!uri) throw new Error('Provide the Uri');
     const params = queryString.parse(uri.split('?').reverse()[0]);
@@ -157,7 +159,7 @@ OAuthClient.prototype.createToken = function (uri) {
     resolve(this.getTokenRequest(request));
   }))).then((res) => {
     const authResponse = res.json ? res : null;
-    const json = authResponse && authResponse.getJson() || res;
+    const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
     this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
     return authResponse;
@@ -173,7 +175,7 @@ OAuthClient.prototype.createToken = function (uri) {
  * @param {Object} params.refresh_token (optional)
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.refresh = function () {
+OAuthClient.prototype.refresh = function refresh() {
   return (new Promise(((resolve) => {
     /**
      * Check if the tokens exist and are valid
@@ -200,7 +202,7 @@ OAuthClient.prototype.refresh = function () {
     resolve(this.getTokenRequest(request));
   }))).then((res) => {
     const authResponse = res.json ? res : null;
-    const json = authResponse && authResponse.getJson() || res;
+    const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
     this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
     return authResponse;
@@ -212,11 +214,12 @@ OAuthClient.prototype.refresh = function () {
 
 
 /**
- * Refresh Tokens by passing refresh_token parameter explicitly { Refresh access_token by passing refresh_token }
+ * Refresh Tokens by passing refresh_token parameter explicitly
+ * { Refresh access_token by passing refresh_token }
  * @param {Object} params.refresh_token (refresh_token)
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.refreshUsingToken = function (refresh_token) {
+OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_token) {
   return (new Promise(((resolve) => {
     /**
      * Check if the tokens exist
@@ -246,7 +249,7 @@ OAuthClient.prototype.refreshUsingToken = function (refresh_token) {
     const authResponse = res.json ? res : null;
 
     // New changes that are added
-    const json = authResponse && authResponse.getJson() || res;
+    const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
     this.log('info', 'Refresh usingToken () response is : ', JSON.stringify(authResponse, null, 2));
     return authResponse;
@@ -262,13 +265,16 @@ OAuthClient.prototype.refreshUsingToken = function (refresh_token) {
  * @param {Object} params.refresh_token (optional)
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.revoke = function (params) {
+OAuthClient.prototype.revoke = function revoke(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
     const body = {};
 
-    body.token = params.access_token || params.refresh_token || (this.getToken().isAccessTokenValid() ? this.getToken().access_token : this.getToken().refresh_token);
+    body.token = params.access_token || params.refresh_token ||
+      (this.getToken().isAccessTokenValid()
+        ? this.getToken().access_token
+        : this.getToken().refresh_token);
 
     const request = {
       url: OAuthClient.revokeEndpoint,
@@ -298,12 +304,12 @@ OAuthClient.prototype.revoke = function (params) {
  * @param {Object} params
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.getUserInfo = function (params) {
+OAuthClient.prototype.getUserInfo = function getUserInfo(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
     const request = {
-      url: this.environment == 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
+      url: this.environment === 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
       method: 'GET',
       headers: {
         Authorization: `Bearer ${this.token.access_token}`,
@@ -328,19 +334,27 @@ OAuthClient.prototype.getUserInfo = function (params) {
  * @param params
  * @returns {Promise<any>}
  */
-OAuthClient.prototype.makeApiCall = function (params) {
+OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
     const request = {
       url: params.url,
-      method: 'GET',
+      method: params.method || 'GET',
       headers: {
         Authorization: `Bearer ${this.getToken().access_token}`,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
       },
     };
+
+    if (params.headers && typeof params.headers === 'object') {
+      for (const header in params.headers) {
+        request.headers[header] = params.headers[header];
+      }
+    }
+
+    params.body && (request.body = params.body);
 
     resolve(this.getTokenRequest(request));
   }))).then((authResponse) => {
@@ -357,11 +371,11 @@ OAuthClient.prototype.makeApiCall = function (params) {
  * @param params
  * @returns {Promise<any>}
  */
-OAuthClient.prototype.migrate = function (params) {
+OAuthClient.prototype.migrate = function migrate(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
-    const uri = this.environment.toLowerCase() == 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
+    const uri = this.environment.toLowerCase() === 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
 
     const authHeader = this.generateOauth1Sign(objectAssign({}, { method: 'POST', uri }, params));
 
@@ -387,7 +401,7 @@ OAuthClient.prototype.migrate = function (params) {
     resolve(this.getTokenRequest(request));
   }))).then((res) => {
     const authResponse = res.json ? res : null;
-    const json = authResponse && authResponse.getJson() || res;
+    const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
     this.log('info', 'The migrate () response is : ', JSON.stringify(authResponse, null, 2));
     return authResponse;
@@ -402,7 +416,7 @@ OAuthClient.prototype.migrate = function (params) {
  * @param params
  * @returns {string}
  */
-OAuthClient.prototype.generateOauth1Sign = function (params) {
+OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
   const timestamp = Math.round(new Date().getTime() / 1000);
 
   const parameters = {
@@ -414,23 +428,26 @@ OAuthClient.prototype.generateOauth1Sign = function (params) {
     oauth_version: '1.0',
   };
 
-  const encodedSignature = oauthSignature.generate(params.method, params.uri, parameters, params.oauth_consumer_secret, params.access_secret);
+  const encodedSignature = oauthSignature.generate(
+    params.method,
+    params.uri,
+    parameters,
+    params.oauth_consumer_secret,
+    params.access_secret
+  );
 
   parameters.oauth_signature = encodedSignature;
-  const keys = Object.keys(parameters);
-  let authHeader = '';
 
-  for (const key in parameters) {
+  const authHeader = Object.entries(parameters).reduce((header, [key, val], idx, array) => {
     // Add this for Accounting API minorversion url query parameter
     if (key === 'minorversion') {
-      continue;
+      return header;
     }
-    if (key === keys[keys.length - 1]) {
-      authHeader += `${key}=` + `"${parameters[key]}"`;
-    } else {
-      authHeader += `${key}=` + `"${parameters[key]}",`;
+    if (idx === array.length - 1) {
+      return `${header}${key}="${val}"`;
     }
-  }
+    return `${header}${key}="${val}",`;
+  }, '');
 
   return authHeader;
 };
@@ -440,27 +457,22 @@ OAuthClient.prototype.generateOauth1Sign = function (params) {
  * @param params
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.validateIdToken = function (params) {
+OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
   return (new Promise(((resolve) => {
     if (!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
 
     const id_token = this.getToken().id_token || params.id_token;
-
-    params = params || {};
 
     // Decode ID Token
     const token_parts = id_token.split('.');
     const id_token_header = JSON.parse(atob(token_parts[0]));
     const id_token_payload = JSON.parse(atob(token_parts[1]));
 
-    const id_token_signature = atob(token_parts[2]);
-    //
     // Step 1 : First check if the issuer is as mentioned in "issuer"
-    if (id_token_payload.iss != 'https://oauth.platform.intuit.com/op/v1') return false;
+    if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
 
     // Step 2 : check if the aud field in idToken is same as application's clientId
-    if (id_token_payload.aud != this.clientId) return false;
-
+    if (id_token_payload.aud !== this.clientId) return false;
 
     // Step 3 : ensure the timestamp has not elapsed
     if (id_token_payload.exp < Date.now() / 1000) return false;
@@ -474,10 +486,11 @@ OAuthClient.prototype.validateIdToken = function (params) {
       },
     };
 
-    resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
+    return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   }))).then((res) => {
     this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
     if (res) return true;
+    return false;
   }).catch((e) => {
     this.log('error', 'The validateIdToken () threw an exception : ', JSON.stringify(e, null, 2));
     throw e;
@@ -491,15 +504,15 @@ OAuthClient.prototype.validateIdToken = function (params) {
  * @param request
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.getKeyFromJWKsURI = function (id_token, kid, request) {
+OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, kid, request) {
   return (new Promise(((resolve) => {
     resolve(this.loadResponse(request));
   }))).then((response) => {
-    if (response.status != '200') throw new Error('Could not reach JWK endpoint');
+    if (response.status !== '200') throw new Error('Could not reach JWK endpoint');
 
     // Find the key by KID
     const responseBody = JSON.parse(response.body);
-    const key = responseBody.keys.find(el => (el.kid == kid));
+    const key = responseBody.keys.find(el => (el.kid === kid));
     const cert = this.getPublicKey(key.n, key.e);
 
     return jwt.verify(id_token, cert);
@@ -515,7 +528,8 @@ OAuthClient.prototype.getKeyFromJWKsURI = function (id_token, kid, request) {
  * @param modulus
  * @param exponent
  */
-OAuthClient.prototype.getPublicKey = function (modulus, exponent) {
+OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
+  // eslint-disable-next-line global-require
   const getPem = require('rsa-pem-from-mod-exp');
   const pem = getPem(modulus, exponent);
   return pem;
@@ -526,7 +540,7 @@ OAuthClient.prototype.getPublicKey = function (modulus, exponent) {
  * @param {Object} request
  * @returns {Promise<AuthResponse>}
  */
-OAuthClient.prototype.getTokenRequest = function (request) {
+OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
   const authResponse = new AuthResponse({ token: this.token });
 
   return (new Promise(((resolve) => {
@@ -546,7 +560,7 @@ OAuthClient.prototype.getTokenRequest = function (request) {
 /**
  * Token Validation
  */
-OAuthClient.prototype.validateToken = function () {
+OAuthClient.prototype.validateToken = function validateToken() {
   if (!this.token.refreshToken()) throw new Error('The Refresh token is missing');
   if (!this.token.isRefreshTokenValid()) throw new Error('The Refresh token is invalid, please Authorize again.');
 };
@@ -557,7 +571,7 @@ OAuthClient.prototype.validateToken = function () {
  * @param request
  * @returns response
  */
-OAuthClient.prototype.loadResponse = function (request) {
+OAuthClient.prototype.loadResponse = function loadResponse(request) {
   return popsicle.get(request).then(response => response);
 };
 
@@ -566,7 +580,7 @@ OAuthClient.prototype.loadResponse = function (request) {
  * @param request
  * @returns response
  */
-OAuthClient.prototype.loadResponseFromJWKsURI = function (request) {
+OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI(request) {
   return popsicle.get(request).then(response => response);
 };
 
@@ -576,21 +590,34 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function (request) {
  * @param {AuthResponse} authResponse
  * @return {Error|IApiError}
  */
-OAuthClient.prototype.createError = function (e, authResponse) {
-  if (!authResponse || authResponse.body == '') {
-    e.error = e.originalMessage || '';
+OAuthClient.prototype.createError = function createError(e, authResponse) {
+  if (!authResponse || authResponse.body === '') {
+    e.error = (authResponse && authResponse.response.statusText) || e.message || '';
     e.authResponse = authResponse || '';
-    e.intuit_tid = authResponse.headers().intuit_tid || '';
-    e.originalMessage = authResponse.response.statusText || '';
-    e.error = authResponse.response.statusText || '';
-    e.error_description = authResponse.response.statusText || '';
+    e.intuit_tid = (authResponse && authResponse.headers().intuit_tid) || '';
+    e.originalMessage = e.message || '';
+    e.error_description = (authResponse && authResponse.response.statusText) || '';
     return e;
   }
 
-  e.authResponse = authResponse || null;
+  e.authResponse = authResponse;
   e.originalMessage = e.message;
-  e.error = ('error' in authResponse.getJson() ? authResponse.getJson().error : '');
-  e.error_description = ('error_description' in authResponse.getJson() ? authResponse.getJson().error_description : '');
+
+  e.error = '';
+  if ('error' in authResponse.getJson()) {
+    e.error = authResponse.getJson().error;
+  } else if (authResponse.response.statusText) {
+    e.error = authResponse.response.statusText;
+  } else if (e.message) {
+    e.error = e.message;
+  }
+
+  e.error_description = '';
+  if ('error_description' in authResponse.getJson()) {
+    e.error_description = authResponse.getJson().error_description;
+  } else if (authResponse.response.statusText) {
+    e.error_description = authResponse.response.statusText;
+  }
   e.intuit_tid = authResponse.headers().intuit_tid;
 
   return e;
@@ -601,7 +628,7 @@ OAuthClient.prototype.createError = function (e, authResponse) {
  * @returns {boolean}
  * @private
  */
-OAuthClient.prototype.isAccessTokenValid = function () {
+OAuthClient.prototype.isAccessTokenValid = function isAccessTokenValid() {
   return this.token.isAccessTokenValid();
 };
 
@@ -609,7 +636,7 @@ OAuthClient.prototype.isAccessTokenValid = function () {
  * GetToken
  * @returns {Token}
  */
-OAuthClient.prototype.getToken = function () {
+OAuthClient.prototype.getToken = function getToken() {
   return this.token;
 };
 
@@ -619,7 +646,7 @@ OAuthClient.prototype.getToken = function () {
  * @param {Object}
  * @returns {Token}
  */
-OAuthClient.prototype.setToken = function (params) {
+OAuthClient.prototype.setToken = function setToken(params) {
   this.token = new Token(params);
   return this.token;
 };
@@ -629,12 +656,12 @@ OAuthClient.prototype.setToken = function (params) {
  * Get AuthHeader
  * @returns {string} authHeader
  */
-OAuthClient.prototype.authHeader = function () {
+OAuthClient.prototype.authHeader = function authHeader() {
   const apiKey = `${this.clientId}:${this.clientSecret}`;
-  return (typeof btoa === 'function') ? btoa(apiKey) : new Buffer(apiKey).toString('base64');
+  return (typeof btoa === 'function') ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
 };
 
-OAuthClient.prototype.log = function (level, message, messageData) {
+OAuthClient.prototype.log = function log(level, message, messageData) {
   if (this.logging) {
     this.logger.log(level, message + messageData);
   }
