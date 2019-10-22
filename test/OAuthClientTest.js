@@ -36,8 +36,282 @@ const oauthClient = new OAuthClientTest({
   logging: false,
 });
 
+const oauthClientWithAutoRefresh = new OAuthClientTest({
+  clientId: 'clientID',
+  clientSecret: 'clientSecret',
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8000/callback',
+  autoRefresh: true,
+  logging: false,
+});
+
+const oauthClientWithAutoRefreshAndInterval = new OAuthClientTest({
+  clientId: 'clientID',
+  clientSecret: 'clientSecret',
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8000/callback',
+  autoRefresh: true,
+  autoRefreshIntervalInSeconds: 3,
+  logging: false,
+});
+
 const { expect } = chai;
 chai.use(chaiAsPromised);
+
+describe('Tests for AutoRefresh', () => {
+  it('Checks if autoRefresh configs are set right', () => {
+    expect(oauthClient.autoRefresh).to.equal(false);
+    expect(oauthClient.autoRefreshIntervalInSeconds).to.equal(3300);
+    expect(oauthClientWithAutoRefresh.autoRefresh).to.equal(true);
+    expect(oauthClientWithAutoRefresh.autoRefreshIntervalInSeconds).to.equal(3300);
+    expect(oauthClientWithAutoRefreshAndInterval.autoRefresh).to.equal(true);
+    expect(oauthClientWithAutoRefreshAndInterval.autoRefreshIntervalInSeconds).to.equal(3);
+  });
+
+  // Test AutoRefresh when set
+  describe('AutoRefresh Happy path tests', () => {
+    before(() => {
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    it('Test if setIntervalHandle is set', () => {
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+      oauthClient.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+          expect(oauthClient.autoRefreshHandle).to.equal(undefined);
+        });
+
+      oauthClientWithAutoRefresh.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+          expect(oauthClientWithAutoRefresh.autoRefreshHandle).to.not.equal(undefined);
+          oauthClientWithAutoRefresh.stopAutoRefresh();
+        });
+
+      oauthClientWithAutoRefreshAndInterval.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+          expect(oauthClientWithAutoRefreshAndInterval.autoRefreshHandle).to.not.equal(undefined);
+          oauthClientWithAutoRefreshAndInterval.stopAutoRefresh();
+        });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls refreshToken for Default values', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefresh.refresh.restore();
+    });
+
+    it('Verify setInterval fires at autoRefreshIntervalInSeconds with default 55 minutes', () => {
+      var refreshCallSpy = sinon.spy(oauthClientWithAutoRefresh, "refresh");
+
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+      oauthClientWithAutoRefresh.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+
+          // // At time 0, we don't expect the function to have been called.
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock 50 minutes
+          this.clock.tick(50 * 60 * 1000);
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock again (6 minutes)
+          this.clock.tick(6 * 60 * 1000);
+          expect(refreshCallSpy.calledOnce).to.be.true;
+
+          // Advance clock again (55 minutes)
+          this.clock.tick(55 * 60 * 1000);
+          expect(refreshCallSpy.calledTwice).to.be.true;
+
+          oauthClientWithAutoRefresh.stopAutoRefresh();
+        });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls refreshToken for user set values', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefreshAndInterval.refresh.restore();
+    });
+
+    it('Verify setInterval fires at autoRefreshIntervalInSeconds with userSet minutes', () => {
+      var refreshCallSpy = sinon.spy(oauthClientWithAutoRefreshAndInterval, "refresh");
+
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+      oauthClientWithAutoRefreshAndInterval.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+
+          // // At time 0, we don't expect the function to have been called.
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock 3 seconds
+          this.clock.tick(3 * 1000);
+          expect(refreshCallSpy.calledOnce).to.be.true;
+
+          // Advance clock again (3 seconds)
+          this.clock.tick(3 * 1000);
+          expect(refreshCallSpy.calledTwice).to.be.true;
+
+          oauthClientWithAutoRefreshAndInterval.stopAutoRefresh();
+        });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls are not made after stopRefresh', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefresh.refresh.restore();
+    });
+
+    it('Test stopAutoRefresh for default values', () => {
+      var refreshCallSpy = sinon.spy(oauthClientWithAutoRefresh, "refresh");
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+
+      oauthClientWithAutoRefresh.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+
+          //Stop auto fresh
+          oauthClientWithAutoRefresh.stopAutoRefresh()
+
+          // // At time 0, we don't expect the function to have been called.
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock 50 minutes
+          this.clock.tick(50 * 60 * 1000);
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock again (6 minutes)
+          this.clock.tick(6 * 60 * 1000);
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock again (55 minutes)
+          this.clock.tick(55 * 60 * 1000);
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          oauthClientWithAutoRefresh.stopAutoRefresh();
+        });
+    });
+  });
+
+  // Test if setInterval calls refreshToken
+  describe('Test if setInterval calls are not made after stopRefresh for user set values', () => {
+    before(() => {
+      this.clock = sinon.useFakeTimers();
+      nock('https://oauth.platform.intuit.com').persist()
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(200, expectedTokenResponse, {
+          'content-type': 'application/json',
+          'content-length': '1636',
+          connection: 'close',
+          server: 'nginx',
+          intuit_tid: '12345-123-1234-12345',
+          'cache-control': 'no-cache, no-store',
+          pragma: 'no-cache',
+        });
+    });
+
+    after(() => {
+      this.clock.restore();
+      oauthClientWithAutoRefreshAndInterval.refresh.restore();
+    });
+
+    it('Test stopAutoRefresh for user set values', () => {
+      var refreshCallSpy = sinon.spy(oauthClientWithAutoRefreshAndInterval, "refresh");
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+
+      oauthClientWithAutoRefreshAndInterval.createToken(parseRedirect)
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token)
+            .to.be.equal(expectedAccessToken.access_token);
+
+          //Stop auto fresh
+          oauthClientWithAutoRefreshAndInterval.stopAutoRefresh()
+
+          // // At time 0, we don't expect the function to have been called.
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock 3 seconds
+          this.clock.tick(3 * 1000);
+          expect(refreshCallSpy.calledOnce).to.not.be.true;
+
+          // Advance clock again (3 seconds)
+          this.clock.tick(3 * 1000);
+          expect(refreshCallSpy.calledTwice).to.not.be.true;
+        });
+    });
+
+  });
+});
 
 describe('Tests for OAuthClient', () => {
   it('Creates a new access token instance', () => {
