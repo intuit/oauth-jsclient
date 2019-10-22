@@ -18,7 +18,7 @@ const ngrok =  (process.env.NGROK_ENABLED==="true") ? require('ngrok'):null;
  * Configure View and Handlebars
  */
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '../public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 app.use(bodyParser.json())
