@@ -1,7 +1,7 @@
 [![SDK Banner](views/SDK.png)][ss1]
 
 
-[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient)
+[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=develop)](https://travis-ci.org/intuit/oauth-jsclient?branch=develop)
 [![NPM Package Version](https://img.shields.io/npm/v/intuit-oauth.svg?style=flat-square)](https://www.npmjs.com/package/intuit-oauth)
 [![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg)](https://coveralls.io/github/intuit/oauth-jsclient)
 [![Known Vulnerabilities](https://snyk.io/test/github/intuit/oauth-jsclient/badge.svg)](https://snyk.io/test/github/intuit/oauth-jsclient)
