@@ -135,6 +135,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     if (!uri) throw new Error('Provide the Uri');
     const params = queryString.parse(uri.split('?').reverse()[0]);
     this.getToken().realmId = (params.realmId ? params.realmId : '');
+    if ('state' in params) this.getToken().state = params.state;
 
     const body = {};
     if (params.code) {
