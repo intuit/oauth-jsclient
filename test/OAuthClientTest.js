@@ -11,6 +11,8 @@ const nock = require('nock');
 const sinon = require('sinon');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const btoa = require('btoa');
+const jwt = require('jsonwebtoken');
 
 // eslint-disable-next-line no-unused-vars
 const getPem = require('rsa-pem-from-mod-exp');
@@ -23,10 +25,13 @@ const expectedTokenResponse = require('./mocks/tokenResponse.json');
 const expectedUserInfo = require('./mocks/userInfo.json');
 const expectedMakeAPICall = require('./mocks/makeAPICallResponse.json');
 const expectedjwkResponseCall = require('./mocks/jwkResponse.json');
-const expectedvalidateIdToken = require('./mocks/validateIdToken.json');
 const expectedOpenIDToken = require('./mocks/openID-token.json');
 // var expectedErrorResponse = require('./mocks/errorResponse.json');
 const expectedMigrationResponse = require('./mocks/authResponse.json');
+
+require.cache[require.resolve('rsa-pem-from-mod-exp')] = {
+  exports: sinon.stub().returns(3),
+};
 
 const oauthClient = new OAuthClientTest({
   clientId: 'clientID',
@@ -262,7 +267,7 @@ describe('Tests for OAuthClient', () => {
   });
 
   // make API Call
-  describe('Make API Call ', () => {
+  describe('Make API Call', () => {
     before(() => {
       nock('https://sandbox-quickbooks.api.intuit.com').persist()
         .get('/v3/company/12345/companyinfo/12345')
@@ -280,6 +285,20 @@ describe('Tests for OAuthClient', () => {
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
       return oauthClient.makeApiCall({ url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345' })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.getJson()))
+            .to.be.equal(JSON.stringify(expectedMakeAPICall));
+        });
+    });
+    it('Make API Call in Sandbox Environment with headers as parameters', () => {
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient.makeApiCall({
+          url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
+          headers: {
+            Accept: "application/json",
+          }
+        })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.getJson()))
             .to.be.equal(JSON.stringify(expectedMakeAPICall));
@@ -324,9 +343,6 @@ describe('Tests for OAuthClient', () => {
 });
 
 describe('getPublicKey', () => {
-  require.cache[require.resolve('rsa-pem-from-mod-exp')] = {
-    exports: sinon.mock().returns(3),
-  };
   const pem = oauthClient.getPublicKey(3, 4);
   expect(pem).to.be.equal(3);
 });
@@ -359,7 +375,7 @@ describe('Validate Id Token ', () => {
   before(() => {
     nock('https://oauth.platform.intuit.com').persist()
       .get('/op/v1/jwks')
-      .reply(200, expectedjwkResponseCall, {
+      .reply(200, expectedjwkResponseCall.body, {
         'content-type': 'application/json;charset=UTF-8',
         'content-length': '264',
         connection: 'close',
@@ -369,7 +385,22 @@ describe('Validate Id Token ', () => {
         'cache-control': 'no-cache, no-store',
         pragma: 'no-cache',
       });
+    sinon.stub(jwt, 'verify').returns(true);
   });
+
+  const mockIdTokenPayload = {
+    sub: 'b053d994-07d5-468d-b7ee-22e349d2e739',
+    aud: ['clientID'],
+    realmid: '1108033471',
+    auth_time: 1462554475,
+    iss: 'https://oauth.platform.intuit.com/op/v1',
+    exp: Date.now() + 60000,
+    iat: 1462557728,
+  };
+
+  const tokenParts = expectedOpenIDToken.id_token.split('.');
+  const encodedMockIdTokenPayload = tokenParts[0].concat('.', btoa(JSON.stringify(mockIdTokenPayload)));
+  const mockToken = Object.assign({}, expectedOpenIDToken, { id_token: encodedMockIdTokenPayload });
 
   it('validate id token returns error if id_token missing', async () => {
     delete oauthClient.getToken().id_token;
@@ -377,18 +408,18 @@ describe('Validate Id Token ', () => {
   });
 
   it('Validate Id Token', () => {
-    oauthClient.getToken().setToken(expectedOpenIDToken);
+    oauthClient.getToken().setToken(mockToken);
     oauthClient.validateIdToken()
       .then((response) => {
-        expect(response).to.be.equal(expectedvalidateIdToken);
+        expect(response).to.be.equal(true);
       });
   });
 
   it('Validate Id Token alternative', () => {
-    oauthClient.setToken(expectedOpenIDToken);
+    oauthClient.setToken(mockToken);
     oauthClient.validateIdToken()
       .then((response) => {
-        expect(response).to.be.equal(expectedOpenIDToken);
+        expect(response).to.be.equal(true);
       });
   });
 });
@@ -474,6 +505,10 @@ describe('Generate OAuth1Sign', () => {
 
     const oauth1Sign = oauthClient.generateOauth1Sign(params);
     expect(oauth1Sign).to.be.a('String');
+    expect(oauth1Sign).to.have.string('oauth_consumer_key="qyprdFsHNQtdRupMKmYnDt6MOjWBW9');
+    expect(oauth1Sign).to.have.string('oauth_nonce="nonce');
+    expect(oauth1Sign).to.have.string('oauth_version="1.0');
+    expect(oauth1Sign).to.have.string('oauth_token', 'oauth_timestamp', 'oauth_signature');
   });
 });
 
