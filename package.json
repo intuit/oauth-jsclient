@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -68,8 +68,8 @@
   },
   "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
-    "csrf": "^3.0.4",
     "atob": "2.1.2",
+    "csrf": "^3.0.4",
     "es6-promise": "^4.2.5",
     "events": "^3.0.0",
     "idtoken-verifier": "^1.2.0",
@@ -83,6 +83,7 @@
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
+    "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chance": "^1.1.3",
