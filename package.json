@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -47,9 +47,6 @@
       "html",
       "json"
     ]
-  },
-  "bin": {
-    "coveralls": "./bin/coveralls.js"
   },
   "engines": {
     "node": ">=7.0.0"
