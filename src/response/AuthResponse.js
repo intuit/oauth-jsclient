@@ -46,7 +46,7 @@ function AuthResponse(params) {
 AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
   this.body = (response && response.body) || '';
-  this.json = this.body ? JSON.parse(this.body) : null;
+  this.json = this.body && this.isJson() ? JSON.parse(this.body) : null;
   this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
 };
 
@@ -86,7 +86,7 @@ AuthResponse.prototype.headers = function headers() {
  * @returns {*|boolean}
  */
 AuthResponse.prototype.valid = function valid() {
-  return (this.response && Number(this.response.status) === 200);
+  return (this.response && Number(this.response.status) >= 200 && Number(this.response.status) < 300);
 };
 
 
