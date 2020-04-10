@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -67,38 +67,24 @@
   "dependencies": {
     "atob": "2.1.2",
     "csrf": "^3.0.4",
-    "es6-promise": "^4.2.5",
-    "events": "^3.0.0",
-    "idtoken-verifier": "^1.2.0",
     "jsonwebtoken": "^8.3.0",
     "oauth-signature": "^1.3.1",
     "object-assign": "^4.1.1",
     "popsicle": "10.0.1",
-    "query-string": "6.2.0",
+    "query-string": "^6.12.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "body-parser": "^1.15.2",
     "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "chance": "^1.1.3",
-    "cors": "^2.8.1",
-    "coveralls": "^3.0.7",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "express": "^4.14.0",
-    "is-travis": "^1.0.0",
-    "istanbul": "^0.4.5",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
     "mocha": "^5.0.4",
-    "mocha-lcov-reporter": "^1.3.0",
     "nock": "^9.2.3",
     "nyc": "^11.6.0",
-    "phantomjs-prebuilt": "^2.1.4",
-    "sinon": "^7.5.0",
-    "standard": "^11.0.0",
-    "watchify": "^3.7.0"
+    "sinon": "^9.0.2"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "url":"https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+  "headers":{
+    "content-type":"application/pdf",
+    "content-length":"1636",
+    "connection":"close",
+    "server":"nginx",
+    "date":"Wed, 05 Sep 2018 05:57:09 GMT",
+    "intuit_tid":"1234-1234-1234-123",
+    "cache-control":"no-cache, no-store",
+    "pragma":"no-cache"
+  },
+  "body":"%PDF-1.\ntrailer<</Root<</Pages<</Kids[<</MediaBox[0 0 3 3]>>]>>>>>>",
+  "status":200,
+  "statusText":"OK"
+}
