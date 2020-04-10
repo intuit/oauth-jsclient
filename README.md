@@ -1,9 +1,9 @@
 [![SDK Banner](views/SDK.png)][ss1]
 
 
-[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=develop)](https://travis-ci.org/intuit/oauth-jsclient?branch=develop)
+[![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient?branch=master)
 [![NPM Package Version](https://img.shields.io/npm/v/intuit-oauth.svg?style=flat-square)](https://www.npmjs.com/package/intuit-oauth)
-[![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=develop)](https://coveralls.io/github/intuit/oauth-jsclient?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/intuit/oauth-jsclient/badge.svg)](https://snyk.io/test/github/intuit/oauth-jsclient)
 
 
@@ -129,7 +129,7 @@ The available scopes include :
 
 OpenID Scopes :
 
-* `openid` - for openID assertion include `OAuthClient.scopes.Openid`
+* `openid` - for openID assertion include `OAuthClient.scopes.OpenId`
 * `profile` - for profile assertion include `OAuthClient.scopes.Profile`  
 * `email` - for email assertion include `OAuthClient.scopes.Email`
 * `phone` - for phone assertion include `OAuthClient.scopes.Phone`
@@ -197,7 +197,7 @@ Access tokens are valid for 3600 seconds (one hour), after which time you need t
 
     oauthClient.refresh()
         .then(function(authResponse) {
-            console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json()));
+            console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getJson()));
         })
         .catch(function(e) {
             console.error("The error message is :"+e.originalMessage);
@@ -214,7 +214,7 @@ You can call the below helper method to refresh tokens by explictly passing the 
 
     oauthClient.refreshUsingToken('<Enter the refresh token>')
         .then(function(authResponse) {
-            console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json()));
+            console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getJson()));
         })
         .catch(function(e) {
             console.error("The error message is :"+e.originalMessage);
@@ -231,7 +231,7 @@ When you no longer need the access_token, you could use the below helper method 
 
 oauthClient.revoke()
         .then(function(authResponse) {
-            console.log('Tokens revoked : ' + JSON.stringify(authResponse.json()));
+            console.log('Tokens revoked : ' + JSON.stringify(authResponse.getJson()));
         })
         .catch(function(e) {
             console.error("The error message is :"+e.originalMessage);
@@ -244,7 +244,7 @@ Alternatively you can also pass `access_token` or `refresh_token` to this helper
 
 oauthClient.revoke(params)
         .then(function(authResponse) {
-            console.log('Tokens revoked : ' + JSON.stringify(authResponse.json()));
+            console.log('Tokens revoked : ' + JSON.stringify(authResponse.getJson()));
         })
         .catch(function(e) {
             console.error("The error message is :"+e.originalMessage);
