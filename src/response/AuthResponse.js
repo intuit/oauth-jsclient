@@ -46,7 +46,7 @@ function AuthResponse(params) {
 AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
   this.body = (response && response.body) || '';
-  this.json = this.body ? JSON.parse(this.body) : null;
+  this.json = this.body && this.isJson() ? JSON.parse(this.body) : null;
   this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
 };
 
