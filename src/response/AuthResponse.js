@@ -86,7 +86,7 @@ AuthResponse.prototype.headers = function headers() {
  * @returns {*|boolean}
  */
 AuthResponse.prototype.valid = function valid() {
-  return (this.response && Number(this.response.status) === 200);
+  return (this.response && Number(this.response.status) >= 200 && Number(this.response.status) < 300);
 };
 
 
