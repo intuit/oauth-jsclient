@@ -83,7 +83,7 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "mocha": "^5.0.4",
-    "nock": "^12.0.3",
+    "nock": "^9.2.3",
     "nyc": "^11.6.0",
     "sinon": "^9.0.2"
   }
