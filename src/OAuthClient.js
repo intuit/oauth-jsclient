@@ -592,7 +592,7 @@ OAuthClient.prototype.createError = function createError(e, authResponse) {
   if (!authResponse || authResponse.body === '') {
     e.error = (authResponse && authResponse.response.statusText) || e.message || '';
     e.authResponse = authResponse || '';
-    e.intuit_tid = (authResponse && authResponse.headers().intuit_tid) || '';
+    e.intuit_tid = (authResponse && authResponse.headers() && authResponse.headers().intuit_tid) || '';
     e.originalMessage = e.message || '';
     e.error_description = (authResponse && authResponse.response.statusText) || '';
     return e;
