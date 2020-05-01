@@ -14,7 +14,9 @@
     "test-watch": "mocha --watch --reporter=spec",
     "test-debug": "mocha --inspect-brk --watch test",
     "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
-    "clean-install": "rm -rf node_modules && npm install"
+    "clean-install": "rm -rf node_modules && npm install",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "intuit-oauth",
@@ -73,7 +75,8 @@
     "popsicle": "10.0.1",
     "query-string": "^6.12.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "btoa": "^1.2.1",
@@ -86,5 +89,6 @@
     "nock": "^9.2.3",
     "nyc": "^11.6.0",
     "sinon": "^9.0.2"
-  }
+  },
+  "snyk": true
 }
