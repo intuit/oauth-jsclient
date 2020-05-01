@@ -4,7 +4,9 @@
   "description": "A sample NodeJs application to demonstrate the use of the client OAuth library",
   "scripts": {
     "start": "node app",
-    "test": "./node_modules/mocha/bin/mocha test/**/*-test.js --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha test/**/*-test.js --reporter spec",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "author": "anil_kumar3@intuit.com",
   "license": "APACHE",
@@ -17,6 +19,8 @@
     "ejs": "^2.5.2",
     "dotenv": "^5.0.1",
     "ngrok": "^3.2.5",
-    "intuit-oauth": "1.3.0"
-  }
+    "intuit-oauth": "1.3.0",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
