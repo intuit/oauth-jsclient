@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /**
 
  Copyright (c) 2018 Intuit
@@ -51,7 +50,9 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
 };
 
 /**
- * @return {AuthResponse}
+ * Get Token
+ * *
+ * @returns {object} token
  */
 AuthResponse.prototype.getToken = function getToken() {
   return this.token.getToken();
@@ -59,15 +60,18 @@ AuthResponse.prototype.getToken = function getToken() {
 
 
 /**
- * @return {AuthResponse}
+ * Get Token
+ * *
+ * @returns {string} text
  */
 AuthResponse.prototype.text = function text() {
   return this.body;
 };
 
 /**
- *
- * @returns {*}
+ * Get Token
+ * *
+ * @returns {Number} statusCode
  */
 AuthResponse.prototype.status = function status() {
   return this.response.status;
@@ -75,6 +79,7 @@ AuthResponse.prototype.status = function status() {
 
 /**
  * Get response headers
+ * *
  * @returns {Object} headers
  */
 AuthResponse.prototype.headers = function headers() {
@@ -82,17 +87,20 @@ AuthResponse.prototype.headers = function headers() {
 };
 
 /**
- * valid { response is valid ? }
+ * Is Response valid { response is valid ? }
+ * *
  * @returns {*|boolean}
  */
 AuthResponse.prototype.valid = function valid() {
-  return (this.response && Number(this.response.status) >= 200 && Number(this.response.status) < 300);
+  return (this.response && Number(this.response.status) >= 200 &&
+    Number(this.response.status) < 300);
 };
 
 
 /**
  * Get Json () { returns token as JSON }
- * @return {object} this.json
+ * *
+ * @return {object} json
  */
 AuthResponse.prototype.getJson = function getJson() {
   if (!this.isJson()) throw new Error('AuthResponse is not JSON');
@@ -104,6 +112,7 @@ AuthResponse.prototype.getJson = function getJson() {
 
 /**
  * Get Intuit tid
+ * *
  * @returns {string} intuit_tid
  */
 AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
@@ -112,21 +121,27 @@ AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
 
 
 /**
- * @private
+ * isContentType
+ * *
+ * @returns {boolean} isContentType
  */
 AuthResponse.prototype.isContentType = function isContentType(contentType) {
   return this.getContentType().indexOf(contentType) > -1;
 };
 
 /**
- * @private
+ * getContentType
+ * *
+ * @returns {string} getContentType
  */
 AuthResponse.prototype.getContentType = function getContentType() {
   return this.response.get(AuthResponse._contentType) || '';
 };
 
 /**
- * @private
+ * isJson
+ * *
+ * @returns {boolean} isJson
  */
 AuthResponse.prototype.isJson = function isJson() {
   return this.isContentType('application/json');

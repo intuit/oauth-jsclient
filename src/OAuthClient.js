@@ -28,7 +28,7 @@
 const atob = require('atob');
 const oauthSignature = require('oauth-signature');
 const objectAssign = require('object-assign');
-const csrf = require('csrf');
+const Csrf = require('csrf');
 const queryString = require('query-string');
 const popsicle = require('popsicle');
 const os = require('os');
@@ -36,6 +36,7 @@ const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const getPem = require('rsa-pem-from-mod-exp');
 const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
@@ -56,7 +57,7 @@ function OAuthClient(config) {
   this.token = new Token(config.token);
   this.logging = !!(Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true);
   this.logger = null;
-  this.state = new csrf(); // eslint-disable-line new-cap
+  this.state = new Csrf();
 
   if (this.logging) {
     const dir = './logs';
@@ -67,9 +68,11 @@ function OAuthClient(config) {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
       ),
-      transports: [new winston.transports.File({ filename: path.join(dir, 'oAuthClient-log.log') })],
+      transports: [new winston.transports.File({
+        filename: path.join(dir, 'oAuthClient-log.log')
+      })],
     });
   }
 }
@@ -83,7 +86,10 @@ OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com
 OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
 OAuthClient.migrate_sandbox = 'https://developer-sandbox.api.intuit.com/v2/oauth2/tokens/migrate';
 OAuthClient.migrate_production = 'https://developer.api.intuit.com/v2/oauth2/tokens/migrate';
-OAuthClient.environment = { sandbox: 'https://sandbox-quickbooks.api.intuit.com/', production: 'https://quickbooks.api.intuit.com/' };
+OAuthClient.environment = {
+  sandbox: 'https://sandbox-quickbooks.api.intuit.com/',
+  production: 'https://quickbooks.api.intuit.com/'
+};
 OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
   Accounting: 'com.intuit.quickbooks.accounting',
@@ -98,11 +104,12 @@ OAuthClient.scopes = {
   OpenId: 'openid',
   Intuit_name: 'intuit_name',
 };
-OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version}_${os.type()}_${os.release()}_${os.platform()}`;
+OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version.version}_${os.type()}_${os.release()}_${os.platform()}`;
 
 
 /**
  * Redirect  User to Authorization Page
+ * *
  * @param params
  * @returns {string} authorize Uri
  */
@@ -126,9 +133,10 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
 
 
 /**
- * Create Token { exchange code for bearer_token }
- * @param options
- * @returns {Promise<any>}
+ * Create Token { exchange authorization code for bearer_token }
+ * *
+ * @param {string|Object} uri
+ * @returns {Promise}
  */
 OAuthClient.prototype.createToken = function createToken(uri) {
   return (new Promise(((resolve) => {
@@ -170,9 +178,9 @@ OAuthClient.prototype.createToken = function createToken(uri) {
 
 
 /**
- * Refresh Token { Refresh access_token }
- * @param {Object} params.refresh_token (optional)
- * @returns {Promise<AuthResponse>}
+ * Refresh the access_token
+ * *
+ * @returns {Promise}
  */
 OAuthClient.prototype.refresh = function refresh() {
   return (new Promise(((resolve) => {
@@ -214,9 +222,9 @@ OAuthClient.prototype.refresh = function refresh() {
 
 /**
  * Refresh Tokens by passing refresh_token parameter explicitly
- * { Refresh access_token by passing refresh_token }
- * @param {Object} params.refresh_token (refresh_token)
- * @returns {Promise<AuthResponse>}
+ * *
+ * @param {string} refresh_token
+ * @returns {Promise}
  */
 OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_token) {
   return (new Promise(((resolve) => {
@@ -246,8 +254,6 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   }))).then((res) => {
     const authResponse = res.json ? res : null;
-
-    // New changes that are added
     const json = (authResponse && authResponse.getJson()) || res;
     this.token.setToken(json);
     this.log('info', 'Refresh usingToken () response is : ', JSON.stringify(authResponse, null, 2));
@@ -259,10 +265,11 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
 };
 
 /**
- * Revoke Token { revoke access/refresh_token }
+ * Revoke access_token/refresh_token
+ * *
  * @param {Object} params.access_token (optional)
  * @param {Object} params.refresh_token (optional)
- * @returns {Promise<AuthResponse>}
+ * @returns {Promise}
  */
 OAuthClient.prototype.revoke = function revoke(params) {
   return (new Promise(((resolve) => {
@@ -271,9 +278,9 @@ OAuthClient.prototype.revoke = function revoke(params) {
     const body = {};
 
     body.token = params.access_token || params.refresh_token ||
-      (this.getToken().isAccessTokenValid()
-        ? this.getToken().access_token
-        : this.getToken().refresh_token);
+      (this.getToken().isAccessTokenValid() ?
+        this.getToken().access_token :
+        this.getToken().refresh_token);
 
     const request = {
       url: OAuthClient.revokeEndpoint,
@@ -300,13 +307,11 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
 /**
  * Get User Info  { Get User Info }
- * @param {Object} params
- * @returns {Promise<AuthResponse>}
+ * *
+ * @returns {Promise}
  */
-OAuthClient.prototype.getUserInfo = function getUserInfo(params) {
+OAuthClient.prototype.getUserInfo = function getUserInfo() {
   return (new Promise(((resolve) => {
-    params = params || {};
-
     const request = {
       url: this.environment === 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
       method: 'GET',
@@ -329,29 +334,30 @@ OAuthClient.prototype.getUserInfo = function getUserInfo(params) {
 };
 
 /**
- * Make API call : Make API Call
- * @param params
- * @returns {Promise<any>}
+ * Make API call. Pass the url,method,headers using `params` object
+ * *
+ * @param {Object} params
+ * @returns {Promise}
  */
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
-    const request = {
-      url: params.url,
-      method: params.method || 'GET',
-      headers: {
+    const headers = (params.headers && typeof params.headers === 'object') ? Object.assign({}, {
         Authorization: `Bearer ${this.getToken().access_token}`,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
-      },
+      }, params.headers) :
+      Object.assign({}, {
+        Authorization: `Bearer ${this.getToken().access_token}`,
+        Accept: AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent,
+      });
+    const request = {
+      url: params.url,
+      method: params.method || 'GET',
+      headers,
     };
-
-    if (params.headers && typeof params.headers === 'object') {
-      for (const header in params.headers) {
-        request.headers[header] = params.headers[header];
-      }
-    }
 
     params.body && (request.body = params.body);
 
@@ -367,8 +373,9 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
 
 /**
  * Migrate OAuth1.0 apps to support OAuth2.0
- * @param params
- * @returns {Promise<any>}
+ * *
+ * @param {Object} params
+ * @returns {Promise}
  */
 OAuthClient.prototype.migrate = function migrate(params) {
   return (new Promise(((resolve) => {
@@ -376,7 +383,10 @@ OAuthClient.prototype.migrate = function migrate(params) {
 
     const uri = this.environment.toLowerCase() === 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
 
-    const authHeader = this.generateOauth1Sign(objectAssign({}, { method: 'POST', uri }, params));
+    const authHeader = this.generateOauth1Sign(objectAssign({}, {
+      method: 'POST',
+      uri,
+    }, params));
 
     const body = {
       scope: (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
@@ -412,7 +422,8 @@ OAuthClient.prototype.migrate = function migrate(params) {
 
 /**
  * Generate oAuth1 Sign : Helper Method to Migrate OAuth1.0 apps to OAuth2.0
- * @param params
+ * *
+ * @param {Object} params
  * @returns {string}
  */
 OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
@@ -453,7 +464,8 @@ OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
 
 /**
  * Validate id_token
- * @param params
+ * *
+ * @param {Object} params(optional)
  * @returns {Promise<AuthResponse>}
  */
 OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
@@ -471,7 +483,7 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
 
     // Step 2 : check if the aud field in idToken contains application's clientId
-    if (!id_token_payload.aud.find(audience => (audience === this.clientId))) return false;
+    if (!id_token_payload.aud.find((audience) => (audience === this.clientId))) return false;
 
     // Step 3 : ensure the timestamp has not elapsed
     if (id_token_payload.exp < Date.now() / 1000) return false;
@@ -497,11 +509,12 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
 };
 
 /**
- *
- * @param id_token
- * @param kid
- * @param request
- * @returns {Promise<AuthResponse>}
+ * Get Key from JWKURI
+ * *
+ * @param {string} id_token
+ * @param {string} kid
+ * @param {Object} request
+ * @returns {Promise}
  */
 OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, kid, request) {
   return (new Promise(((resolve) => {
@@ -510,7 +523,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
     if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
     // Find the key by KID
     const responseBody = JSON.parse(response.body);
-    const key = responseBody.keys.find(el => (el.kid === kid));
+    const key = responseBody.keys.find((el) => (el.kid === kid));
     const cert = this.getPublicKey(key.n, key.e);
 
     return jwt.verify(id_token, cert);
@@ -522,24 +535,26 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
 };
 
 /**
- * get Public Key
+ * Get Public Key
+ * *
  * @param modulus
  * @param exponent
  */
 OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
-  // eslint-disable-next-line global-require
-  const getPem = require('rsa-pem-from-mod-exp');
   const pem = getPem(modulus, exponent);
   return pem;
 };
 
 /**
  * Get Token Request
+ * *
  * @param {Object} request
- * @returns {Promise<AuthResponse>}
+ * @returns {Promise}
  */
 OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
-  const authResponse = new AuthResponse({ token: this.token });
+  const authResponse = new AuthResponse({
+    token: this.token
+  });
 
   return (new Promise(((resolve) => {
     resolve(this.loadResponse(request));
@@ -556,7 +571,9 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
 };
 
 /**
- * Token Validation
+ * Validate Token
+ * *
+ * @returns {boolean}
  */
 OAuthClient.prototype.validateToken = function validateToken() {
   if (!this.token.refreshToken()) throw new Error('The Refresh token is missing');
@@ -570,7 +587,7 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @returns response
  */
 OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return popsicle.get(request).then(response => response);
+  return popsicle.get(request).then((response) => response);
 };
 
 /**
@@ -579,7 +596,7 @@ OAuthClient.prototype.loadResponse = function loadResponse(request) {
  * @returns response
  */
 OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI(request) {
-  return popsicle.get(request).then(response => response);
+  return popsicle.get(request).then((response) => response);
 };
 
 /**
