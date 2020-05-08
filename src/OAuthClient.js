@@ -36,7 +36,6 @@ const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const getPem = require('rsa-pem-from-mod-exp');
 const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
@@ -71,7 +70,7 @@ function OAuthClient(config) {
         winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
       ),
       transports: [new winston.transports.File({
-        filename: path.join(dir, 'oAuthClient-log.log')
+        filename: path.join(dir, 'oAuthClient-log.log'),
       })],
     });
   }
@@ -88,7 +87,7 @@ OAuthClient.migrate_sandbox = 'https://developer-sandbox.api.intuit.com/v2/oauth
 OAuthClient.migrate_production = 'https://developer.api.intuit.com/v2/oauth2/tokens/migrate';
 OAuthClient.environment = {
   sandbox: 'https://sandbox-quickbooks.api.intuit.com/',
-  production: 'https://quickbooks.api.intuit.com/'
+  production: 'https://quickbooks.api.intuit.com/',
 };
 OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
@@ -277,10 +276,10 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
     const body = {};
 
-    body.token = params.access_token || params.refresh_token ||
-      (this.getToken().isAccessTokenValid() ?
-        this.getToken().access_token :
-        this.getToken().refresh_token);
+    body.token = params.access_token || params.refresh_token
+      || (this.getToken().isAccessTokenValid()
+        ? this.getToken().access_token
+        : this.getToken().refresh_token);
 
     const request = {
       url: OAuthClient.revokeEndpoint,
@@ -343,12 +342,13 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return (new Promise(((resolve) => {
     params = params || {};
 
+    // TODO : Test this feature
     const headers = (params.headers && typeof params.headers === 'object') ? Object.assign({}, {
-        Authorization: `Bearer ${this.getToken().access_token}`,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-      }, params.headers) :
-      Object.assign({}, {
+      Authorization: `Bearer ${this.getToken().access_token}`,
+      Accept: AuthResponse._jsonContentType,
+      'User-Agent': OAuthClient.user_agent,
+    }, params.headers)
+      : Object.assign({}, {
         Authorization: `Bearer ${this.getToken().access_token}`,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
@@ -541,6 +541,8 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
  * @param exponent
  */
 OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
+  // eslint-disable-next-line global-require
+  const getPem = require('rsa-pem-from-mod-exp');
   const pem = getPem(modulus, exponent);
   return pem;
 };
@@ -553,7 +555,7 @@ OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
  */
 OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
   const authResponse = new AuthResponse({
-    token: this.token
+    token: this.token,
   });
 
   return (new Promise(((resolve) => {
