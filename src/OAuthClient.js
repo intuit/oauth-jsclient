@@ -18,28 +18,26 @@
 
  */
 
-
 /**
  * @namespace OAuthClient
  */
 
-'use strict';
+"use strict";
 
-const atob = require('atob');
-const oauthSignature = require('oauth-signature');
-const objectAssign = require('object-assign');
-const Csrf = require('csrf');
-const queryString = require('query-string');
-const popsicle = require('popsicle');
-const os = require('os');
-const winston = require('winston');
-const path = require('path');
-const fs = require('fs');
-const jwt = require('jsonwebtoken');
-const AuthResponse = require('./response/AuthResponse');
-const version = require('../package.json');
-const Token = require('./access-token/Token');
-
+const atob = require("atob");
+const oauthSignature = require("oauth-signature");
+const objectAssign = require("object-assign");
+const Csrf = require("csrf");
+const queryString = require("query-string");
+const popsicle = require("popsicle");
+const os = require("os");
+const winston = require("winston");
+const path = require("path");
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const AuthResponse = require("./response/AuthResponse");
+const version = require("../package.json");
+const Token = require("./access-token/Token");
 
 /**
  * @constructor
@@ -54,57 +52,70 @@ function OAuthClient(config) {
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
   this.token = new Token(config.token);
-  this.logging = !!(Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true);
+  this.logging = !!(
+    Object.prototype.hasOwnProperty.call(config, "logging") &&
+    config.logging === true
+  );
   this.logger = null;
   this.state = new Csrf();
 
   if (this.logging) {
-    const dir = './logs';
+    const dir = "./logs";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
     this.logger = winston.createLogger({
-      level: 'info',
+      level: "info",
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+        winston.format.printf(
+          (info) => `${info.timestamp} ${info.level}: ${info.message}`
+        )
       ),
-      transports: [new winston.transports.File({
-        filename: path.join(dir, 'oAuthClient-log.log'),
-      })],
+      transports: [
+        new winston.transports.File({
+          filename: path.join(dir, "oAuthClient-log.log"),
+        }),
+      ],
     });
   }
 }
 
-
-OAuthClient.cacheId = 'cacheID';
-OAuthClient.authorizeEndpoint = 'https://appcenter.intuit.com/connect/oauth2';
-OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
-OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
-OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
-OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
-OAuthClient.migrate_sandbox = 'https://developer-sandbox.api.intuit.com/v2/oauth2/tokens/migrate';
-OAuthClient.migrate_production = 'https://developer.api.intuit.com/v2/oauth2/tokens/migrate';
+OAuthClient.cacheId = "cacheID";
+OAuthClient.authorizeEndpoint = "https://appcenter.intuit.com/connect/oauth2";
+OAuthClient.tokenEndpoint =
+  "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
+OAuthClient.revokeEndpoint =
+  "https://developer.api.intuit.com/v2/oauth2/tokens/revoke";
+OAuthClient.userinfo_endpoint_production =
+  "https://accounts.platform.intuit.com/v1/openid_connect/userinfo";
+OAuthClient.userinfo_endpoint_sandbox =
+  "https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo";
+OAuthClient.migrate_sandbox =
+  "https://developer-sandbox.api.intuit.com/v2/oauth2/tokens/migrate";
+OAuthClient.migrate_production =
+  "https://developer.api.intuit.com/v2/oauth2/tokens/migrate";
 OAuthClient.environment = {
-  sandbox: 'https://sandbox-quickbooks.api.intuit.com/',
-  production: 'https://quickbooks.api.intuit.com/',
+  sandbox: "https://sandbox-quickbooks.api.intuit.com/",
+  production: "https://quickbooks.api.intuit.com/",
 };
-OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
+OAuthClient.jwks_uri = "https://oauth.platform.intuit.com/op/v1/jwks";
 OAuthClient.scopes = {
-  Accounting: 'com.intuit.quickbooks.accounting',
-  Payment: 'com.intuit.quickbooks.payment',
-  Payroll: 'com.intuit.quickbooks.payroll',
-  TimeTracking: 'com.intuit.quickbooks.payroll.timetracking',
-  Benefits: 'com.intuit.quickbooks.payroll.benefits',
-  Profile: 'profile',
-  Email: 'email',
-  Phone: 'phone',
-  Address: 'address',
-  OpenId: 'openid',
-  Intuit_name: 'intuit_name',
+  Accounting: "com.intuit.quickbooks.accounting",
+  Payment: "com.intuit.quickbooks.payment",
+  Payroll: "com.intuit.quickbooks.payroll",
+  TimeTracking: "com.intuit.quickbooks.payroll.timetracking",
+  Benefits: "com.intuit.quickbooks.payroll.benefits",
+  Profile: "profile",
+  Email: "email",
+  Phone: "phone",
+  Address: "address",
+  OpenId: "openid",
+  Intuit_name: "intuit_name",
 };
-OAuthClient.user_agent = `Intuit-OAuthClient-JS_${version.version}_${os.type()}_${os.release()}_${os.platform()}`;
-
+OAuthClient.user_agent = `Intuit-OAuthClient-JS_${
+  version.version
+}_${os.type()}_${os.release()}_${os.platform()}`;
 
 /**
  * Redirect  User to Authorization Page
@@ -116,20 +127,19 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
   params = params || {};
 
   // check if the scopes is provided
-  if (!params.scope) throw new Error('Provide the scopes');
+  if (!params.scope) throw new Error("Provide the scopes");
 
   const authUri = `${OAuthClient.authorizeEndpoint}?${queryString.stringify({
-    response_type: 'code',
+    response_type: "code",
     redirect_uri: this.redirectUri,
     client_id: this.clientId,
-    scope: (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
+    scope: Array.isArray(params.scope) ? params.scope.join(" ") : params.scope,
     state: params.state || this.state.create(this.state.secretSync()),
   })}`;
 
-  this.log('info', 'The Authorize Uri is :', authUri);
+  this.log("info", "The Authorize Uri is :", authUri);
   return authUri;
 };
-
 
 /**
  * Create Token { exchange authorization code for bearer_token }
@@ -138,14 +148,15 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
  * @returns {Promise}
  */
 OAuthClient.prototype.createToken = function createToken(uri) {
-  return (new Promise(((resolve) => {
-    if (!uri) throw new Error('Provide the Uri');
-    const params = queryString.parse(uri.split('?').reverse()[0]);
-    this.getToken().realmId = (params.realmId ? params.realmId : '');
+  return new Promise((resolve) => {
+    if (!uri) throw new Error("Provide the Uri");
+    const params = queryString.parse(uri.split("?").reverse()[0]);
+    this.getToken().realmId = params.realmId ? params.realmId : "";
+    if ("state" in params) this.getToken().state = params.state;
 
     const body = {};
     if (params.code) {
-      body.grant_type = 'authorization_code';
+      body.grant_type = "authorization_code";
       body.code = params.code;
       body.redirect_uri = params.redirectUri || this.redirectUri;
     }
@@ -153,28 +164,37 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     const request = {
       url: OAuthClient.tokenEndpoint,
       body,
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
+        "Content-Type": AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((res) => {
-    const authResponse = res.json ? res : null;
-    const json = (authResponse && authResponse.getJson()) || res;
-    this.token.setToken(json);
-    this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Create Token () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.getJson()) || res;
+      this.token.setToken(json);
+      this.log(
+        "info",
+        "Create Token response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Create Token () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
-
 
 /**
  * Refresh the access_token
@@ -182,7 +202,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
  * @returns {Promise}
  */
 OAuthClient.prototype.refresh = function refresh() {
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     /**
      * Check if the tokens exist and are valid
      */
@@ -190,34 +210,43 @@ OAuthClient.prototype.refresh = function refresh() {
 
     const body = {};
 
-    body.grant_type = 'refresh_token';
+    body.grant_type = "refresh_token";
     body.refresh_token = this.getToken().refresh_token;
 
     const request = {
       url: OAuthClient.tokenEndpoint,
       body,
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
+        "Content-Type": AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((res) => {
-    const authResponse = res.json ? res : null;
-    const json = (authResponse && authResponse.getJson()) || res;
-    this.token.setToken(json);
-    this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.getJson()) || res;
+      this.token.setToken(json);
+      this.log(
+        "info",
+        "Refresh Token () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Refresh Token () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
-
 
 /**
  * Refresh Tokens by passing refresh_token parameter explicitly
@@ -225,42 +254,54 @@ OAuthClient.prototype.refresh = function refresh() {
  * @param {string} refresh_token
  * @returns {Promise}
  */
-OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_token) {
-  return (new Promise(((resolve) => {
+OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(
+  refresh_token
+) {
+  return new Promise((resolve) => {
     /**
      * Check if the tokens exist
      */
 
-    if (!refresh_token) throw new Error('The Refresh token is missing');
+    if (!refresh_token) throw new Error("The Refresh token is missing");
 
     const body = {};
 
-    body.grant_type = 'refresh_token';
+    body.grant_type = "refresh_token";
     body.refresh_token = refresh_token;
 
     const request = {
       url: OAuthClient.tokenEndpoint,
       body,
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
+        "Content-Type": AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((res) => {
-    const authResponse = res.json ? res : null;
-    const json = (authResponse && authResponse.getJson()) || res;
-    this.token.setToken(json);
-    this.log('info', 'Refresh usingToken () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.getJson()) || res;
+      this.token.setToken(json);
+      this.log(
+        "info",
+        "Refresh usingToken () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Refresh Token () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -271,37 +312,49 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
  * @returns {Promise}
  */
 OAuthClient.prototype.revoke = function revoke(params) {
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     params = params || {};
 
     const body = {};
 
-    body.token = params.access_token || params.refresh_token
-      || (this.getToken().isAccessTokenValid()
+    body.token =
+      params.access_token ||
+      params.refresh_token ||
+      (this.getToken().isAccessTokenValid()
         ? this.getToken().access_token
         : this.getToken().refresh_token);
 
     const request = {
       url: OAuthClient.revokeEndpoint,
       body,
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
         Accept: AuthResponse._jsonContentType,
-        'Content-Type': AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "Content-Type": AuthResponse._jsonContentType,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((authResponse) => {
-    this.token.clearToken();
-    this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Revoke Token () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((authResponse) => {
+      this.token.clearToken();
+      this.log(
+        "info",
+        "Revoke Token () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Revoke Token () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -310,26 +363,39 @@ OAuthClient.prototype.revoke = function revoke(params) {
  * @returns {Promise}
  */
 OAuthClient.prototype.getUserInfo = function getUserInfo() {
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     const request = {
-      url: this.environment === 'sandbox' ? OAuthClient.userinfo_endpoint_sandbox : OAuthClient.userinfo_endpoint_production,
-      method: 'GET',
+      url:
+        this.environment === "sandbox"
+          ? OAuthClient.userinfo_endpoint_sandbox
+          : OAuthClient.userinfo_endpoint_production,
+      method: "GET",
       headers: {
         Authorization: `Bearer ${this.token.access_token}`,
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((res) => {
-    const authResponse = res.json ? res : null;
-    this.log('info', 'The Get User Info () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Get User Info ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      this.log(
+        "info",
+        "The Get User Info () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Get User Info ()  threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -339,36 +405,55 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
  * @returns {Promise}
  */
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     params = params || {};
 
     // TODO : Test this feature
-    const headers = (params.headers && typeof params.headers === 'object') ? Object.assign({}, {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    }, params.headers)
-      : Object.assign({}, {
-        Authorization: `Bearer ${this.getToken().access_token}`,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-      });
+    const headers =
+      params.headers && typeof params.headers === "object"
+        ? Object.assign(
+            {},
+            {
+              Authorization: `Bearer ${this.getToken().access_token}`,
+              Accept: AuthResponse._jsonContentType,
+              "User-Agent": OAuthClient.user_agent,
+            },
+            params.headers
+          )
+        : Object.assign(
+            {},
+            {
+              Authorization: `Bearer ${this.getToken().access_token}`,
+              Accept: AuthResponse._jsonContentType,
+              "User-Agent": OAuthClient.user_agent,
+            }
+          );
     const request = {
       url: params.url,
-      method: params.method || 'GET',
+      method: params.method || "GET",
       headers,
     };
 
     params.body && (request.body = params.body);
 
     resolve(this.getTokenRequest(request));
-  }))).then((authResponse) => {
-    this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'Get makeAPICall ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((authResponse) => {
+      this.log(
+        "info",
+        "The makeAPICall () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "Get makeAPICall ()  threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -378,18 +463,29 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
  * @returns {Promise}
  */
 OAuthClient.prototype.migrate = function migrate(params) {
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     params = params || {};
 
-    const uri = this.environment.toLowerCase() === 'sandbox' ? OAuthClient.migrate_sandbox : OAuthClient.migrate_production;
+    const uri =
+      this.environment.toLowerCase() === "sandbox"
+        ? OAuthClient.migrate_sandbox
+        : OAuthClient.migrate_production;
 
-    const authHeader = this.generateOauth1Sign(objectAssign({}, {
-      method: 'POST',
-      uri,
-    }, params));
+    const authHeader = this.generateOauth1Sign(
+      objectAssign(
+        {},
+        {
+          method: "POST",
+          uri,
+        },
+        params
+      )
+    );
 
     const body = {
-      scope: (Array.isArray(params.scope)) ? params.scope.join(' ') : params.scope,
+      scope: Array.isArray(params.scope)
+        ? params.scope.join(" ")
+        : params.scope,
       redirect_uri: this.redirectUri,
       client_id: this.clientId,
       client_secret: this.clientSecret,
@@ -397,27 +493,37 @@ OAuthClient.prototype.migrate = function migrate(params) {
 
     const request = {
       url: uri,
-      method: 'POST',
+      method: "POST",
       body,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `OAuth ${authHeader}`,
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
     resolve(this.getTokenRequest(request));
-  }))).then((res) => {
-    const authResponse = res.json ? res : null;
-    const json = (authResponse && authResponse.getJson()) || res;
-    this.token.setToken(json);
-    this.log('info', 'The migrate () response is : ', JSON.stringify(authResponse, null, 2));
-    return authResponse;
-  }).catch((e) => {
-    this.log('error', 'The migrate () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  })
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.getJson()) || res;
+      this.token.setToken(json);
+      this.log(
+        "info",
+        "The migrate () response is : ",
+        JSON.stringify(authResponse, null, 2)
+      );
+      return authResponse;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "The migrate () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -432,10 +538,10 @@ OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
   const parameters = {
     oauth_consumer_key: params.oauth_consumer_key,
     oauth_token: params.access_token,
-    oauth_signature_method: 'HMAC-SHA1',
+    oauth_signature_method: "HMAC-SHA1",
     oauth_timestamp: timestamp,
-    oauth_nonce: 'nonce',
-    oauth_version: '1.0',
+    oauth_nonce: "nonce",
+    oauth_version: "1.0",
   };
 
   const encodedSignature = oauthSignature.generate(
@@ -448,16 +554,19 @@ OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
 
   parameters.oauth_signature = encodedSignature;
 
-  const authHeader = Object.entries(parameters).reduce((header, [key, val], idx, array) => {
-    // Add this for Accounting API minorversion url query parameter
-    if (key === 'minorversion') {
-      return header;
-    }
-    if (idx === array.length - 1) {
-      return `${header}${key}="${val}"`;
-    }
-    return `${header}${key}="${val}",`;
-  }, '');
+  const authHeader = Object.entries(parameters).reduce(
+    (header, [key, val], idx, array) => {
+      // Add this for Accounting API minorversion url query parameter
+      if (key === "minorversion") {
+        return header;
+      }
+      if (idx === array.length - 1) {
+        return `${header}${key}="${val}"`;
+      }
+      return `${header}${key}="${val}",`;
+    },
+    ""
+  );
 
   return authHeader;
 };
@@ -469,43 +578,58 @@ OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
  * @returns {Promise<AuthResponse>}
  */
 OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
-  return (new Promise(((resolve) => {
-    if (!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
+  return new Promise((resolve) => {
+    if (!this.getToken().id_token)
+      throw new Error("The bearer token does not have id_token");
 
     const id_token = this.getToken().id_token || params.id_token;
 
     // Decode ID Token
-    const token_parts = id_token.split('.');
+    const token_parts = id_token.split(".");
     const id_token_header = JSON.parse(atob(token_parts[0]));
     const id_token_payload = JSON.parse(atob(token_parts[1]));
 
     // Step 1 : First check if the issuer is as mentioned in "issuer"
-    if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
+    if (id_token_payload.iss !== "https://oauth.platform.intuit.com/op/v1")
+      return false;
 
     // Step 2 : check if the aud field in idToken contains application's clientId
-    if (!id_token_payload.aud.find((audience) => (audience === this.clientId))) return false;
+    if (!id_token_payload.aud.find((audience) => audience === this.clientId))
+      return false;
 
     // Step 3 : ensure the timestamp has not elapsed
     if (id_token_payload.exp < Date.now() / 1000) return false;
 
     const request = {
       url: OAuthClient.jwks_uri,
-      method: 'GET',
+      method: "GET",
       headers: {
         Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
+        "User-Agent": OAuthClient.user_agent,
       },
     };
 
-    return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
-  }))).then((res) => {
-    this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
-    if (res) return true;
-    return false;
-  }).catch((e) => {
-    this.log('error', 'The validateIdToken () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+    return resolve(
+      this.getKeyFromJWKsURI(id_token, id_token_header.kid, request)
+    );
+  })
+    .then((res) => {
+      this.log(
+        "info",
+        "The validateIdToken () response is : ",
+        JSON.stringify(res, null, 2)
+      );
+      if (res) return true;
+      return false;
+    })
+    .catch((e) => {
+      this.log(
+        "error",
+        "The validateIdToken () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -516,22 +640,33 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
  * @param {Object} request
  * @returns {Promise}
  */
-OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, kid, request) {
-  return (new Promise(((resolve) => {
+OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(
+  id_token,
+  kid,
+  request
+) {
+  return new Promise((resolve) => {
     resolve(this.loadResponse(request));
-  }))).then((response) => {
-    if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
-    // Find the key by KID
-    const responseBody = JSON.parse(response.body);
-    const key = responseBody.keys.find((el) => (el.kid === kid));
-    const cert = this.getPublicKey(key.n, key.e);
+  })
+    .then((response) => {
+      if (Number(response.status) !== 200)
+        throw new Error("Could not reach JWK endpoint");
+      // Find the key by KID
+      const responseBody = JSON.parse(response.body);
+      const key = responseBody.keys.find((el) => el.kid === kid);
+      const cert = this.getPublicKey(key.n, key.e);
 
-    return jwt.verify(id_token, cert);
-  }).catch((e) => {
-    e = this.createError(e);
-    this.log('error', 'The getKeyFromJWKsURI () threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+      return jwt.verify(id_token, cert);
+    })
+    .catch((e) => {
+      e = this.createError(e);
+      this.log(
+        "error",
+        "The getKeyFromJWKsURI () threw an exception : ",
+        JSON.stringify(e, null, 2)
+      );
+      throw e;
+    });
 };
 
 /**
@@ -542,7 +677,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
  */
 OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
   // eslint-disable-next-line global-require
-  const getPem = require('rsa-pem-from-mod-exp');
+  const getPem = require("rsa-pem-from-mod-exp");
   const pem = getPem(modulus, exponent);
   return pem;
 };
@@ -558,18 +693,20 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
     token: this.token,
   });
 
-  return (new Promise(((resolve) => {
+  return new Promise((resolve) => {
     resolve(this.loadResponse(request));
-  }))).then((response) => {
-    authResponse.processResponse(response);
+  })
+    .then((response) => {
+      authResponse.processResponse(response);
 
-    if (!authResponse.valid()) throw new Error('Response has an Error');
+      if (!authResponse.valid()) throw new Error("Response has an Error");
 
-    return authResponse;
-  }).catch((e) => {
-    if (!e.authResponse) e = this.createError(e, authResponse);
-    throw e;
-  });
+      return authResponse;
+    })
+    .catch((e) => {
+      if (!e.authResponse) e = this.createError(e, authResponse);
+      throw e;
+    });
 };
 
 /**
@@ -578,10 +715,11 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
  * @returns {boolean}
  */
 OAuthClient.prototype.validateToken = function validateToken() {
-  if (!this.token.refreshToken()) throw new Error('The Refresh token is missing');
-  if (!this.token.isRefreshTokenValid()) throw new Error('The Refresh token is invalid, please Authorize again.');
+  if (!this.token.refreshToken())
+    throw new Error("The Refresh token is missing");
+  if (!this.token.isRefreshTokenValid())
+    throw new Error("The Refresh token is invalid, please Authorize again.");
 };
-
 
 /**
  * Make HTTP Request using Popsicle Client
@@ -597,7 +735,9 @@ OAuthClient.prototype.loadResponse = function loadResponse(request) {
  * @param request
  * @returns response
  */
-OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI(request) {
+OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI(
+  request
+) {
   return popsicle.get(request).then((response) => response);
 };
 
@@ -608,20 +748,26 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI
  * @return {Error|IApiError}
  */
 OAuthClient.prototype.createError = function createError(e, authResponse) {
-  if (!authResponse || authResponse.body === '') {
-    e.error = (authResponse && authResponse.response.statusText) || e.message || '';
-    e.authResponse = authResponse || '';
-    e.intuit_tid = (authResponse && authResponse.headers().intuit_tid) || '';
-    e.originalMessage = e.message || '';
-    e.error_description = (authResponse && authResponse.response.statusText) || '';
+  if (!authResponse || authResponse.body === "") {
+    e.error =
+      (authResponse && authResponse.response.statusText) || e.message || "";
+    e.authResponse = authResponse || "";
+    e.intuit_tid =
+      (authResponse &&
+        authResponse.headers() &&
+        authResponse.headers().intuit_tid) ||
+      "";
+    e.originalMessage = e.message || "";
+    e.error_description =
+      (authResponse && authResponse.response.statusText) || "";
     return e;
   }
 
   e.authResponse = authResponse;
   e.originalMessage = e.message;
 
-  e.error = '';
-  if ('error' in authResponse.getJson()) {
+  e.error = "";
+  if ("error" in authResponse.getJson()) {
     e.error = authResponse.getJson().error;
   } else if (authResponse.response.statusText) {
     e.error = authResponse.response.statusText;
@@ -629,8 +775,8 @@ OAuthClient.prototype.createError = function createError(e, authResponse) {
     e.error = e.message;
   }
 
-  e.error_description = '';
-  if ('error_description' in authResponse.getJson()) {
+  e.error_description = "";
+  if ("error_description" in authResponse.getJson()) {
     e.error_description = authResponse.getJson().error_description;
   } else if (authResponse.response.statusText) {
     e.error_description = authResponse.response.statusText;
@@ -657,7 +803,6 @@ OAuthClient.prototype.getToken = function getToken() {
   return this.token;
 };
 
-
 /**
  * Set Token
  * @param {Object}
@@ -668,14 +813,15 @@ OAuthClient.prototype.setToken = function setToken(params) {
   return this.token;
 };
 
-
 /**
  * Get AuthHeader
  * @returns {string} authHeader
  */
 OAuthClient.prototype.authHeader = function authHeader() {
   const apiKey = `${this.clientId}:${this.clientSecret}`;
-  return (typeof btoa === 'function') ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
+  return typeof btoa === "function"
+    ? btoa(apiKey)
+    : Buffer.from(apiKey).toString("base64");
 };
 
 OAuthClient.prototype.log = function log(level, message, messageData) {
