@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.org/intuit/oauth-jsclient.svg?branch=master)](https://travis-ci.org/intuit/oauth-jsclient?branch=master)
 [![NPM Package Version](https://img.shields.io/npm/v/intuit-oauth.svg?style=flat-square)](https://www.npmjs.com/package/intuit-oauth)
 [![Coverage Status](https://coveralls.io/repos/github/intuit/oauth-jsclient/badge.svg?branch=master)](https://coveralls.io/github/intuit/oauth-jsclient?branch=master)
-![Downloads Per Month](https://img.shields.io/npm/dm/intuit-oauth)
-![GitHub contributors](https://img.shields.io/github/contributors/intuit/oauth-jsclient?style=flat-square)
-![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/intuit/oauth-jsclient)
+[![GitHub contributors](https://img.shields.io/github/contributors/intuit/oauth-jsclient?style=flat-square)](https://github.com/intuit/oauth-jsclient/graphs/contributors)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/intuit/oauth-jsclient/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/intuit/oauth-jsclient/?branch=master)
+![npm](https://img.shields.io/npm/dm/intuit-oauth?style=flat-square)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
 [![Known Vulnerabilities](https://snyk.io/test/github/intuit/oauth-jsclient/badge.svg)](https://snyk.io/test/github/intuit/oauth-jsclient)
 
