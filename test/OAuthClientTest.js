@@ -514,72 +514,7 @@ describe('Get Auth Header', () => {
   });
 });
 
-// Generate OAuth1Sign
-
-describe('Generate OAuth1Sign', () => {
-  it('Generate OAuth1Sign String', () => {
-    const params = {
-      method: 'POST',
-      uri: 'uri',
-      oauth_consumer_key: 'qyprdFsHNQtdRupMKmYnDt6MOjWBW9',
-      oauth_consumer_secret: 'TOI5I5dK94dkqDy9SlRD7s08uQUvtow6CK53SpJ1',
-      oauth_signature_method: 'HMAC-SHA1',
-      oauth_timestamp: 'timestamp',
-      oauth_nonce: 'nonce',
-      oauth_version: '1.0',
-      access_token: 'qyprdlGm45UFPPhwAM59Awaq4BAd6hNFwp1SSkZDn54Zrgv9',
-      access_secret: 'xPZ44ZvT17H56pkAAqhfyjuZlF5zZb2k9ej3ohko',
-    };
-
-    const oauth1Sign = oauthClient.generateOauth1Sign(params);
-    expect(oauth1Sign).to.be.a('String');
-    expect(oauth1Sign).to.have.string('oauth_consumer_key="qyprdFsHNQtdRupMKmYnDt6MOjWBW9');
-    expect(oauth1Sign).to.have.string('oauth_nonce="nonce');
-    expect(oauth1Sign).to.have.string('oauth_version="1.0');
-    expect(oauth1Sign).to.have.string('oauth_token', 'oauth_timestamp', 'oauth_signature');
-  });
-});
-
-// Migrate Tokens
-describe('Migrate OAuth Tokens', () => {
-  describe('Sandbox', () => {
-    before(() => {
-      nock('https://developer.api.intuit.com')
-        .persist()
-        .post('/v2/oauth2/tokens/migrate')
-        .reply(200, expectedMigrationResponse, {
-          'content-type': 'application/json;charset=UTF-8',
-          'content-length': '264',
-          connection: 'close',
-          server: 'nginx',
-          'strict-transport-security': 'max-age=15552000',
-          intuit_tid: '1234-1234-1234-123',
-          'cache-control': 'no-cache, no-store',
-          pragma: 'no-cache',
-        });
-    });
-
-    it('Migrate OAuth Tokens - Sandbox', () => {
-      const timestamp = Math.round(new Date().getTime() / 1000);
-
-      const params = {
-        oauth_consumer_key: 'oauth_consumer_key',
-        oauth_consumer_secret: 'oauth_consumer_secret',
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_timestamp: timestamp,
-        oauth_nonce: 'nonce',
-        oauth_version: '1.0',
-        access_token: 'sample_access_token',
-        access_secret: 'sample_access_secret',
-        scope: ['com.intuit.quickbooks.accounting'],
-      };
-      oauthClient.migrate(params).then((response) => {
-        expect(response).to.be.equal(expectedMigrationResponse);
-      });
-    });
-  });
-});
-
+// Load Responses
 describe('load responses', () => {
   before(() => {
     nock('https://sandbox-quickbooks.api.intuit.com')

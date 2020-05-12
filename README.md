@@ -52,11 +52,14 @@ implementations which conforms to the specifications.
 
 # Requirements
 
-The Node.js client library is tested against the `Node` >= `7.0.0`
+The Node.js client library is tested against the `Node 8 LTS` and newer versions.
 
 To use in node 6, please use
-[intuit-oauth@1.x.](https://github.com/intuit/oauth-jsclient/tree/1.5.0) Older node versions are
-unsupported.
+[intuit-oauth@1.x.](https://github.com/intuit/oauth-jsclient/tree/1.5.0)
+
+To use in node 7, please use
+[intuit-oauth@2.x.](https://github.com/intuit/oauth-jsclient/tree/2.0.0). Older node versions are
+not supported.
 
 # Installation
 
@@ -136,6 +139,11 @@ The available scopes include :
 
 - `com.intuit.quickbooks.accounting` - for accounting scope include `OAuthClient.scopes.Accounting`
 - `com.intuit.quickbooks.payment` - for payment scope include `OAuthClient.scopes.Payment`
+- `com.intuit.quickbooks.payroll` - for QuickBooks Payroll API (whitelisted beta apps only)
+- `com.intuit.quickbooks.payroll.timetracking` - for QuickBooks Payroll API for for access to
+  compensation (whitelisted beta apps only)
+- `com.intuit.quickbooks.payroll.benefits` - for QuickBooks Payroll API for access to
+  benefits/pension/deduction (whitelisted beta apps only)
 
 OpenID Scopes :
 

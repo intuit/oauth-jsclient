@@ -25,8 +25,8 @@
 'use strict';
 
 const atob = require('atob');
-const oauthSignature = require('oauth-signature');
-const objectAssign = require('object-assign');
+// const oauthSignature = require('oauth-signature');
+// const objectAssign = require('object-assign');
 const Csrf = require('csrf');
 const queryString = require('query-string');
 const popsicle = require('popsicle');
@@ -188,9 +188,6 @@ OAuthClient.prototype.createToken = function createToken(uri) {
  */
 OAuthClient.prototype.refresh = function refresh() {
   return new Promise((resolve) => {
-    /**
-     * Check if the tokens exist and are valid
-     */
     this.validateToken();
 
     const body = {};
@@ -233,10 +230,6 @@ OAuthClient.prototype.refresh = function refresh() {
  */
 OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_token) {
   return new Promise((resolve) => {
-    /**
-     * Check if the tokens exist
-     */
-
     if (!refresh_token) throw new Error('The Refresh token is missing');
 
     const body = {};
@@ -367,7 +360,6 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
 
-    // TODO : Test this feature
     const headers =
       params.headers && typeof params.headers === 'object'
         ? Object.assign(
@@ -387,6 +379,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               'User-Agent': OAuthClient.user_agent,
             }
           );
+
     const request = {
       url: params.url,
       method: params.method || 'GET',
@@ -405,108 +398,6 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
       this.log('error', 'Get makeAPICall ()  threw an exception : ', JSON.stringify(e, null, 2));
       throw e;
     });
-};
-
-/**
- * Migrate OAuth1.0 apps to support OAuth2.0
- * *
- * @param {Object} params
- * @returns {Promise}
- */
-OAuthClient.prototype.migrate = function migrate(params) {
-  return new Promise((resolve) => {
-    params = params || {};
-
-    const uri =
-      this.environment.toLowerCase() === 'sandbox'
-        ? OAuthClient.migrate_sandbox
-        : OAuthClient.migrate_production;
-
-    const authHeader = this.generateOauth1Sign(
-      objectAssign(
-        {},
-        {
-          method: 'POST',
-          uri,
-        },
-        params
-      )
-    );
-
-    const body = {
-      scope: Array.isArray(params.scope) ? params.scope.join(' ') : params.scope,
-      redirect_uri: this.redirectUri,
-      client_id: this.clientId,
-      client_secret: this.clientSecret,
-    };
-
-    const request = {
-      url: uri,
-      method: 'POST',
-      body,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `OAuth ${authHeader}`,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-      },
-    };
-
-    resolve(this.getTokenRequest(request));
-  })
-    .then((res) => {
-      const authResponse = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
-      this.token.setToken(json);
-      this.log('info', 'The migrate () response is : ', JSON.stringify(authResponse, null, 2));
-      return authResponse;
-    })
-    .catch((e) => {
-      this.log('error', 'The migrate () threw an exception : ', JSON.stringify(e, null, 2));
-      throw e;
-    });
-};
-
-/**
- * Generate oAuth1 Sign : Helper Method to Migrate OAuth1.0 apps to OAuth2.0
- * *
- * @param {Object} params
- * @returns {string}
- */
-OAuthClient.prototype.generateOauth1Sign = function generateOauth1Sign(params) {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-
-  const parameters = {
-    oauth_consumer_key: params.oauth_consumer_key,
-    oauth_token: params.access_token,
-    oauth_signature_method: 'HMAC-SHA1',
-    oauth_timestamp: timestamp,
-    oauth_nonce: 'nonce',
-    oauth_version: '1.0',
-  };
-
-  const encodedSignature = oauthSignature.generate(
-    params.method,
-    params.uri,
-    parameters,
-    params.oauth_consumer_secret,
-    params.access_secret
-  );
-
-  parameters.oauth_signature = encodedSignature;
-
-  const authHeader = Object.entries(parameters).reduce((header, [key, val], idx, array) => {
-    // Add this for Accounting API minorversion url query parameter
-    if (key === 'minorversion') {
-      return header;
-    }
-    if (idx === array.length - 1) {
-      return `${header}${key}="${val}"`;
-    }
-    return `${header}${key}="${val}",`;
-  }, '');
-
-  return authHeader;
 };
 
 /**
