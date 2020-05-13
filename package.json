@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -39,7 +39,7 @@
     ],
     "check-coverage": true,
     "lines": 95,
-    "statements": 85,
+    "statements": 95,
     "functions": 90,
     "branches": 85,
     "reporter": [
@@ -73,8 +73,7 @@
     "popsicle": "10.0.1",
     "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
-    "winston": "^3.1.0",
-    "snyk": "^1.316.1"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "btoa": "^1.2.1",
@@ -88,7 +87,8 @@
     "nock": "^9.2.3",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "snyk": "^1.316.1"
   },
   "snyk": true
 }
