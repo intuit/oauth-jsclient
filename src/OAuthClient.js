@@ -25,8 +25,6 @@
 'use strict';
 
 const atob = require('atob');
-// const oauthSignature = require('oauth-signature');
-// const objectAssign = require('object-assign');
 const Csrf = require('csrf');
 const queryString = require('query-string');
 const popsicle = require('popsicle');
@@ -67,7 +65,7 @@ function OAuthClient(config) {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
       ),
       transports: [
         new winston.transports.File({
@@ -258,7 +256,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.log(
         'info',
         'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse, null, 2)
+        JSON.stringify(authResponse, null, 2),
       );
       return authResponse;
     })
@@ -340,7 +338,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       this.log(
         'info',
         'The Get User Info () response is : ',
-        JSON.stringify(authResponse, null, 2)
+        JSON.stringify(authResponse, null, 2),
       );
       return authResponse;
     })
@@ -369,7 +367,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
             },
-            params.headers
+            params.headers,
           )
         : Object.assign(
             {},
@@ -377,7 +375,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Authorization: `Bearer ${this.getToken().access_token}`,
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
-            }
+            },
           );
 
     const request = {
@@ -474,7 +472,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       this.log(
         'error',
         'The getKeyFromJWKsURI () threw an exception : ',
-        JSON.stringify(e, null, 2)
+        JSON.stringify(e, null, 2),
       );
       throw e;
     });
