@@ -1,12 +1,6 @@
 'use strict';
 
-const {
-  describe,
-  it,
-  before,
-  beforeEach,
-  afterEach,
-} = require('mocha');
+const { describe, it, before, beforeEach, afterEach } = require('mocha');
 const nock = require('nock');
 const sinon = require('sinon');
 const chai = require('chai');
@@ -56,11 +50,11 @@ describe('Tests for OAuthClient', () => {
     expect(accessToken).to.have.property('latency');
   });
 
-
   describe('Get the authorizationURI', () => {
     it('When Scope is passed', () => {
       const actualAuthUri = oauthClient.authorizeUri({ scope: 'testScope', state: 'testState' });
-      const expectedAuthUri = 'https://appcenter.intuit.com/connect/oauth2?client_id=clientID&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=testScope&state=testState';
+      const expectedAuthUri =
+        'https://appcenter.intuit.com/connect/oauth2?client_id=clientID&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=testScope&state=testState';
       expect(actualAuthUri).to.be.equal(expectedAuthUri);
     });
 
@@ -72,8 +66,16 @@ describe('Tests for OAuthClient', () => {
       }
     });
     it('When Scope is passed as an array', () => {
-      const actualAuthUri = oauthClient.authorizeUri({ scope: [OAuthClientTest.scopes.Accounting, OAuthClientTest.scopes.Payment, OAuthClientTest.scopes.OpenId], state: 'testState' });
-      const expectedAuthUri = 'https://appcenter.intuit.com/connect/oauth2?client_id=clientID&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20com.intuit.quickbooks.payment%20openid&state=testState';
+      const actualAuthUri = oauthClient.authorizeUri({
+        scope: [
+          OAuthClientTest.scopes.Accounting,
+          OAuthClientTest.scopes.Payment,
+          OAuthClientTest.scopes.OpenId,
+        ],
+        state: 'testState',
+      });
+      const expectedAuthUri =
+        'https://appcenter.intuit.com/connect/oauth2?client_id=clientID&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20com.intuit.quickbooks.payment%20openid&state=testState';
       expect(actualAuthUri).to.be.equal(expectedAuthUri);
     });
   });
@@ -81,7 +83,8 @@ describe('Tests for OAuthClient', () => {
   // Create bearer tokens
   describe('Create Bearer Token', () => {
     before(() => {
-      nock('https://oauth.platform.intuit.com').persist()
+      nock('https://oauth.platform.intuit.com')
+        .persist()
         .post('/oauth2/v1/tokens/bearer')
         .reply(200, expectedTokenResponse, {
           'content-type': 'application/json',
@@ -95,21 +98,24 @@ describe('Tests for OAuthClient', () => {
     });
 
     it('Provide the uri to get the tokens', () => {
-      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
-      return oauthClient.createToken(parseRedirect)
-        .then((authResponse) => {
-          expect(authResponse.getToken().access_token)
-            .to.be.equal(expectedAccessToken.access_token);
-        });
+      const parseRedirect =
+        'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
+      return oauthClient.createToken(parseRedirect).then((authResponse) => {
+        expect(authResponse.getToken().access_token).to.be.equal(expectedAccessToken.access_token);
+      });
     });
 
-    it('When NO uri is provided', () => oauthClient.createToken()
-      .then((authResponse) => {
-        expect(authResponse.getToken().access_token).to.be.equal(expectedAccessToken.access_token);
-      })
-      .catch((e) => {
-        expect(e.message).to.equal('Provide the Uri');
-      }));
+    it('When NO uri is provided', () =>
+      oauthClient
+        .createToken()
+        .then((authResponse) => {
+          expect(authResponse.getToken().access_token).to.be.equal(
+            expectedAccessToken.access_token,
+          );
+        })
+        .catch((e) => {
+          expect(e.message).to.equal('Provide the Uri');
+        }));
 
     it('Handles when code is NOT in the URL', async () => {
       const parseRedirect = 'http://localhost:8000/callback?state=testState';
@@ -129,7 +135,8 @@ describe('Tests for OAuthClient', () => {
     before(() => {
       // eslint-disable-next-line global-require
       const refreshAccessToken = require('./mocks/refreshResponse.json');
-      nock('https://oauth.platform.intuit.com').persist()
+      nock('https://oauth.platform.intuit.com')
+        .persist()
         .post('/oauth2/v1/tokens/bearer')
         .reply(200, refreshAccessToken, {
           'content-type': 'application/json',
@@ -142,27 +149,26 @@ describe('Tests for OAuthClient', () => {
         });
     });
 
-    it('Refresh the existing tokens', () => oauthClient.refresh()
-      .then((authResponse) => {
-        expect(authResponse.getToken().refresh_token)
-          .to.be.equal(expectedAccessToken.refresh_token);
+    it('Refresh the existing tokens', () =>
+      oauthClient.refresh().then((authResponse) => {
+        expect(authResponse.getToken().refresh_token).to.be.equal(
+          expectedAccessToken.refresh_token,
+        );
       }));
 
     it('Refresh : refresh token is missing', () => {
       oauthClient.getToken().refresh_token = null;
-      return oauthClient.refresh()
-        .catch((e) => {
-          expect(e.message).to.equal('The Refresh token is missing');
-        });
+      return oauthClient.refresh().catch((e) => {
+        expect(e.message).to.equal('The Refresh token is missing');
+      });
     });
 
     it('Refresh : refresh token is invalid', () => {
       oauthClient.getToken().refresh_token = 'sample_refresh_token';
       oauthClient.getToken().x_refresh_token_expires_in = '300';
-      return oauthClient.refresh()
-        .catch((e) => {
-          expect(e.message).to.equal('The Refresh token is invalid, please Authorize again.');
-        });
+      return oauthClient.refresh().catch((e) => {
+        expect(e.message).to.equal('The Refresh token is invalid, please Authorize again.');
+      });
     });
 
     it('Refresh Using token', async () => {
@@ -179,7 +185,8 @@ describe('Tests for OAuthClient', () => {
   // Revoke bearer tokens
   describe('Revoke Bearer Token', () => {
     before(() => {
-      nock('https://developer.api.intuit.com').persist()
+      nock('https://developer.api.intuit.com')
+        .persist()
         .post('/v2/oauth2/tokens/revoke')
         .reply(200, '', {
           'content-type': 'application/json',
@@ -194,34 +201,32 @@ describe('Tests for OAuthClient', () => {
 
     it('Revoke the existing tokens', () => {
       oauthClient.getToken().x_refresh_token_expires_in = '4535995551112';
-      return oauthClient.revoke()
-        .then((authResponse) => {
-          expect(authResponse.getToken().refresh_token).to.be.equal('');
-        });
+      return oauthClient.revoke().then((authResponse) => {
+        expect(authResponse.getToken().refresh_token).to.be.equal('');
+      });
     });
 
     it('Revoke : refresh token is missing', () => {
       oauthClient.getToken().refresh_token = null;
-      return oauthClient.revoke()
-        .catch((e) => {
-          expect(e.message).to.equal('The Refresh token is missing');
-        });
+      return oauthClient.revoke().catch((e) => {
+        expect(e.message).to.equal('The Refresh token is missing');
+      });
     });
 
     it('Revoke : refresh token is invalid', () => {
       oauthClient.getToken().refresh_token = 'sample_refresh_token';
       oauthClient.getToken().x_refresh_token_expires_in = '300';
-      return oauthClient.revoke()
-        .catch((e) => {
-          expect(e.message).to.equal('The Refresh token is invalid, please Authorize again.');
-        });
+      return oauthClient.revoke().catch((e) => {
+        expect(e.message).to.equal('The Refresh token is invalid, please Authorize again.');
+      });
     });
   });
 
   // Get User Info ( OpenID )
   describe('Get User Info ( OpenID )', () => {
     before(() => {
-      nock('https://sandbox-accounts.platform.intuit.com').persist()
+      nock('https://sandbox-accounts.platform.intuit.com')
+        .persist()
         .get('/v1/openid_connect/userinfo')
         .reply(200, expectedUserInfo, {
           'content-type': 'application/json',
@@ -234,16 +239,18 @@ describe('Tests for OAuthClient', () => {
         });
     });
 
-    it('Get User Info in Sandbox', () => oauthClient.getUserInfo()
-      .then((authResponse) => {
-        expect(JSON.stringify(authResponse.getJson()))
-          .to.be.equal(JSON.stringify(expectedUserInfo));
+    it('Get User Info in Sandbox', () =>
+      oauthClient.getUserInfo().then((authResponse) => {
+        expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+          JSON.stringify(expectedUserInfo),
+        );
       }));
   });
 
   describe('Get User Info In Production', () => {
     before(() => {
-      nock('https://accounts.platform.intuit.com').persist()
+      nock('https://accounts.platform.intuit.com')
+        .persist()
         .get('/v1/openid_connect/userinfo')
         .reply(200, expectedUserInfo, {
           'content-type': 'application/json',
@@ -258,18 +265,19 @@ describe('Tests for OAuthClient', () => {
 
     it('Get User Info in Production', () => {
       oauthClient.environment = 'production';
-      return oauthClient.getUserInfo()
-        .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson()))
-            .to.be.equal(JSON.stringify(expectedUserInfo));
-        });
+      return oauthClient.getUserInfo().then((authResponse) => {
+        expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+          JSON.stringify(expectedUserInfo),
+        );
+      });
     });
   });
 
   // make API Call
   describe('Make API Call', () => {
     before(() => {
-      nock('https://sandbox-quickbooks.api.intuit.com').persist()
+      nock('https://sandbox-quickbooks.api.intuit.com')
+        .persist()
         .get('/v3/company/12345/companyinfo/12345')
         .reply(200, expectedMakeAPICall, {
           'content-type': 'application/json',
@@ -284,40 +292,50 @@ describe('Tests for OAuthClient', () => {
     it('Make API Call in Sandbox Environment', () => {
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
-      return oauthClient.makeApiCall({ url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345' })
+      return oauthClient
+        .makeApiCall({
+          url:
+            'https://sandbox-quickbooks.api.intuit.com/v3/company/' +
+            '12345' +
+            '/companyinfo/' +
+            '12345',
+        })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson()))
-            .to.be.equal(JSON.stringify(expectedMakeAPICall));
+          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
         });
     });
     it('Make API Call in Sandbox Environment with headers as parameters', () => {
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
-      return oauthClient.makeApiCall({
-          url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
+      return oauthClient
+        .makeApiCall({
+          url: `https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345`,
           headers: {
-            Accept: "application/json",
-          }
+            Accept: 'application/json',
+          },
         })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson()))
-            .to.be.equal(JSON.stringify(expectedMakeAPICall));
+          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
         });
     });
     it('loadResponseFromJWKsURI', () => {
       const request = {
         url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
       };
-      return oauthClient.loadResponseFromJWKsURI(request)
-        .then((authResponse) => {
-          expect(authResponse.body).to.be.equal(JSON.stringify(expectedMakeAPICall));
-        });
+      return oauthClient.loadResponseFromJWKsURI(request).then((authResponse) => {
+        expect(authResponse.body).to.be.equal(JSON.stringify(expectedMakeAPICall));
+      });
     });
   });
 
   describe('Make API call in Production', () => {
     before(() => {
-      nock('https://quickbooks.api.intuit.com').persist()
+      nock('https://quickbooks.api.intuit.com')
+        .persist()
         .get('/v3/company/12345/companyinfo/12345')
         .reply(200, expectedMakeAPICall, {
           'content-type': 'application/json',
@@ -333,10 +351,15 @@ describe('Tests for OAuthClient', () => {
       oauthClient.environment = 'production';
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
-      return oauthClient.makeApiCall({ url: 'https://quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345' })
+      return oauthClient
+        .makeApiCall({
+          url:
+            'https://quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
+        })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson()))
-            .to.be.equal(JSON.stringify(expectedMakeAPICall));
+          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
         });
     });
   });
@@ -365,15 +388,19 @@ describe('Validate that token request can handle a failure', () => {
 
   it('Validate token request can handle a failure', async () => {
     oauthClient.getToken().setToken(expectedOpenIDToken);
-    await expect(oauthClient.getTokenRequest({ url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/6789/companyinfo/6789' }))
-      .to.be.rejectedWith(Error);
+    await expect(
+      oauthClient.getTokenRequest({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/6789/companyinfo/6789',
+      }),
+    ).to.be.rejectedWith(Error);
   });
 });
 
 // Validate Id Token
 describe('Validate Id Token ', () => {
   before(() => {
-    nock('https://oauth.platform.intuit.com').persist()
+    nock('https://oauth.platform.intuit.com')
+      .persist()
       .get('/op/v1/jwks')
       .reply(200, expectedjwkResponseCall.body, {
         'content-type': 'application/json;charset=UTF-8',
@@ -399,7 +426,10 @@ describe('Validate Id Token ', () => {
   };
 
   const tokenParts = expectedOpenIDToken.id_token.split('.');
-  const encodedMockIdTokenPayload = tokenParts[0].concat('.', btoa(JSON.stringify(mockIdTokenPayload)));
+  const encodedMockIdTokenPayload = tokenParts[0].concat(
+    '.',
+    btoa(JSON.stringify(mockIdTokenPayload)),
+  );
   const mockToken = Object.assign({}, expectedOpenIDToken, { id_token: encodedMockIdTokenPayload });
 
   it('validate id token returns error if id_token missing', async () => {
@@ -409,18 +439,16 @@ describe('Validate Id Token ', () => {
 
   it('Validate Id Token', () => {
     oauthClient.getToken().setToken(mockToken);
-    oauthClient.validateIdToken()
-      .then((response) => {
-        expect(response).to.be.equal(true);
-      });
+    oauthClient.validateIdToken().then((response) => {
+      expect(response).to.be.equal(true);
+    });
   });
 
   it('Validate Id Token alternative', () => {
     oauthClient.setToken(mockToken);
-    oauthClient.validateIdToken()
-      .then((response) => {
-        expect(response).to.be.equal(true);
-      });
+    oauthClient.validateIdToken().then((response) => {
+      expect(response).to.be.equal(true);
+    });
   });
 });
 
@@ -486,75 +514,11 @@ describe('Get Auth Header', () => {
   });
 });
 
-// Generate OAuth1Sign
-
-describe('Generate OAuth1Sign', () => {
-  it('Generate OAuth1Sign String', () => {
-    const params = {
-      method: 'POST',
-      uri: 'uri',
-      oauth_consumer_key: 'qyprdFsHNQtdRupMKmYnDt6MOjWBW9',
-      oauth_consumer_secret: 'TOI5I5dK94dkqDy9SlRD7s08uQUvtow6CK53SpJ1',
-      oauth_signature_method: 'HMAC-SHA1',
-      oauth_timestamp: 'timestamp',
-      oauth_nonce: 'nonce',
-      oauth_version: '1.0',
-      access_token: 'qyprdlGm45UFPPhwAM59Awaq4BAd6hNFwp1SSkZDn54Zrgv9',
-      access_secret: 'xPZ44ZvT17H56pkAAqhfyjuZlF5zZb2k9ej3ohko',
-    };
-
-    const oauth1Sign = oauthClient.generateOauth1Sign(params);
-    expect(oauth1Sign).to.be.a('String');
-    expect(oauth1Sign).to.have.string('oauth_consumer_key="qyprdFsHNQtdRupMKmYnDt6MOjWBW9');
-    expect(oauth1Sign).to.have.string('oauth_nonce="nonce');
-    expect(oauth1Sign).to.have.string('oauth_version="1.0');
-    expect(oauth1Sign).to.have.string('oauth_token', 'oauth_timestamp', 'oauth_signature');
-  });
-});
-
-// Migrate Tokens
-describe('Migrate OAuth Tokens', () => {
-  describe('Sandbox', () => {
-    before(() => {
-      nock('https://developer.api.intuit.com').persist()
-        .post('/v2/oauth2/tokens/migrate')
-        .reply(200, expectedMigrationResponse, {
-          'content-type': 'application/json;charset=UTF-8',
-          'content-length': '264',
-          connection: 'close',
-          server: 'nginx',
-          'strict-transport-security': 'max-age=15552000',
-          intuit_tid: '1234-1234-1234-123',
-          'cache-control': 'no-cache, no-store',
-          pragma: 'no-cache',
-        });
-    });
-
-    it('Migrate OAuth Tokens - Sandbox', () => {
-      const timestamp = Math.round(new Date().getTime() / 1000);
-
-      const params = {
-        oauth_consumer_key: 'oauth_consumer_key',
-        oauth_consumer_secret: 'oauth_consumer_secret',
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_timestamp: timestamp,
-        oauth_nonce: 'nonce',
-        oauth_version: '1.0',
-        access_token: 'sample_access_token',
-        access_secret: 'sample_access_secret',
-        scope: ['com.intuit.quickbooks.accounting'],
-      };
-      oauthClient.migrate(params)
-        .then((response) => {
-          expect(response).to.be.equal(expectedMigrationResponse);
-        });
-    });
-  });
-});
-
+// Load Responses
 describe('load responses', () => {
   before(() => {
-    nock('https://sandbox-quickbooks.api.intuit.com').persist()
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .persist()
       .get('/v3/company/12345/companyinfo/12345')
       .reply(200, expectedMakeAPICall, {
         'content-type': 'application/json',
