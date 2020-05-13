@@ -148,19 +148,19 @@ const server = app.listen(process.env.PORT || 8000, () => {
     console.log(
       `💳  Step 1 : Paste this URL in your browser : ` +
         'http://localhost:' +
-        `${server.address().port}`
+        `${server.address().port}`,
     );
     console.log(
-      '💳  Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com'
+      '💳  Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com',
     );
     console.log(
       `💳  Step 3 : Copy Paste this callback URL into redirectURI :` +
         'http://localhost:' +
         `${server.address().port}` +
-        '/callback'
+        '/callback',
     );
     console.log(
-      `💻  Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`
+      `💻  Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`,
     );
   }
 });
@@ -176,11 +176,11 @@ if (ngrok) {
       redirectUri = `${url}/callback`;
       console.log(`💳 Step 1 : Paste this URL in your browser :  ${url}`);
       console.log(
-        '💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com'
+        '💳 Step 2 : Copy and Paste the clientId and clientSecret from : https://developer.intuit.com',
       );
       console.log(`💳 Step 3 : Copy Paste this callback URL into redirectURI :  ${redirectUri}`);
       console.log(
-        `💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`
+        `💻 Step 4 : Make Sure this redirect URI is also listed under the Redirect URIs on your app in : https://developer.intuit.com`,
       );
     })
     .catch(() => {
