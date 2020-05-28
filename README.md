@@ -173,8 +173,10 @@ oauthClient
 
 # Sample
 
-For more clarity, we suggest you take a look at the sample application below :  
-[sample](https://github.com/intuit/oauth-jsclient/tree/master/sample)
+For more clarity, we suggest you take a look at the sample application below :
+
+- ✨🐢[javascript-express](https://github.com/intuit/oauth-jsclient/tree/master/sample/javascript-express)
+- ✨⚛️[react](https://github.com/intuit/oauth-jsclient/tree/master/sample/react)
 
 ## Helpers
 
