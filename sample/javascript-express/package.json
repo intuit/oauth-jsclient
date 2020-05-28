@@ -10,7 +10,7 @@
   },
   "author": "anil_kumar3@intuit.com",
   "license": "APACHE",
-  "homepage": "https://github.intuit.com/abisalehalliprasan/oauth-jsclient",
+  "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
     "body-parser": "latest",
     "dotenv": "^5.0.1",
