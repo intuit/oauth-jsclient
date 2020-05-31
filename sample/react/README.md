@@ -4,16 +4,15 @@
 
 ## Overview
 
-This is a `sample` app built using React and Express Framework to showcase how to Authorize and
-Authenticate using Intuit's OAuth2.0 Client library.
+This is a `sample` app bootstrapped with [Create React App](https://github.com/facebook/create-react-app) to show how to login using Intuit's [OAuth2.0 Client library](https://www.npmjs.com/package/intuit-oauth).
 
 ## Installation
 
 ### Requirements
 
 - ⚛️ React
-- [Node.js](http://nodejs.org) >= 8.0.0
-- [Intuit Developer](https://developer.intuit.com) Account
+- [Node.js](http://nodejs.org) version 8 LTS and above
+- [Create an app on Intuit Developer](https://developer.intuit.com) Account
 
 ### Via Github Repo (Recommended)
 
