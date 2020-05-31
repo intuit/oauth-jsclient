@@ -31,7 +31,6 @@ export const LoginWrapper = Styled.section`
       color: red;
     }
     .login-container {
-      background-color: #000;
       width: 40%;
       border-radius: 3px;
       color: #fff;
@@ -45,7 +44,7 @@ export const LoginWrapper = Styled.section`
         cursor: pointer;
         display: flex;
         align-items: center;          
-        // height: 40px;
+        border: none;
         > span:nth-child(2) {
           margin-left: 5px;
         }

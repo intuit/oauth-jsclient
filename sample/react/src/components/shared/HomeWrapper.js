@@ -26,17 +26,14 @@ export const HomeWrapper = Styled.section`
     height: 100%;
     width: 100%;
     display: flex;
-    // margin:0 auto;
     font-size: 18px;
     justify-content: center;
-    // justify-content: space-between;
     align-items: center;
     .content{
       display: flex;
       flex-direction: column;
       padding: 20px 100px;   
       margin:20px; 
-      // margin:0 auto;
       box-shadow: 0 15px 30px 0 rgba(0,0,0,.11), 0 5px 15px 0 rgba(0,0,0,.08);
       width: auto;
   
@@ -56,7 +53,6 @@ export const HomeWrapper = Styled.section`
   
       >span:not(:nth-child(2)){
         margin-top: 8px;        
-        // font-size: 14px;
       }
   
     }
