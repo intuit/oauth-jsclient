@@ -109,6 +109,24 @@ OAuthClient.user_agent = `Intuit-OAuthClient-JS_${
 }_${os.type()}_${os.release()}_${os.platform()}`;
 
 /**
+ * Helper function for setting custom authorizeEndpoint/tokenEndpoint URL's
+ * *
+ * @param params
+ * @returns {null}
+ */
+OAuthClient.prototype.setAuthorizeURLs = function setAuthorizeURLs(params) {
+  params = params || {};
+
+  // check if the customURL's are passed correctly
+  if (!params.authorizeEndpoint || !params.tokenEndpoint)
+    throw new Error('Provide the custom authorize URL');
+
+  OAuthClient.authorizeEndpoint = params.authorizeEndpoint;
+  OAuthClient.tokenEndpoint = params.tokenEndpoint;
+  return null;
+};
+
+/**
  * Redirect  User to Authorization Page
  * *
  * @param params
