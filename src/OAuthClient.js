@@ -65,7 +65,7 @@ function OAuthClient(config) {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
       ),
       transports: [
         new winston.transports.File({
@@ -108,21 +108,18 @@ OAuthClient.user_agent = `Intuit-OAuthClient-JS_${
   version.version
 }_${os.type()}_${os.release()}_${os.platform()}`;
 
-/**
- * Helper function for setting custom authorizeEndpoint/tokenEndpoint URL's
- * *
- * @param params
- * @returns {null}
- */
 OAuthClient.prototype.setAuthorizeURLs = function setAuthorizeURLs(params) {
   // check if the customURL's are passed correctly
   if (!params) {
     throw new Error("Provide the custom authorize URL's");
   }
-
   OAuthClient.authorizeEndpoint = params.authorizeEndpoint;
   OAuthClient.tokenEndpoint = params.tokenEndpoint;
   OAuthClient.revokeEndpoint = params.revokeEndpoint;
+  this.environment === 'sandbox'
+    ? (OAuthClient.userinfo_endpoint_sandbox = params.userInfoEndpoint)
+    : (OAuthClient.userinfo_endpoint_production = params.userInfoEndpoint);
+
   return this;
 };
 
@@ -274,7 +271,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.log(
         'info',
         'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse, null, 2),
+        JSON.stringify(authResponse, null, 2)
       );
       return authResponse;
     })
@@ -356,7 +353,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       this.log(
         'info',
         'The Get User Info () response is : ',
-        JSON.stringify(authResponse, null, 2),
+        JSON.stringify(authResponse, null, 2)
       );
       return authResponse;
     })
@@ -385,7 +382,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
             },
-            params.headers,
+            params.headers
           )
         : Object.assign(
             {},
@@ -393,7 +390,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Authorization: `Bearer ${this.getToken().access_token}`,
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
-            },
+            }
           );
 
     const request = {
@@ -490,7 +487,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       this.log(
         'error',
         'The getKeyFromJWKsURI () threw an exception : ',
-        JSON.stringify(e, null, 2),
+        JSON.stringify(e, null, 2)
       );
       throw e;
     });
