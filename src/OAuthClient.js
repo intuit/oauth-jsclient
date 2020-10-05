@@ -401,7 +401,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
 
     params.body && (request.body = params.body);
 
-    resolve(this.getTokenRequest(request));
+    resolve(this.getTokenRequest(request, params.transport));
   })
     .then((authResponse) => {
       this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
@@ -512,13 +512,13 @@ OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
  * @param {Object} request
  * @returns {Promise}
  */
-OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
+OAuthClient.prototype.getTokenRequest = function getTokenRequest(request, transport) {
   const authResponse = new AuthResponse({
     token: this.token,
   });
 
   return new Promise((resolve) => {
-    resolve(this.loadResponse(request));
+    resolve(this.loadResponse(request, transport));
   })
     .then((response) => {
       authResponse.processResponse(response);
@@ -549,8 +549,8 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @param request
  * @returns response
  */
-OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return popsicle.get(request).then((response) => response);
+OAuthClient.prototype.loadResponse = function loadResponse(request, transport) {
+  return popsicle.get(request, transport).then((response) => response);
 };
 
 /**
