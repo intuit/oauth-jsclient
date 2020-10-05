@@ -372,6 +372,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
+    const transport = params.transport ? params.transport : popsicle.createTransport({ type: "text" });
 
     const headers =
       params.headers && typeof params.headers === 'object'
@@ -397,11 +398,12 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
       url: params.url,
       method: params.method || 'GET',
       headers,
+      transport,
     };
 
     params.body && (request.body = params.body);
 
-    resolve(this.getTokenRequest(request, params.transport));
+    resolve(this.getTokenRequest(request));
   })
     .then((authResponse) => {
       this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
@@ -512,13 +514,13 @@ OAuthClient.prototype.getPublicKey = function getPublicKey(modulus, exponent) {
  * @param {Object} request
  * @returns {Promise}
  */
-OAuthClient.prototype.getTokenRequest = function getTokenRequest(request, transport) {
+OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
   const authResponse = new AuthResponse({
     token: this.token,
   });
 
   return new Promise((resolve) => {
-    resolve(this.loadResponse(request, transport));
+    resolve(this.loadResponse(request));
   })
     .then((response) => {
       authResponse.processResponse(response);
@@ -549,8 +551,8 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @param request
  * @returns response
  */
-OAuthClient.prototype.loadResponse = function loadResponse(request, transport) {
-  return popsicle.get(request, transport).then((response) => response);
+OAuthClient.prototype.loadResponse = function loadResponse(request) {
+  return popsicle.get(request).then((response) => response);
 };
 
 /**
