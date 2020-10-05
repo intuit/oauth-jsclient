@@ -1,6 +1,6 @@
 {
-  "name": "intuit-oauth",
-  "version": "3.0.2",
+  "name": "@haislip/intuit-oauth",
+  "version": "3.0.2.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
