@@ -4,5 +4,7 @@ ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   SNYK-JS-LODASH-567746:
-    - winston > async > lodash:
-        patched: '2020-05-01T00:38:24.095Z'
+    - intuit-oauth > winston > async > lodash:
+        patched: '2020-05-01T06:23:47.085Z'
+    - ngrok > request-promise-native > request-promise-core > lodash:
+        patched: '2020-05-01T06:23:47.085Z'

@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "2.0.0",
+  "version": "3.0.2",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "types": "./index.d.ts",
@@ -15,7 +15,9 @@
     "test-watch": "mocha --watch --reporter=spec",
     "test-debug": "mocha --inspect-brk --watch test",
     "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
-    "clean-install": "rm -rf node_modules && npm install"
+    "clean-install": "rm -rf node_modules && npm install",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "intuit-oauth",
@@ -37,10 +39,10 @@
       "sample/node_modules"
     ],
     "check-coverage": true,
-    "lines": 85,
-    "statements": 85,
-    "functions": 80,
-    "branches": 75,
+    "lines": 95,
+    "statements": 95,
+    "functions": 90,
+    "branches": 85,
     "reporter": [
       "lcov",
       "text",
@@ -49,11 +51,8 @@
       "json"
     ]
   },
-  "bin": {
-    "coveralls": "./bin/coveralls.js"
-  },
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=8.17.0"
   },
   "repository": {
     "type": "git",
@@ -69,39 +68,28 @@
   },
   "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
-    "csrf": "^3.0.4",
     "atob": "2.1.2",
-    "es6-promise": "^4.2.5",
-    "events": "^3.0.0",
-    "idtoken-verifier": "^1.2.0",
+    "csrf": "^3.0.4",
     "jsonwebtoken": "^8.3.0",
-    "oauth-signature": "^1.3.1",
-    "object-assign": "^4.1.1",
     "popsicle": "10.0.1",
-    "query-string": "6.2.0",
+    "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "body-parser": "^1.15.2",
+    "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "chance": "^1.1.3",
-    "cors": "^2.8.1",
-    "coveralls": "^3.0.7",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "express": "^4.14.0",
-    "is-travis": "^1.0.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.0.4",
-    "mocha-lcov-reporter": "^1.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "mocha": "^7.1.2",
     "nock": "^9.2.3",
-    "nyc": "^11.6.0",
-    "phantomjs-prebuilt": "^2.1.4",
-    "sinon": "^7.5.0",
-    "standard": "^11.0.0",
-    "watchify": "^3.7.0"
-  }
+    "nyc": "^15.0.1",
+    "prettier": "^2.0.5",
+    "sinon": "^9.0.2",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
