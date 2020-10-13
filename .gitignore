@@ -4,6 +4,7 @@
 .idea
 .idea/
 .nyc_output
+.vscode/
 coverage
 bower_components
 npm-debug.*
