@@ -18,8 +18,7 @@
     "clean-install": "rm -rf node_modules && npm install",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
-    "test-ts": "mocha -r ts-node/register test/**/*.test.ts",
-    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
+    "test-ts": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [
     "intuit-oauth",
