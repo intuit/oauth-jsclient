@@ -2,6 +2,7 @@ import csrf from 'csrf';
 
 declare class AuthResponse {
     constructor(params: AuthResponse.AuthResponseParams);
+    processResponse(response: Object): void;
     getToken(): Token;
     text(): string;
     status(): number;
@@ -9,6 +10,10 @@ declare class AuthResponse {
     valid(): boolean;
     getJson(): Object;
     get_intuit_tid(): string;
+    isContentType(): boolean;
+    getContentType(): string;
+    isJson(): boolean;
+
 }
 
 declare namespace AuthResponse {
@@ -43,13 +48,14 @@ declare class Token implements Token.TokenData {
 
 declare namespace Token {
     export interface TokenData {
-        realmId: string;
-        token_type: string;
-        access_token: string;
-        refresh_token: string;
+        realmId?: string;
+        token_type?: string;
+        access_token?: string;
+        refresh_token?: string;
         expires_in: number;
         x_refresh_token_expires_in: number;
-        id_token: string;
+        id_token?: string;
+        latency: number;
         createdAt: string;
     }
 }
@@ -61,8 +67,6 @@ declare class OAuthClient {
     createError(e: Error, authResponse?: AuthResponse): OAuthClient.OAuthClientError;
     createToken(uri: string): Promise<AuthResponse>;
     getKeyFromJWKsURI(id_token: string, kid: string, request: Request): Promise<object | string>;
-    getPublicKey(modulus: string, exponent: string): string;
-    getToken(): Token;
     getTokenRequest(request: Request): Promise<AuthResponse>;
     getUserInfo(params?: OAuthClient.GetUserInfoParams): Promise<AuthResponse>;
     isAccessTokenValid(): boolean;
@@ -74,7 +78,7 @@ declare class OAuthClient {
     refreshUsingToken(refresh_token: string): Promise<AuthResponse>;
     revoke(params?: OAuthClient.RevokeParams): Promise<AuthResponse>;
     setToken(params: Token.TokenData): Token;
-    validateIdToken(params: OAuthClient.ValidateIdTokenParams): Promise<Response>;
+    validateIdToken(params?: OAuthClient.ValidateIdTokenParams): Promise<Response>;
     validateToken(): void;
 }
 
@@ -84,6 +88,8 @@ declare namespace OAuthClient {
         clientSecret: string;
         redirectUri?: string;
         environment?: string;
+        token: Token;
+        logging: boolean;
     }
 
     export enum environment {
