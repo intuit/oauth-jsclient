@@ -60,7 +60,6 @@ declare class OAuthClient {
     authorizeUri(params: OAuthClient.AuthorizeParams): string;
     createError(e: Error, authResponse?: AuthResponse): OAuthClient.OAuthClientError;
     createToken(uri: string): Promise<AuthResponse>;
-    generateOauth1Sign(params: OAuthClient.GenerateOAuth1SignParams): string;
     getKeyFromJWKsURI(id_token: string, kid: string, request: Request): Promise<object | string>;
     getPublicKey(modulus: string, exponent: string): string;
     getToken(): Token;
@@ -71,7 +70,6 @@ declare class OAuthClient {
     loadResponseFromJWKsURI(request: Request): Promise<Response>;
     log(level: string, message: string, messageData: any): void;
     makeApiCall(params?: OAuthClient.MakeApiCallParams): Promise<AuthResponse>;
-    migrate(params: OAuthClient.MigrateParams): Promise<AuthResponse>;
     refresh(): Promise<AuthResponse>;
     refreshUsingToken(refresh_token: string): Promise<AuthResponse>;
     revoke(params?: OAuthClient.RevokeParams): Promise<AuthResponse>;
@@ -121,19 +119,6 @@ declare namespace OAuthClient {
 
     export interface MakeApiCallParams {
         url: string;
-    }
-
-    export interface MigrateParams extends GenerateOAuth1SignParams {
-        scope?: scopes | scopes[] | string;
-    }
-
-    export interface GenerateOAuth1SignParams {
-        oauth_consumer_key: string;
-        oauth_consumer_secret: string;
-        access_token: string;
-        access_secret: string;
-        method: 'GET' | 'POST';
-        uri: string;
     }
 
     export interface ValidateIdTokenParams {
