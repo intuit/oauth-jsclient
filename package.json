@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
-    "test": "nyc mocha",
+    "test": "nyc mocha && npm run test-ts",
     "snyk": "snyk test",
     "lint": "eslint .",
     "fix": "eslint . --fix",
@@ -17,7 +17,8 @@
     "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
     "clean-install": "rm -rf node_modules && npm install",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
+    "test-ts": "mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [
     "intuit-oauth",
@@ -77,6 +78,8 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.0.3",
     "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -89,7 +92,9 @@
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "sinon": "^9.0.2",
-    "snyk": "^1.316.1"
+    "snyk": "^1.316.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   },
   "snyk": true
 }
