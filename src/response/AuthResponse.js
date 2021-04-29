@@ -150,6 +150,7 @@ AuthResponse.prototype.isJson = function isJson() {
 
 AuthResponse._contentType = 'Content-Type';
 AuthResponse._jsonContentType = 'application/json';
+AuthResponse._pdfContentType = 'application/pdf';
 AuthResponse._urlencodedContentType = 'application/x-www-form-urlencoded';
 
 
