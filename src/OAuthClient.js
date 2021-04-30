@@ -655,16 +655,23 @@ OAuthClient.prototype.log = function log(level, message, messageData) {
 };
 
 /**
- * Get details of a quickbooks Account
- * @param {string|number} acc_id - Id reference of Account
- * @returns {Promise} QuickBooks Account
+ * This is a generic method for performing API call
+ * We also have makeAPICall() but here we are first checking whether token is valid, realm Id is there
+ * @param {object} options0 - Fetch API call options, defaults to GET method
+ * @param {string} entity0 - QuickBooks Entity name e.g. CompanyInfo (Important: Case sensitive)
+ * @param {string|number} [id0] - If GET method, specify Id of Entity (wherever required)
+ * @returns {Promise} - Quickbooks Entity Object or Response of API
  */
 
-OAuthClient.prototype.getAccount = function getAccount(acc_id) {
+OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
+  if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+  entity0 = entity0.slice(0,50).trim();
+  const name0 = entity0[0].toUpperCase() + entity0.slice(1);
+  entity0 = entity0.toLowerCase();
   return new Promise((resolve) => {
     if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const acc = parseInt(acc_id, 10);
-    if (Number.isNaN(acc)) throw new Error('Invalid Account Id! Must be a number or number as a string!');
+    const entity_id = parseInt(id0, 10);
+    if (id0 && Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
     const companyID = this.getToken().realmId;
     if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
     const url0 = this.environment === 'sandbox'
@@ -675,22 +682,113 @@ OAuthClient.prototype.getAccount = function getAccount(acc_id) {
       Accept: AuthResponse._jsonContentType,
       'User-Agent': OAuthClient.user_agent,
     };
+    let extendURL = entity0;
+    if (id0) {
+      extendURL += `/${entity_id}`;
+    }
     const request = {
       method: 'GET',
-      url: `${url0}v3/company/${companyID}/account/${acc}`,
+      url: `${url0}v3/company/${companyID}/${extendURL}`,
       headers: headers0,
     };
+    if (options0 && typeof(options0)==='object' && typeof(options0.method)==='string') {
+      request.method = options0.method;
+      if (options0.method.toUpperCase()!=='GET') {
+        request.body = options0.body;
+      }
+      if (typeof(options0.headers)==='object') {
+        Object.assign(request.headers, options0.headers);
+      }
+    }
     resolve(this.getTokenRequest(request));
   })
   .then((authResponse) => {
-    this.log('info', 'The getAccount () response is : ', JSON.stringify(authResponse, null, 2));
-    const myAccount = JSON.parse(authResponse.text());
-    return myAccount.Account;
+    this.log('info', `The fetch on ${name0} () response is : `, JSON.stringify(authResponse, null, 2));
+    let myEntity;
+    if (authResponse.headers()['content-type'].indexOf('json')>-1) {
+      myEntity = JSON.parse(authResponse.text())[name0];
+    }
+    else {
+      myEntity = authResponse.text();
+    }
+    return myEntity;
   })
   .catch((e) => {
-    this.log('error', 'Get getAccount ()  threw an exception : ', JSON.stringify(e, null, 2));
+    this.log('error', `The fetch on ${name0} ()  threw an exception : `, JSON.stringify(e, null, 2));
     throw e;
   });
+}
+
+/**
+ * This is a method for getting a PDF
+ * @param {string} entity0 - QuickBooks Entity name e.g. Invoice (Important: Case sensitive)
+ * @param {string|number} id0 - Specify Id of Entity (required)
+ * @returns {Promise} - PDF response (It is a buffer in the form of PDF)
+ */
+
+ OAuthClient.prototype.fetchPDF = function fetchPDF(entity0, id0) {
+  if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+  entity0 = entity0.slice(0,50).trim();
+  const name0 = entity0[0].toUpperCase() + entity0.slice(1);
+  entity0 = entity0.toLowerCase();
+  return new Promise((resolve) => {
+    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
+    const entity_id = parseInt(id0, 10);
+    if (Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
+    const companyID = this.getToken().realmId;
+    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
+    const url0 = this.environment === 'sandbox'
+      ? OAuthClient.environment.sandbox
+      : OAuthClient.environment.production;
+    const headers0 = {
+      Authorization: `Bearer ${this.getToken().access_token}`,
+      Accept: AuthResponse._pdfContentType,
+      'User-Agent': OAuthClient.user_agent,
+    };
+    const extendURL = `${entity0}/${entity_id}/pdf`;
+    const req_options = {
+      method: 'GET',
+      headers: headers0,
+    };
+    const get_url = `${url0}v3/company/${companyID}/${extendURL}`;
+    const request = https.get(get_url, req_options, (resp) => {
+      let myPDFBuffer = [];
+      resp.on('data', (chunk) => {
+        myPDFBuffer.push(chunk);
+      });
+      resp.on('end', () => {
+        resolve(Buffer.concat(myPDFBuffer));
+      });
+    });
+    request.on('error', (er) => {
+      throw er;
+    });
+    request.end();
+  })
+  .then((authResponse) => {
+    this.log('info', `The get${name0}PDF () response is : `, authResponse ? authResponse.toString() : "EMPTY");
+    return authResponse;
+  })
+  .catch((e) => {
+    this.log('error', `Get get${name0}PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
+    throw e;
+  });
+}
+
+/* CREATE ENTITIES */
+
+/* DELETE ENTITIES */
+
+/* GET ENTITIES */
+
+/**
+ * Get details of a quickbooks Account
+ * @param {string|number} acc_id - Id reference of Account
+ * @returns {Promise} QuickBooks Account
+ */
+
+OAuthClient.prototype.getAccount = function getAccount(acc_id) {
+  return this.fetchAPI(null, 'Account', acc_id);
 };
 
 /**
@@ -700,36 +798,7 @@ OAuthClient.prototype.getAccount = function getAccount(acc_id) {
  */
 
 OAuthClient.prototype.getBill = function getBill(bill_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const bill0 = parseInt(bill_id, 10);
-    if (Number.isNaN(bill0)) throw new Error('Invalid Bill Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/bill/${bill0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getBill () response is : ', JSON.stringify(authResponse, null, 2));
-    const myBill = JSON.parse(authResponse.text());
-    return myBill.Bill;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getBill ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Bill', bill_id);
 };
 
 /**
@@ -737,35 +806,8 @@ OAuthClient.prototype.getBill = function getBill(bill_id) {
  * @returns {Promise} QuickBooks CompanyInfo
  */
 
-OAuthClient.prototype.getCompanyInfo = function getCompanyInfo() {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id / CompanyInfo Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/companyinfo/${companyID}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getCompanyInfo () response is : ', JSON.stringify(authResponse, null, 2));
-    const myCompanyInfo = JSON.parse(authResponse.text());
-    return myCompanyInfo.CompanyInfo;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getCompanyInfo ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+OAuthClient.prototype.getCompanyInfo = function getCompanyInfo() { // check
+  return this.fetchAPI(null, 'CompanyInfo', this.getToken().realmId);
 };
 
 /**
@@ -775,36 +817,7 @@ OAuthClient.prototype.getCompanyInfo = function getCompanyInfo() {
  */
 
 OAuthClient.prototype.getCustomer = function getCustomer(customer_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const cus = parseInt(customer_id, 10);
-    if (Number.isNaN(cus)) throw new Error('Invalid Customer Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/customer/${cus}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getCustomer () response is : ', JSON.stringify(authResponse, null, 2));
-    const myCustomer = JSON.parse(authResponse.text());
-    return myCustomer.Customer;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getCustomer ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Customer', customer_id);
 };
 
 /**
@@ -814,36 +827,7 @@ OAuthClient.prototype.getCustomer = function getCustomer(customer_id) {
  */
 
 OAuthClient.prototype.getEmployee = function getEmployee(employee_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const employee0 = parseInt(employee_id, 10);
-    if (Number.isNaN(employee0)) throw new Error('Invalid Employee Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/employee/${employee0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getEmployee () response is : ', JSON.stringify(authResponse, null, 2));
-    const myEmployee = JSON.parse(authResponse.text());
-    return myEmployee.Employee;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getEmployee ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Employee', employee_id);
 };
 
 /**
@@ -853,36 +837,7 @@ OAuthClient.prototype.getEmployee = function getEmployee(employee_id) {
  */
 
 OAuthClient.prototype.getEstimate = function getEstimate(estimate_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const estimate0 = parseInt(estimate_id, 10);
-    if (Number.isNaN(estimate0)) throw new Error('Invalid Estimate Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/estimate/${estimate0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getEstimate () response is : ', JSON.stringify(authResponse, null, 2));
-    const myEstimate = JSON.parse(authResponse.text());
-    return myEstimate.Estimate;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getEstimate ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Estimate', estimate_id);
 };
 
 /**
@@ -892,47 +847,7 @@ OAuthClient.prototype.getEstimate = function getEstimate(estimate_id) {
  */
 
  OAuthClient.prototype.getEstimatePDF = function getEstimatePDF(estimate_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const estimate0 = parseInt(estimate_id, 10);
-    if (Number.isNaN(estimate0)) throw new Error('Invalid Estimate Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._pdfContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const req_options = {
-      method: 'GET',
-      headers: headers0,
-    };
-    const get_url = `${url0}v3/company/${companyID}/estimate/${estimate0}/pdf`;
-    const request = https.get(get_url, req_options, (resp) => {
-      let myPDFBuffer = [];
-      resp.on('data', (chunk) => {
-        myPDFBuffer.push(chunk);
-      });
-      resp.on('end', () => {
-        resolve(Buffer.concat(myPDFBuffer));
-      });
-    });
-    request.on('error', (er) => {
-      throw er;
-    });
-    request.end();
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getEstimatePDF () response is : ', authResponse ? authResponse.toString() : "EMPTY");
-    return authResponse;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getEstimatePDF ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchPDF('Estimate', estimate_id);
 };
 
 /**
@@ -942,36 +857,7 @@ OAuthClient.prototype.getEstimate = function getEstimate(estimate_id) {
  */
 
 OAuthClient.prototype.getInvoice = function getInvoice(invoice_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const invoice0 = parseInt(invoice_id, 10);
-    if (Number.isNaN(invoice0)) throw new Error('Invalid Invoice Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/invoice/${invoice0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getInvoice () response is : ', JSON.stringify(authResponse, null, 2));
-    const myInvoice = JSON.parse(authResponse.text());
-    return myInvoice.Invoice;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getInvoice ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Invoice', invoice_id);
 };
 
 /**
@@ -981,47 +867,7 @@ OAuthClient.prototype.getInvoice = function getInvoice(invoice_id) {
  */
 
 OAuthClient.prototype.getInvoicePDF = function getInvoicePDF(invoice_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const invoice0 = parseInt(invoice_id, 10);
-    if (Number.isNaN(invoice0)) throw new Error('Invalid Invoice Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._pdfContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const req_options = {
-      method: 'GET',
-      headers: headers0,
-    };
-    const get_url = `${url0}v3/company/${companyID}/invoice/${invoice0}/pdf`;
-    const request = https.get(get_url, req_options, (resp) => {
-      let myPDFBuffer = [];
-      resp.on('data', (chunk) => {
-        myPDFBuffer.push(chunk);
-      });
-      resp.on('end', () => {
-        resolve(Buffer.concat(myPDFBuffer));
-      });
-    });
-    request.on('error', (er) => {
-      throw er;
-    });
-    request.end();
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getInvoicePDF () response is : ', authResponse ? authResponse.toString() : "EMPTY");
-    return authResponse;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getInvoicePDF ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchPDF('Invoice', invoice_id);
 };
 
 /**
@@ -1031,36 +877,7 @@ OAuthClient.prototype.getInvoicePDF = function getInvoicePDF(invoice_id) {
  */
 
 OAuthClient.prototype.getItem = function getItem(item_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const item0 = parseInt(item_id, 10);
-    if (Number.isNaN(item0)) throw new Error('Invalid Item Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/item/${item0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getItem () response is : ', JSON.stringify(authResponse, null, 2));
-    const myItem = JSON.parse(authResponse.text());
-    return myItem.Item;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getItem ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Item', item_id);
 };
 
 /**
@@ -1070,36 +887,7 @@ OAuthClient.prototype.getItem = function getItem(item_id) {
  */
 
 OAuthClient.prototype.getPayment = function getPayment(payment_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const payment0 = parseInt(payment_id, 10);
-    if (Number.isNaN(payment0)) throw new Error('Invalid Payment Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/payment/${payment0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getPayment () response is : ', JSON.stringify(authResponse, null, 2));
-    const myPayment = JSON.parse(authResponse.text());
-    return myPayment.Payment;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getPayment ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Payment', payment_id);
 };
 
 /**
@@ -1108,34 +896,7 @@ OAuthClient.prototype.getPayment = function getPayment(payment_id) {
  */
 
 OAuthClient.prototype.getPreferences = function getPreferences() {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/preferences`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getPreferences () response is : ', JSON.stringify(authResponse, null, 2));
-    const myPreferences = JSON.parse(authResponse.text());
-    return myPreferences.Preferences;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getPreferences ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Preferences');
 };
 
 /**
@@ -1144,37 +905,8 @@ OAuthClient.prototype.getPreferences = function getPreferences() {
  * @returns {Promise} QuickBooks TaxAgency
  */
 
-OAuthClient.prototype.getTaxAgency = function getTaxAgency(tax_agency_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const taxagency0 = parseInt(tax_agency_id, 10);
-    if (Number.isNaN(taxagency0)) throw new Error('Invalid TaxAgency Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/taxagency/${taxagency0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getTaxAgency () response is : ', JSON.stringify(authResponse, null, 2));
-    const myTaxAgency = JSON.parse(authResponse.text());
-    return myTaxAgency.TaxAgency;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getTaxAgency ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+OAuthClient.prototype.getTaxAgency = function getTaxAgency(tax_agency_id) { // check
+  return this.fetchAPI(null, 'TaxAgency', tax_agency_id);
 };
 
 /**
@@ -1184,69 +916,7 @@ OAuthClient.prototype.getTaxAgency = function getTaxAgency(tax_agency_id) {
  */
 
  OAuthClient.prototype.getVendor = function getVendor(vendor_id) {
-  return new Promise((resolve) => {
-    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
-    const vendor0 = parseInt(vendor_id, 10);
-    if (Number.isNaN(vendor0)) throw new Error('Invalid Vendor Id! Must be a number or number as a string!');
-    const companyID = this.getToken().realmId;
-    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
-    const url0 = this.environment === 'sandbox'
-      ? OAuthClient.environment.sandbox
-      : OAuthClient.environment.production;
-    const headers0 = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-    const request = {
-      method: 'GET',
-      url: `${url0}v3/company/${companyID}/vendor/${vendor0}`,
-      headers: headers0,
-    };
-    resolve(this.getTokenRequest(request));
-  })
-  .then((authResponse) => {
-    this.log('info', 'The getVendor () response is : ', JSON.stringify(authResponse, null, 2));
-    const myVendor = JSON.parse(authResponse.text());
-    return myVendor.Vendor;
-  })
-  .catch((e) => {
-    this.log('error', 'Get getVendor ()  threw an exception : ', JSON.stringify(e, null, 2));
-    throw e;
-  });
+  return this.fetchAPI(null, 'Vendor', vendor_id);
 };
-
-//  OAuthClient.prototype.getCompanyInfo = function getCompanyInfo() {
-//   return new Promise((resolve) => {
-//     const request = {
-//       url:
-//         this.environment === 'sandbox'
-//           ? OAuthClient.userinfo_endpoint_sandbox
-//           : OAuthClient.userinfo_endpoint_production,
-//       method: 'GET',
-//       headers: {
-//         Authorization: `Bearer ${this.token.access_token}`,
-//         Accept: AuthResponse._jsonContentType,
-//         'User-Agent': OAuthClient.user_agent,
-//       },
-//     };
-
-//     resolve(this.getTokenRequest(request));
-//   })
-//     .then((res) => {
-//       const authResponse = res.json ? res : null;
-//       this.log(
-//         'info',
-//         'The Get User Info () response is : ',
-//         JSON.stringify(authResponse, null, 2),
-//       );
-//       return authResponse;
-//     })
-//     .catch((e) => {
-//       this.log('error', 'Get User Info ()  threw an exception : ', JSON.stringify(e, null, 2));
-//       throw e;
-//     });
-// };
-
 
 module.exports = OAuthClient;
