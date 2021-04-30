@@ -33,10 +33,10 @@ const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const https = require('https');
 const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
-const https = require('https');
 
 /**
  * @constructor
@@ -664,11 +664,12 @@ OAuthClient.prototype.log = function log(level, message, messageData) {
  */
 
 OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
-  if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
-  entity0 = entity0.slice(0,50).trim();
-  const name0 = entity0[0].toUpperCase() + entity0.slice(1);
-  entity0 = entity0.toLowerCase();
+  let name0;
   return new Promise((resolve) => {
+    if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+    entity0 = entity0.slice(0,50).trim();
+    name0 = entity0[0].toUpperCase() + entity0.slice(1);
+    entity0 = entity0.toLowerCase();
     if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
     const entity_id = parseInt(id0, 10);
     if (id0 && Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
@@ -703,7 +704,7 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
     resolve(this.getTokenRequest(request));
   })
   .then((authResponse) => {
-    this.log('info', `The fetch on ${name0} () response is : `, JSON.stringify(authResponse, null, 2));
+    this.log('info', `The fetch on ${entity0} () response is : `, JSON.stringify(authResponse, null, 2));
     let myEntity;
     if (authResponse.headers()['content-type'].indexOf('json')>-1) {
       myEntity = JSON.parse(authResponse.text())[name0];
@@ -714,7 +715,7 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
     return myEntity;
   })
   .catch((e) => {
-    this.log('error', `The fetch on ${name0} ()  threw an exception : `, JSON.stringify(e, null, 2));
+    this.log('error', `The fetch on ${entity0} ()  threw an exception : `, JSON.stringify(e, null, 2));
     throw e;
   });
 }
@@ -727,11 +728,12 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
  */
 
  OAuthClient.prototype.fetchPDF = function fetchPDF(entity0, id0) {
-  if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
-  entity0 = entity0.slice(0,50).trim();
-  const name0 = entity0[0].toUpperCase() + entity0.slice(1);
-  entity0 = entity0.toLowerCase();
+  let name0;
   return new Promise((resolve) => {
+    if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+    entity0 = entity0.slice(0,50).trim();
+    name0 = entity0[0].toUpperCase() + entity0.slice(1);
+    entity0 = entity0.toLowerCase();
     if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
     const entity_id = parseInt(id0, 10);
     if (Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
@@ -766,11 +768,11 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
     request.end();
   })
   .then((authResponse) => {
-    this.log('info', `The get${name0}PDF () response is : `, authResponse ? authResponse.toString() : "EMPTY");
+    this.log('info', `The get${entity0}PDF () response is : `, authResponse ? authResponse.toString() : "EMPTY");
     return authResponse;
   })
   .catch((e) => {
-    this.log('error', `Get ${name0} PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
+    this.log('error', `Get ${entity0} PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
     throw e;
   });
 }
