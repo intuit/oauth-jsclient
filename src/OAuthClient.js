@@ -696,7 +696,7 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
       if (options0.method.toUpperCase()!=='GET') {
         request.body = options0.body;
       }
-      if (typeof(options0.headers)==='object') {
+      if (options0.headers && typeof(options0.headers)==='object') {
         Object.assign(request.headers, options0.headers);
       }
     }
@@ -770,14 +770,252 @@ OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
     return authResponse;
   })
   .catch((e) => {
-    this.log('error', `Get get${name0}PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
+    this.log('error', `Get ${name0} PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
     throw e;
   });
 }
 
 /* CREATE ENTITIES */
 
+/**
+ * Create quickbooks Account
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/account#create-an-account
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} accountObj - Object to create: Account
+ * @param {string} accountObj.Name - Unique name for Account
+ * @param {string} accountObj.AccountType - Account Type Enum i.e. must be one of the Account types, default 'Accounts Receivable'
+ * @returns {Promise} QuickBooks Account created
+ */
+
+ OAuthClient.prototype.createAccount = function createAccount(accountObj) {
+  if (!accountObj || typeof(accountObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(accountObj),
+  }, 'Account');
+};
+
+/**
+ * Create quickbooks Bill
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/bill#create-a-bill
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} billObj - Object to create: Bill
+ * @param {object} billObj.Line - Line must be a JSON for Bill
+ * @param {string} billObj.Line.DetailType - Set to 'AccountBasedExpenseLineDetail'
+ * @param {number} billObj.Line.Amount - Amount payable for this Bill
+ * @param {object} billObj.Line.AccountBasedExpenseLineDetail - Account details
+ * @param {object} billObj.Line.AccountBasedExpenseLineDetail.AccountRef - Account associated with this Bill
+ * @param {string} billObj.Line.AccountBasedExpenseLineDetail.AccountRef.value - String Id of Account
+ * @param {object} billObj.VendorRef - Vendor associated with this Bill
+ * @param {string} billObj.VendorRef.value - String Id of Vendor associated with this Bill
+ * @param {object} billObj.CurrencyRef - Currency Ref string
+ * @param {string} billObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Bill created
+ */
+
+OAuthClient.prototype.createBill = function createBill(billObj) {
+  if (!billObj || typeof(billObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(billObj),
+  }, 'Bill');
+};
+
+/**
+ * Create quickbooks Customer
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/customer#create-a-customer
+ * 
+ * DisplayName OR at least one of Title, GivenName, MiddleName, FamilyName, or Suffix must be present
+ * The equivalent Name must be UNIQUE
+ * Refer to above link for exact fields and description
+ * @param {object} customerObj - Object to create: Customer
+ * @returns {Promise} QuickBooks Customer created
+ */
+
+OAuthClient.prototype.createCustomer = function createCustomer(customerObj) {
+  if (!customerObj || typeof(customerObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(customerObj),
+  }, 'Customer');
+};
+
+/**
+ * Create quickbooks Employee
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/employee#create-an-employee
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} employeeObj - Object to create: Employee
+ * @returns {Promise} QuickBooks Employee created
+ */
+
+OAuthClient.prototype.createEmployee = function createEmployee(employeeObj) {
+  if (!employeeObj || typeof(employeeObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(employeeObj),
+  }, 'Employee');
+};
+
+/**
+ * Create quickbooks Estimate
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/estimate#create-an-estimate
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} estimateObj - Object to create: Estimate
+ * @param {object} estimateObj.Line - Line details
+ * @param {string} estimateObj.Line.DetailType - Type of Line
+ * @param {object} estimateObj.CustomerRef - Customer associated with this Estimate
+ * @param {string} estimateObj.CustomerRef.value - String Id of Customer associated with this Estimate
+ * @param {object} estimateObj.CurrencyRef - Currency Ref string
+ * @param {string} estimateObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Estimate created
+ */
+
+OAuthClient.prototype.createEstimate = function createEstimate(estimateObj) {
+  if (!estimateObj || typeof(estimateObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(estimateObj),
+  }, 'Estimate');
+};
+
+/**
+ * Create quickbooks Invoice
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/invoice#create-an-invoice
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} invoiceObj - Object to create: Invoice
+ * @param {object} invoiceObj.Line - Line details
+ * @param {string} invoiceObj.Line.DetailType - Type of Line
+ * @param {object} invoiceObj.CustomerRef - Customer associated with this Invoice
+ * @param {string} invoiceObj.CustomerRef.value - String Id of Customer associated with this Invoice
+ * @param {object} invoiceObj.CurrencyRef - Currency Ref string
+ * @param {string} invoiceObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Invoice created
+ */
+
+OAuthClient.prototype.createInvoice = function createInvoice(invoiceObj) {
+  if (!invoiceObj || typeof(invoiceObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(invoiceObj),
+  }, 'Invoice');
+};
+
+/**
+ * Create quickbooks Item
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/item#create-an-item
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} itemObj - Object to create: Item
+ * @returns {Promise} QuickBooks Item created
+ */
+
+OAuthClient.prototype.createItem = function createItem(itemObj) {
+  if (!itemObj || typeof(itemObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(itemObj),
+  }, 'Item');
+};
+
+/**
+ * Create quickbooks Payment
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/payment#create-a-payment
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} paymentObj - Object to create: Payment
+ * @param {number} paymentObj.TotalAmt - Total amount of Payment
+ * @param {object} paymentObj.CustomerRef - Customer associated with this Payment
+ * @param {string} paymentObj.CustomerRef.value - String Id of Customer associated with this Payment
+ * @param {object} paymentObj.CurrencyRef - Currency Ref string
+ * @param {string} paymentObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Payment created
+ */
+
+OAuthClient.prototype.createPayment = function createPayment(paymentObj) {
+  if (!paymentObj || typeof(paymentObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(paymentObj),
+  }, 'Payment');
+};
+
+/**
+ * Create quickbooks TaxAgency
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/taxagency#create-a-taxagency
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} tax_agencyObj - Object to create: TaxAgency
+ * @param {string} tax_agencyObj.DisplayName - Name of TaxAgency
+ * @returns {Promise} QuickBooks TaxAgency created
+ */
+
+OAuthClient.prototype.createTaxAgency = function createTaxAgency(tax_agencyObj) { // check
+  if (!tax_agencyObj || typeof(tax_agencyObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(tax_agencyObj),
+  }, 'TaxAgency');
+};
+
+/**
+ * Create quickbooks Vendor
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/vendor#create-a-vendor
+ * 
+ * DisplayName OR at least one of Title, GivenName, MiddleName, FamilyName, or Suffix must be present
+ * The equivalent Name must be UNIQUE
+ * Refer to above link for exact fields and description
+ * @param {object} vendorObj - Object to create: Vendor
+ * @returns {Promise} QuickBooks Vendor created
+ */
+
+ OAuthClient.prototype.createVendor = function createVendor(vendorObj) {
+  if (!vendorObj || typeof(vendorObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(vendorObj),
+  }, 'Vendor');
+};
+
+/* END CREATE ENTITIES */
+
 /* DELETE ENTITIES */
+
+/* END DELETE ENTITIES */
 
 /* GET ENTITIES */
 
@@ -918,5 +1156,7 @@ OAuthClient.prototype.getTaxAgency = function getTaxAgency(tax_agency_id) { // c
  OAuthClient.prototype.getVendor = function getVendor(vendor_id) {
   return this.fetchAPI(null, 'Vendor', vendor_id);
 };
+
+/* END GET ENTITIES */
 
 module.exports = OAuthClient;
