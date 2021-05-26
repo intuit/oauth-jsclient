@@ -52,14 +52,15 @@ implementations which conforms to the specifications.
 
 # Requirements
 
-The Node.js client library is tested against the `Node 8 LTS` and newer versions.
+The Node.js client library is tested against the `Node 10` and newer versions.
 
-To use in node 6, please use
-[intuit-oauth@1.x.](https://github.com/intuit/oauth-jsclient/tree/1.5.0)
+| Version                                                                          | Node support                      |
+|----------------------------------------------------------------------------------|-----------------------------------|
+| [intuit-oauth@1.x.x](https://github.com/intuit/oauth-jsclient/tree/1.5.0)        | Node 6.x or higher                |
+| [intuit-oauth@2.x.x](https://github.com/intuit/oauth-jsclient/tree/2.0.0)        | Node 7.x or higher                |
+| [intuit-oauth@3.x.x](https://github.com/intuit/oauth-jsclient/tree/3.0.2)        | Node 8.x or Node 9.x and higher   |
 
-To use in node 7, please use
-[intuit-oauth@2.x.](https://github.com/intuit/oauth-jsclient/tree/2.0.0). Older node versions are
-not supported.
+**Note**: Older node versions are not supported.
 
 # Installation
 
