@@ -383,7 +383,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
             },
-            params.headers,
+            params.headers
           )
         : Object.assign(
             {},
@@ -391,7 +391,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Authorization: `Bearer ${this.getToken().access_token}`,
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
-            },
+            }
           );
 
     const request = {
