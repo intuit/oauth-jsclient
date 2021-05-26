@@ -1,5 +1,6 @@
 # Changelog
 
+
 ## [4.0.0](https://github.com/intuit/oauth-jsclient/tree/4.0.0)
 #### Breaking Changes
 - Minimum Node Version >= 10
@@ -14,6 +15,7 @@
 
 #### References
 - [PDF Transport](https://github.com/intuit/oauth-jsclient/issues/97) 
+
 
 ## [3.0.2](https://github.com/intuit/oauth-jsclient/tree/3.0.2)
 #### Features 
