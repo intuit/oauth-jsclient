@@ -1,8 +1,10 @@
 language: node_js
 
 node_js:
-  - 9
-  - 8
+  - 10
+  - 11
+  - 12
+  - 14
 
 before_script:
   - npm install

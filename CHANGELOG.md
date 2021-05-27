@@ -1,5 +1,22 @@
 # Changelog
 
+
+## [4.0.0](https://github.com/intuit/oauth-jsclient/tree/4.0.0)
+#### Breaking Changes
+- Minimum Node Version >= 10
+#### Features 
+- Supports Minimum Node version 10 and newer ( not backward compatible )
+- Moved lower node versions ( node 8,9, node 7, node 6 to 3.x.x. , 2.x.x and 1.x.x release respectively )
+  - node version 8,9 and higher refer to 3.x.x 
+  - node version 7 and higher refer to 2.x.x
+  - node version 6 and higher refer to 1.x.x
+#### Issues Fixed
+- [Adding Transport Override for PDF use case](https://github.com/intuit/oauth-jsclient/pull/98)
+
+#### References
+- [PDF Transport](https://github.com/intuit/oauth-jsclient/issues/97) 
+
+
 ## [3.0.2](https://github.com/intuit/oauth-jsclient/tree/3.0.2)
 #### Features 
 - [Added support for passing custom authorize URL's](https://github.com/intuit/oauth-jsclient/pull/92)
