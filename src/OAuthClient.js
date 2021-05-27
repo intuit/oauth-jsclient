@@ -372,6 +372,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
+    const transport = params.transport ? params.transport : popsicle.createTransport({ type: "text" });
 
     const headers =
       params.headers && typeof params.headers === 'object'
@@ -382,7 +383,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
             },
-            params.headers,
+            params.headers
           )
         : Object.assign(
             {},
@@ -390,13 +391,14 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Authorization: `Bearer ${this.getToken().access_token}`,
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
-            },
+            }
           );
 
     const request = {
       url: params.url,
       method: params.method || 'GET',
       headers,
+      transport,
     };
 
     params.body && (request.body = params.body);

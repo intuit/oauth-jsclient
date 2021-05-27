@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -51,7 +51,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.17.0"
+    "node": ">=10"
   },
   "repository": {
     "type": "git",
