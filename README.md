@@ -441,6 +441,13 @@ oauthClient
 The client validates the ID Token and returns boolean `true` if validates successfully else it would
 throw an exception.
 
+#### Support for PDF format
+In order to save the PDF generated from the APIs properly, the correct transport type should be passed into the `makeAPI()`.Below is an example of the same:
+```
+.makeApiCall({ url: `${url}v3/company/${companyID}/invoice/${invoiceNumber}/pdf?minorversion=59` , headers:{'Content-Type': 'application/pdf','Accept':'application/pdf'}, transport: popsicle.createTransport({type: 'buffer'})})
+```
+The response is an actual buffer( binary BLOB) which could then be saved to the file. 
+
 ### Auth-Response
 
 The response provided by the client is a wrapped response of the below items which is what we call
