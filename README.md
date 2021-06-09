@@ -94,8 +94,7 @@ Follow the instructions below to use the library :
 - `environment` - environment for the client. Required
   - `sandbox` - for authorizing in sandbox.
   - `production` - for authorizing in production.
-- `redirectUri` - redirectUri on your app to get the `authorizationCode` from Intuit Servers.
-  Required
+- `redirectUri` - redirectUri on your app to get the `authorizationCode` from Intuit Servers. Make sure this redirect URI is also added on your app in the [developer portal](https://developer.intuit.com) on the Keys & OAuth tab. Required
 - `logging` - by default, logging is disabled i.e `false`. To enable provide`true`.
 
 # Usage
