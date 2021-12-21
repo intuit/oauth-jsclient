@@ -40,9 +40,11 @@ const Token = require('./access-token/Token');
 /**
  * @constructor
  * @param {string} config.environment
- * @param {string} config.appSecret
- * @param {string} config.appKey
- * @param {string} [config.cachePrefix]
+ * @param {string} config.clientId
+ * @param {string} config.clientSecret
+ * @param {string} config.redirectUri
+ * @param {string} [config.token]
+ * @param {string} [config.logging]
  */
 function OAuthClient(config) {
   this.environment = config.environment;
