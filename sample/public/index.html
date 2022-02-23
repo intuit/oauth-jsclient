@@ -27,24 +27,13 @@
     <h2>OAuth2.0</h2><h4>( Please enter the client credentials below )</h4><br>
     <form>
         <div class="form-group">
-            <label for="clientId">ClientID</label>
-            <input type="text" class="form-control" placeholder="enter the clientId"  id="clientId" />
-        </div>
-        <div class="form-group">
-            <label for="clientSecret">ClientSecret</label>
-            <input type="text"  class="form-control" placeholder="enter the clientSecret"  id="clientSecret" />
-        </div>
-        <div class="form-group">
             <label for="environment">Environment</label>
             <select id="environment" class="form-control">
             <option value="sandbox" selected="selected">Sandbox</option>
             <option value="production">Production</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="redirectUri">Redirect URI</label>
-            <input type="text" class="form-control" placeholder="enter the redirectUri"  id="redirectUri" /><br>
-        </div>
+
     </form>
     <p>Now click the <b>Connect to QuickBooks</b> button below.</p>
     <pre id="accessToken"></pre>

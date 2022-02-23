@@ -2,6 +2,8 @@
 
 require('dotenv').config();
 
+console.log(process.env.QB_CLIENT_ID)
+
 /**
  * Require the dependencies
  * @type {*|createApplication}
@@ -52,14 +54,14 @@ app.get('/', function (req, res) {
  */
 app.get('/authUri', urlencodedParser, function (req, res) {
   oauthClient = new OAuthClient({
-    clientId: req.query.json.clientId,
-    clientSecret: req.query.json.clientSecret,
+    clientId: process.env.QB_CLIENT_ID,
+    clientSecret: process.env.QB_CLIENT_SECRET,
     environment: req.query.json.environment,
-    redirectUri: req.query.json.redirectUri,
+    redirectUri: process.env.REDIRECT_URI,
   });
 
   const authUri = oauthClient.authorizeUri({
-    scope: [OAuthClient.scopes.Accounting],
+    scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.Payment],
     state: 'intuit-test',
   });
   res.send(authUri);
@@ -72,6 +74,7 @@ app.get('/callback', function (req, res) {
   oauthClient
     .createToken(req.url)
     .then(function (authResponse) {
+        console.log("auth response: *** \n", authResponse.token)
       oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
     })
     .catch(function (e) {
