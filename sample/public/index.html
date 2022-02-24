@@ -83,11 +83,9 @@
             console.warn('yardId ', yardId)
             // Generate the authUri
             var jsonBody = {};
-            // jsonBody.clientId = $('#clientId').val();
-            // jsonBody.clientSecret = $('#clientSecret').val();
+
             jsonBody.environment = $('#environment').val();
             jsonBody.yardId = $('#yardId').val();
-            // jsonBody.redirectUri = $('#redirectUri').val();
 
             $.get('/authUri', {json: jsonBody}, function (uri) {
                 console.log('The Auth Uris is :' + uri);
@@ -96,6 +94,7 @@
                     // Launch Popup using the JS window Object
                     var parameters = "location=1,width=800,height=650";
                     parameters += ",left=" + (screen.width - 800) / 2 + ",top=" + (screen.height - 650) / 2;
+                    //? open an iframe with QB auth modal
                     var win = window.open(authUri, 'connectPopup', parameters);
                     var pollOAuth = window.setInterval(function () {
                         try {

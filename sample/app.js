@@ -60,6 +60,7 @@ app.get('/authUri', urlencodedParser, function (req, res) {
     yardId = req.query.json.yardId
     console.log('yardId is ', yardId)
 
+    //? configure the client with our app creds
     oauthClient = new OAuthClient({
         clientId: process.env.QB_CLIENT_ID,
         clientSecret: process.env.QB_CLIENT_SECRET,
@@ -71,6 +72,7 @@ app.get('/authUri', urlencodedParser, function (req, res) {
         scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.Payment],
         state: 'intuit-test',
     });
+    //? send the auth URI back to the client
     res.send(authUri);
 });
 
@@ -78,8 +80,6 @@ app.get('/authUri', urlencodedParser, function (req, res) {
  * Handle the callback to extract the `Auth Code` and exchange them for `Bearer-Tokens`
  */
 app.get('/callback', function (req, res) {
-
-    const parsedUrl = querystring.parse(req.url)
     oauthClient
         .createToken(req.url)
         .then(function (authResponse) {
@@ -88,6 +88,7 @@ app.get('/callback', function (req, res) {
             return authResponse
         })
         .then(function (authResponse) {
+            //? save the returned token to the DB
             return tokenSaver.saveAuthToken(authResponse.token, yardId)
         })
         .catch(function (e) {
