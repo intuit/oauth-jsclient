@@ -56,7 +56,6 @@ app.get('/', function (req, res) {
  */
 app.get('/authUri', urlencodedParser, function (req, res) {
 
-
     yardId = req.query.json.yardId
     console.log('yardId is ', yardId)
 
@@ -83,7 +82,10 @@ app.get('/callback', function (req, res) {
     oauthClient
         .createToken(req.url)
         .then(function (authResponse) {
-            console.log("got auth response")
+            console.log("got auth response. raw QB token is: \n")
+            console.log(JSON.stringify(authResponse.token))
+            console.log('-------')
+            console.log('-------')
             oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
             return authResponse
         })
