@@ -10,18 +10,18 @@ module.exports = class TokenSaver {
 
         const query = `
             INSERT INTO erp_tool_credentials
-            (qb_company_id, qb_access_token, qb_refresh_token, qb_expires_in,
-             qb_refresh_token_expires_in, qb_created_at, yard_id)
+            (erp_system_id, qb_access_token, qb_refresh_token, qb_expires_in,
+             qb_refresh_token_expires_in, created_at, yard_id)
             VALUES ($1, $2, $3, $4, $5, to_timestamp($6), $7)
             ON CONFLICT
                 ON CONSTRAINT erp_tool_credentials_pkey
                 DO UPDATE
-                SET qb_company_id               = $1,
+                SET erp_system_id               = $1,
                     qb_access_token             = $2,
                     qb_refresh_token            = $3,
                     qb_expires_in               = $4,
                     qb_refresh_token_expires_in = $5,
-                    qb_created_at               = to_timestamp($6),
+                    created_at               = to_timestamp($6),
                     yard_id                     = $7
             RETURNING *
         `
