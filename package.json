@@ -69,6 +69,7 @@
   "dependencies": {
     "atob": "2.1.2",
     "csrf": "^3.0.4",
+    "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.3.0",
     "popsicle": "10.0.1",
     "query-string": "^6.12.1",
