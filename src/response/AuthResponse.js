@@ -144,7 +144,7 @@ AuthResponse.prototype.getContentType = function getContentType() {
  * @returns {boolean} isJson
  */
 AuthResponse.prototype.isJson = function isJson() {
-  return this.isContentType('application/json');
+  return this.isContentType(AuthResponse._jsonContentType);
 };
 
 
