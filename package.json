@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth-ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "typings": "./src/OAuthClient.d.ts",
