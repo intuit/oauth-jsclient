@@ -1,9 +1,11 @@
 {
-  "name": "intuit-oauth",
-  "version": "4.0.0",
+  "name": "intuit-oauth-ts",
+  "version": "0.0.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "typings": "./src/OAuthClient.d.ts",
+  "author": "bigbizze",
+  "license": "MIT",
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
@@ -15,9 +17,7 @@
     "test-watch": "mocha --watch --reporter=spec",
     "test-debug": "mocha --inspect-brk --watch test",
     "show-coverage": "npm test; open -a 'Google Chrome' coverage/index.html",
-    "clean-install": "rm -rf node_modules && npm install",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "clean-install": "rm -rf node_modules && npm install"
   },
   "keywords": [
     "intuit-oauth",
@@ -56,21 +56,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intuit/oauth-jsclient.git"
+    "url": "https://github.com/bigbizze/oauth-jsclient.git"
   },
-  "author": {
-    "name": "Anil Kumar",
-    "email": "anil_kumar3@intuit.com"
-  },
-  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/intuit/oauth-jsclient/issues"
+    "url": "https://github.com/bigbizze/oauth-jsclient/issues"
   },
-  "homepage": "https://github.com/intuit/oauth-jsclient",
+  "homepage": "https://github.com/bigbizze/oauth-jsclient",
   "dependencies": {
     "atob": "2.1.2",
     "csrf": "^3.0.4",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "popsicle": "10.0.1",
     "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
@@ -89,8 +84,6 @@
     "nock": "^9.2.3",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
-    "sinon": "^9.0.2",
-    "snyk": "^1.316.1"
-  },
-  "snyk": true
+    "sinon": "^9.0.2"
+  }
 }
