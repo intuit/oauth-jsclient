@@ -71,13 +71,16 @@ Follow the instructions below to use the library :
 1. Install the NPM package:
 
    ```sh
-   npm install intuit-oauth --save
+   npm install intuit-oauth-ts --save
    ```
-
+  or
+  ```sh
+   yarn install intuit-oauth-ts
+  ```
 2. Require the Library:
 
    ```js
-   const OAuthClient = require('intuit-oauth');
+   import OAuthClient from 'intuit-oauth';
 
    const oauthClient = new OAuthClient({
      clientId: '<Enter your clientId>',
