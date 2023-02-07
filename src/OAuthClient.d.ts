@@ -80,7 +80,8 @@ export default class OAuthClient {
   getUserInfo(): Promise<AuthResponse>;
   makeApiCall(params: { transport: popsicle.TransportOptions, url: string, method: string, headers: Record<string, string>, body: Record<string, any> }): Promise<AuthResponse>;
   validateIdToken(params?: { id_token: string }): Promise<boolean>;
-  getKeyFromJWKsURI(id_token: string, kid: string, request: popsicle.Request): Promise<ReturnType<typeof jwt.verify>>;
+  getValidatedIdToken(params?: { id_token: string }): Promise<jwt.JwtPayload>;
+  getKeyFromJWKsURI(id_token: string, kid: string, request: popsicle.Request): Promise<jwt.JwtPayload>;
   getPublicKey(): string;
   getTokenRequest(request: popsicle.Request): Promise<AuthResponse>;
   validateToken(): boolean;

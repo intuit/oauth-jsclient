@@ -464,6 +464,77 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
 };
 
 /**
+ * Validate id_token
+ * *
+ * @param {Object} params(optional)
+ * @returns {Promise<AuthResponse>}
+ */
+OAuthClient.prototype.getValidatedIdToken = function getValidatedIdToken(params = {}) {
+  return new Promise((resolve) => {
+    if (!this.getToken().id_token) throw new Error('The bearer token does not have id_token');
+
+    const id_token = this.getToken().id_token || params.id_token;
+
+    // Decode ID Token
+    const token_parts = id_token.split('.');
+    const id_token_header = JSON.parse(atob(token_parts[0]));
+    const id_token_payload = JSON.parse(atob(token_parts[1]));
+
+    // Step 1 : First check if the issuer is as mentioned in "issuer"
+    if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
+
+    // Step 2 : check if the aud field in idToken contains application's clientId
+    if (!id_token_payload.aud.find((audience) => audience === this.clientId)) return false;
+
+    // Step 3 : ensure the timestamp has not elapsed
+    if (id_token_payload.exp < Date.now() / 1000) return false;
+
+    const request = {
+      url: OAuthClient.jwks_uri,
+      method: 'GET',
+      headers: {
+        Accept: AuthResponse._jsonContentType,
+        'User-Agent': OAuthClient.user_agent,
+      },
+    };
+
+    return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
+  })
+      .then((res) => {
+        this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
+        return res;
+      })
+      .catch((e) => {
+        this.log('error', 'The validateIdToken () threw an exception : ', JSON.stringify(e, null, 2));
+        throw e;
+      });
+};
+
+OAuthClient.prototype.getIdTokenComponents = async function(params = {}) {
+  if (!this.getToken().id_token) {
+    throw new Error('The bearer token does not have id_token');
+  }
+  const id_token = this.getToken().id_token || params.id_token;
+  const token_parts = id_token.split('.');
+  const id_token_header = JSON.parse(atob(token_parts[0]));
+  const id_token_payload = JSON.parse(atob(token_parts[1]));
+  if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') {
+    throw new Error('The issuer is not as mentioned in "issuer"');
+  }
+
+  // Step 2 : check if the aud field in idToken contains application's clientId
+  if (!id_token_payload.aud.find((audience) => audience === this.clientId)) {
+    throw new Error('The aud field in idToken does not contain application\'s clientId')
+  }
+
+  // Step 3 : ensure the timestamp has not elapsed
+  if (id_token_payload.exp < Date.now() / 1000) {
+    throw new Error('The timestamp has elapsed');
+  }
+  return { id_token_header, id_token_payload };
+}
+
+/**
  * Get Key from JWKURI
  * *
  * @param {string} id_token
