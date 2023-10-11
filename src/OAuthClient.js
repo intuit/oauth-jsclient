@@ -27,7 +27,7 @@
 const atob = require('atob');
 const Csrf = require('csrf');
 const queryString = require('query-string');
-const popsicle = require('popsicle');
+import { fetch } from 'popsicle'
 const os = require('os');
 const winston = require('winston');
 const path = require('path');
