@@ -27,7 +27,7 @@
 const atob = require('atob');
 const Csrf = require('csrf');
 const queryString = require('query-string');
-const popsicle = require('popsicle');
+const axios = require('axios');
 const os = require('os');
 const winston = require('winston');
 const path = require('path');
@@ -372,7 +372,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
-    const transport = params.transport ? params.transport : popsicle.createTransport({ type: "text" });
+    const transport = params.transport ? params.transport : { responseType: 'text' };
 
     const headers =
       params.headers && typeof params.headers === 'object'
@@ -547,12 +547,12 @@ OAuthClient.prototype.validateToken = function validateToken() {
 };
 
 /**
- * Make HTTP Request using Popsicle Client
+ * Make HTTP Request using Axios Client
  * @param request
  * @returns response
  */
 OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return popsicle.get(request).then((response) => response);
+  return axios.get(request).then((response) => response);
 };
 
 /**
@@ -561,7 +561,7 @@ OAuthClient.prototype.loadResponse = function loadResponse(request) {
  * @returns response
  */
 OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI(request) {
-  return popsicle.get(request).then((response) => response);
+  return axios.get(request).then((response) => response);
 };
 
 /**
