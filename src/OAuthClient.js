@@ -33,6 +33,7 @@ const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const https = require('https');
 const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
@@ -49,6 +50,7 @@ function OAuthClient(config) {
   this.clientId = config.clientId;
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
+  this.realmId = config.realmId;
   this.token = new Token(config.token);
   this.logging = !!(
     Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true
@@ -158,6 +160,8 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     if (!uri) throw new Error('Provide the Uri');
     const params = queryString.parse(uri.split('?').reverse()[0]);
     this.getToken().realmId = params.realmId ? params.realmId : '';
+    if (this.getToken().realmId) this.realmId = this.getToken().realmId;
+    else if (this.realmId && typeof(this.realmId)==="string") this.getToken().realmId = this.realmId;
     if ('state' in params) this.getToken().state = params.state;
 
     const body = {};
@@ -226,6 +230,9 @@ OAuthClient.prototype.refresh = function refresh() {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.getJson()) || res;
       this.token.setToken(json);
+      if (!this.getToken().realmId && this.realmId && typeof(this.realmId)==="string") {
+        this.getToken().realmId = this.realmId;
+      }
       this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
       return authResponse;
     })
@@ -268,6 +275,9 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.getJson()) || res;
       this.token.setToken(json);
+      if (!this.getToken().realmId && this.realmId && typeof(this.realmId)==="string") {
+        this.getToken().realmId = this.realmId;
+      }
       this.log(
         'info',
         'Refresh usingToken () response is : ',
@@ -645,5 +655,512 @@ OAuthClient.prototype.log = function log(level, message, messageData) {
     this.logger.log(level, message + messageData);
   }
 };
+
+/**
+ * This is a generic method for performing API call
+ * We also have makeAPICall() but here we are first checking whether token is valid, realm Id is there
+ * @param {object} options0 - Fetch API call options, defaults to GET method
+ * @param {string} entity0 - QuickBooks Entity name e.g. CompanyInfo (Important: Case sensitive)
+ * @param {string|number} [id0] - If GET method, specify Id of Entity (wherever required)
+ * @returns {Promise} - Quickbooks Entity Object or Response of API
+ */
+
+OAuthClient.prototype.fetchAPI = function fetchAPI(options0, entity0, id0) {
+  let name0;
+  return new Promise((resolve) => {
+    if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+    entity0 = entity0.slice(0,50).trim();
+    name0 = entity0[0].toUpperCase() + entity0.slice(1);
+    entity0 = entity0.toLowerCase();
+    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
+    const entity_id = parseInt(id0, 10);
+    if (id0 && Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
+    const companyID = this.getToken().realmId;
+    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
+    const url0 = this.environment === 'sandbox'
+      ? OAuthClient.environment.sandbox
+      : OAuthClient.environment.production;
+    const headers0 = {
+      Authorization: `Bearer ${this.getToken().access_token}`,
+      Accept: AuthResponse._jsonContentType,
+      'User-Agent': OAuthClient.user_agent,
+    };
+    let extendURL = entity0;
+    if (id0) {
+      extendURL += `/${entity_id}`;
+    }
+    const request = {
+      method: 'GET',
+      url: `${url0}v3/company/${companyID}/${extendURL}`,
+      headers: headers0,
+    };
+    if (options0 && typeof(options0)==='object' && typeof(options0.method)==='string') {
+      request.method = options0.method;
+      if (options0.method.toUpperCase()!=='GET') {
+        request.body = options0.body;
+      }
+      if (options0.headers && typeof(options0.headers)==='object') {
+        Object.assign(request.headers, options0.headers);
+      }
+    }
+    resolve(this.getTokenRequest(request));
+  })
+  .then((authResponse) => {
+    this.log('info', `The fetch on ${entity0} () response is : `, JSON.stringify(authResponse, null, 2));
+    let myEntity;
+    if (authResponse.headers()['content-type'].indexOf('json')>-1) {
+      myEntity = JSON.parse(authResponse.text())[name0];
+    }
+    else {
+      myEntity = authResponse.text();
+    }
+    return myEntity;
+  })
+  .catch((e) => {
+    this.log('error', `The fetch on ${entity0} ()  threw an exception : `, JSON.stringify(e, null, 2));
+    throw e;
+  });
+}
+
+/**
+ * This is a method for getting a PDF
+ * @param {string} entity0 - QuickBooks Entity name e.g. Invoice (Important: Case sensitive)
+ * @param {string|number} id0 - Specify Id of Entity (required)
+ * @returns {Promise} - PDF response (It is a buffer in the form of PDF)
+ */
+
+ OAuthClient.prototype.fetchPDF = function fetchPDF(entity0, id0) {
+  let name0;
+  return new Promise((resolve) => {
+    if (!entity0 || typeof(entity0)!=='string' || !entity0.slice(0,50).trim()) throw new Error('Invalid Quickbooks Entity!');
+    entity0 = entity0.slice(0,50).trim();
+    name0 = entity0[0].toUpperCase() + entity0.slice(1);
+    entity0 = entity0.toLowerCase();
+    if (!this.isAccessTokenValid()) throw new Error('OAuth authentication failed! Invalid Token!');
+    const entity_id = parseInt(id0, 10);
+    if (Number.isNaN(entity_id)) throw new Error(`Invalid ${name0} Id! Must be a number or number as a string!`);
+    const companyID = this.getToken().realmId;
+    if (!companyID) throw new Error('Realm Id missing! Please create a new token using OAuth and try again.');
+    const url0 = this.environment === 'sandbox'
+      ? OAuthClient.environment.sandbox
+      : OAuthClient.environment.production;
+    const headers0 = {
+      Authorization: `Bearer ${this.getToken().access_token}`,
+      Accept: AuthResponse._pdfContentType,
+      'User-Agent': OAuthClient.user_agent,
+    };
+    const extendURL = `${entity0}/${entity_id}/pdf`;
+    const req_options = {
+      method: 'GET',
+      headers: headers0,
+    };
+    const get_url = `${url0}v3/company/${companyID}/${extendURL}`;
+    const request = https.get(get_url, req_options, (resp) => {
+      let myPDFBuffer = [];
+      resp.on('data', (chunk) => {
+        myPDFBuffer.push(chunk);
+      });
+      resp.on('end', () => {
+        resolve(Buffer.concat(myPDFBuffer));
+      });
+    });
+    request.on('error', (er) => {
+      throw er;
+    });
+    request.end();
+  })
+  .then((authResponse) => {
+    this.log('info', `The get${entity0}PDF () response is : `, authResponse ? authResponse.toString() : "EMPTY");
+    return authResponse;
+  })
+  .catch((e) => {
+    this.log('error', `Get ${entity0} PDF ()  threw an exception : `, JSON.stringify(e, null, 2));
+    throw e;
+  });
+}
+
+/* CREATE ENTITIES */
+
+/**
+ * Create quickbooks Account
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/account#create-an-account
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} accountObj - Object to create: Account
+ * @param {string} accountObj.Name - Unique name for Account
+ * @param {string} accountObj.AccountType - Account Type Enum i.e. must be one of the Account types, default 'Accounts Receivable'
+ * @returns {Promise} QuickBooks Account created
+ */
+
+ OAuthClient.prototype.createAccount = function createAccount(accountObj) {
+  if (!accountObj || typeof(accountObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(accountObj),
+  }, 'Account');
+};
+
+/**
+ * Create quickbooks Bill
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/bill#create-a-bill
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} billObj - Object to create: Bill
+ * @param {object} billObj.Line - Line must be a JSON for Bill
+ * @param {string} billObj.Line.DetailType - Set to 'AccountBasedExpenseLineDetail'
+ * @param {number} billObj.Line.Amount - Amount payable for this Bill
+ * @param {object} billObj.Line.AccountBasedExpenseLineDetail - Account details
+ * @param {object} billObj.Line.AccountBasedExpenseLineDetail.AccountRef - Account associated with this Bill
+ * @param {string} billObj.Line.AccountBasedExpenseLineDetail.AccountRef.value - String Id of Account
+ * @param {object} billObj.VendorRef - Vendor associated with this Bill
+ * @param {string} billObj.VendorRef.value - String Id of Vendor associated with this Bill
+ * @param {object} billObj.CurrencyRef - Currency Ref string
+ * @param {string} billObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Bill created
+ */
+
+OAuthClient.prototype.createBill = function createBill(billObj) {
+  if (!billObj || typeof(billObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(billObj),
+  }, 'Bill');
+};
+
+/**
+ * Create quickbooks Customer
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/customer#create-a-customer
+ * 
+ * DisplayName OR at least one of Title, GivenName, MiddleName, FamilyName, or Suffix must be present
+ * The equivalent Name must be UNIQUE
+ * Refer to above link for exact fields and description
+ * @param {object} customerObj - Object to create: Customer
+ * @returns {Promise} QuickBooks Customer created
+ */
+
+OAuthClient.prototype.createCustomer = function createCustomer(customerObj) {
+  if (!customerObj || typeof(customerObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(customerObj),
+  }, 'Customer');
+};
+
+/**
+ * Create quickbooks Employee
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/employee#create-an-employee
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} employeeObj - Object to create: Employee
+ * @returns {Promise} QuickBooks Employee created
+ */
+
+OAuthClient.prototype.createEmployee = function createEmployee(employeeObj) {
+  if (!employeeObj || typeof(employeeObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(employeeObj),
+  }, 'Employee');
+};
+
+/**
+ * Create quickbooks Estimate
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/estimate#create-an-estimate
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} estimateObj - Object to create: Estimate
+ * @param {object} estimateObj.Line - Line details
+ * @param {string} estimateObj.Line.DetailType - Type of Line
+ * @param {object} estimateObj.CustomerRef - Customer associated with this Estimate
+ * @param {string} estimateObj.CustomerRef.value - String Id of Customer associated with this Estimate
+ * @param {object} estimateObj.CurrencyRef - Currency Ref string
+ * @param {string} estimateObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Estimate created
+ */
+
+OAuthClient.prototype.createEstimate = function createEstimate(estimateObj) {
+  if (!estimateObj || typeof(estimateObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(estimateObj),
+  }, 'Estimate');
+};
+
+/**
+ * Create quickbooks Invoice
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/invoice#create-an-invoice
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} invoiceObj - Object to create: Invoice
+ * @param {object} invoiceObj.Line - Line details
+ * @param {string} invoiceObj.Line.DetailType - Type of Line
+ * @param {object} invoiceObj.CustomerRef - Customer associated with this Invoice
+ * @param {string} invoiceObj.CustomerRef.value - String Id of Customer associated with this Invoice
+ * @param {object} invoiceObj.CurrencyRef - Currency Ref string
+ * @param {string} invoiceObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Invoice created
+ */
+
+OAuthClient.prototype.createInvoice = function createInvoice(invoiceObj) {
+  if (!invoiceObj || typeof(invoiceObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(invoiceObj),
+  }, 'Invoice');
+};
+
+/**
+ * Create quickbooks Item
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/item#create-an-item
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} itemObj - Object to create: Item
+ * @returns {Promise} QuickBooks Item created
+ */
+
+OAuthClient.prototype.createItem = function createItem(itemObj) {
+  if (!itemObj || typeof(itemObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(itemObj),
+  }, 'Item');
+};
+
+/**
+ * Create quickbooks Payment
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/payment#create-a-payment
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} paymentObj - Object to create: Payment
+ * @param {number} paymentObj.TotalAmt - Total amount of Payment
+ * @param {object} paymentObj.CustomerRef - Customer associated with this Payment
+ * @param {string} paymentObj.CustomerRef.value - String Id of Customer associated with this Payment
+ * @param {object} paymentObj.CurrencyRef - Currency Ref string
+ * @param {string} paymentObj.CurrencyRef.value - E.g. 'USD'
+ * @returns {Promise} QuickBooks Payment created
+ */
+
+OAuthClient.prototype.createPayment = function createPayment(paymentObj) {
+  if (!paymentObj || typeof(paymentObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(paymentObj),
+  }, 'Payment');
+};
+
+/**
+ * Create quickbooks TaxAgency
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/taxagency#create-a-taxagency
+ * 
+ * Refer to above link for exact fields and description
+ * @param {object} tax_agencyObj - Object to create: TaxAgency
+ * @param {string} tax_agencyObj.DisplayName - Name of TaxAgency
+ * @returns {Promise} QuickBooks TaxAgency created
+ */
+
+OAuthClient.prototype.createTaxAgency = function createTaxAgency(tax_agencyObj) { // check
+  if (!tax_agencyObj || typeof(tax_agencyObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(tax_agencyObj),
+  }, 'TaxAgency');
+};
+
+/**
+ * Create quickbooks Vendor
+ * https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/vendor#create-a-vendor
+ * 
+ * DisplayName OR at least one of Title, GivenName, MiddleName, FamilyName, or Suffix must be present
+ * The equivalent Name must be UNIQUE
+ * Refer to above link for exact fields and description
+ * @param {object} vendorObj - Object to create: Vendor
+ * @returns {Promise} QuickBooks Vendor created
+ */
+
+ OAuthClient.prototype.createVendor = function createVendor(vendorObj) {
+  if (!vendorObj || typeof(vendorObj)!=='object') return new Error('Cannot create empty object!');
+  return this.fetchAPI({
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(vendorObj),
+  }, 'Vendor');
+};
+
+/* END CREATE ENTITIES */
+
+/* DELETE ENTITIES */
+
+/* END DELETE ENTITIES */
+
+/* GET ENTITIES */
+
+/**
+ * Get details of a quickbooks Account
+ * @param {string|number} acc_id - Id reference of Account
+ * @returns {Promise} QuickBooks Account
+ */
+
+OAuthClient.prototype.getAccount = function getAccount(acc_id) {
+  return this.fetchAPI(null, 'Account', acc_id);
+};
+
+/**
+ * Get details of a quickbooks Bill
+ * @param {string|number} bill_id - Id reference of Bill
+ * @returns {Promise} QuickBooks Bill
+ */
+
+OAuthClient.prototype.getBill = function getBill(bill_id) {
+  return this.fetchAPI(null, 'Bill', bill_id);
+};
+
+/**
+ * Get details of a quickbooks companyInfo based on realmId
+ * @returns {Promise} QuickBooks CompanyInfo
+ */
+
+OAuthClient.prototype.getCompanyInfo = function getCompanyInfo() { // check
+  return this.fetchAPI(null, 'CompanyInfo', this.getToken().realmId);
+};
+
+/**
+ * Get details of a quickbooks Customer
+ * @param {string|number} customer_id - Id reference of Customer
+ * @returns {Promise} QuickBooks Customer
+ */
+
+OAuthClient.prototype.getCustomer = function getCustomer(customer_id) {
+  return this.fetchAPI(null, 'Customer', customer_id);
+};
+
+/**
+ * Get details of a quickbooks Employee
+ * @param {string|number} employee_id - Id reference of Employee
+ * @returns {Promise} QuickBooks Employee
+ */
+
+OAuthClient.prototype.getEmployee = function getEmployee(employee_id) {
+  return this.fetchAPI(null, 'Employee', employee_id);
+};
+
+/**
+ * Get details of a quickbooks Estimate
+ * @param {string|number} estimate_id - Id reference of Estimate
+ * @returns {Promise} QuickBooks Estimate
+ */
+
+OAuthClient.prototype.getEstimate = function getEstimate(estimate_id) {
+  return this.fetchAPI(null, 'Estimate', estimate_id);
+};
+
+/**
+ * Get PDF of a quickbooks Estimate
+ * @param {string|number} estimate_id - Id reference of EstimatePDF
+ * @returns {Promise} QuickBooks EstimatePDF
+ */
+
+ OAuthClient.prototype.getEstimatePDF = function getEstimatePDF(estimate_id) {
+  return this.fetchPDF('Estimate', estimate_id);
+};
+
+/**
+ * Get details of a quickbooks Invoice
+ * @param {string|number} invoice_id - Id reference of Invoice
+ * @returns {Promise} QuickBooks Invoice
+ */
+
+OAuthClient.prototype.getInvoice = function getInvoice(invoice_id) {
+  return this.fetchAPI(null, 'Invoice', invoice_id);
+};
+
+/**
+ * Get PDF of a quickbooks Invoice
+ * @param {string|number} invoice_id - Id reference of InvoicePDF
+ * @returns {Promise} QuickBooks InvoicePDF
+ */
+
+OAuthClient.prototype.getInvoicePDF = function getInvoicePDF(invoice_id) {
+  return this.fetchPDF('Invoice', invoice_id);
+};
+
+/**
+ * Get details of a quickbooks Item
+ * @param {string|number} item_id - Id reference of Item
+ * @returns {Promise} QuickBooks Item
+ */
+
+OAuthClient.prototype.getItem = function getItem(item_id) {
+  return this.fetchAPI(null, 'Item', item_id);
+};
+
+/**
+ * Get details of a quickbooks Payment
+ * @param {string|number} payment_id - Id reference of Payment
+ * @returns {Promise} QuickBooks Payment
+ */
+
+OAuthClient.prototype.getPayment = function getPayment(payment_id) {
+  return this.fetchAPI(null, 'Payment', payment_id);
+};
+
+/**
+ * Get quickbooks Preferences for default company ID i.e. realmId
+ * @returns {Promise} QuickBooks Preferences
+ */
+
+OAuthClient.prototype.getPreferences = function getPreferences() {
+  return this.fetchAPI(null, 'Preferences');
+};
+
+/**
+ * Get details of a quickbooks TaxAgency
+ * @param {string|number} tax_agency_id - Id reference of TaxAgency
+ * @returns {Promise} QuickBooks TaxAgency
+ */
+
+OAuthClient.prototype.getTaxAgency = function getTaxAgency(tax_agency_id) { // check
+  return this.fetchAPI(null, 'TaxAgency', tax_agency_id);
+};
+
+/**
+ * Get details of a quickbooks Vendor
+ * @param {string|number} vendor_id - Id reference of Vendor
+ * @returns {Promise} QuickBooks Vendor
+ */
+
+ OAuthClient.prototype.getVendor = function getVendor(vendor_id) {
+  return this.fetchAPI(null, 'Vendor', vendor_id);
+};
+
+/* END GET ENTITIES */
 
 module.exports = OAuthClient;
