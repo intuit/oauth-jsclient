@@ -113,7 +113,7 @@ declare namespace OAuthClient {
 
     export interface AuthorizeParams {
         scope: scopes | scopes[] | string;
-        state?: csrf;
+        state?: csrf | string;
     }
 
     export interface RevokeParams {
