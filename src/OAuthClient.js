@@ -169,7 +169,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
 
     const request = {
       url: OAuthClient.tokenEndpoint,
-      body,
+      data: body,
       method: 'POST',
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
@@ -383,7 +383,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
             },
-            params.headers
+            params.headers,
           )
         : Object.assign(
             {},
@@ -391,7 +391,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
               Authorization: `Bearer ${this.getToken().access_token}`,
               Accept: AuthResponse._jsonContentType,
               'User-Agent': OAuthClient.user_agent,
-            }
+            },
           );
 
     const request = {
@@ -552,7 +552,7 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @returns response
  */
 OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return axios.get(request).then((response) => response);
+  return axios(request).then((response) => response);
 };
 
 /**
