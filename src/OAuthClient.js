@@ -182,8 +182,8 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
+      const { response, ...authResponse } = res.json ? res : null;
+      const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
       return authResponse;
