@@ -210,7 +210,7 @@ OAuthClient.prototype.refresh = function refresh() {
 
     const request = {
       url: OAuthClient.tokenEndpoint,
-      body,
+      data: body,
       method: 'POST',
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
@@ -223,7 +223,7 @@ OAuthClient.prototype.refresh = function refresh() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const { request, ...authResponse } = res.json ? res : null;
       const json = (authResponse && authResponse.getJson()) || res;
       this.token.setToken(json);
       this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
@@ -252,7 +252,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
 
     const request = {
       url: OAuthClient.tokenEndpoint,
-      body,
+      data: body,
       method: 'POST',
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
@@ -265,7 +265,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const { request, ...authResponse } = res.json ? res : null;
       const json = (authResponse && authResponse.getJson()) || res;
       this.token.setToken(json);
       this.log(
@@ -303,7 +303,7 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
     const request = {
       url: OAuthClient.revokeEndpoint,
-      body,
+      data: body,
       method: 'POST',
       headers: {
         Authorization: `Basic ${this.authHeader()}`,
@@ -315,7 +315,7 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
     resolve(this.getTokenRequest(request));
   })
-    .then((authResponse) => {
+    .then(({ request, ...authResponse }) => {
       this.token.clearToken();
       this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse, null, 2));
       return authResponse;
@@ -349,7 +349,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const { request, ...authResponse } = res.json ? res : null;
       this.log(
         'info',
         'The Get User Info () response is : ',
@@ -365,47 +365,43 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
 
 /**
  * Make API call. Pass the url,method,headers using `params` object
- * *
- * @param {Object} params
+ *
+ * @param {params} params
+ * @param {string} params.url
+ * @param {string} params.method (optional) default is GET
+ * @param {Object} params.headers (optional)
+ * @param {Object} params.body (optional)
+ * @param {string} params.responseType (optional) default is json - options are json, text, stream, arraybuffer
  * @returns {Promise}
  */
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
-    const transport = params.transport ? params.transport : { responseType: 'text' };
+    const responseType = params.responseType ? params.responseType : 'json';
+
+    const baseHeaders = {
+      Authorization: `Bearer ${this.getToken().access_token}`,
+      Accept: AuthResponse._jsonContentType,
+      'User-Agent': OAuthClient.user_agent,
+    };
 
     const headers =
       params.headers && typeof params.headers === 'object'
-        ? Object.assign(
-            {},
-            {
-              Authorization: `Bearer ${this.getToken().access_token}`,
-              Accept: AuthResponse._jsonContentType,
-              'User-Agent': OAuthClient.user_agent,
-            },
-            params.headers,
-          )
-        : Object.assign(
-            {},
-            {
-              Authorization: `Bearer ${this.getToken().access_token}`,
-              Accept: AuthResponse._jsonContentType,
-              'User-Agent': OAuthClient.user_agent,
-            },
-          );
+        ? Object.assign({}, baseHeaders, params.headers)
+        : Object.assign({}, baseHeaders);
 
     const request = {
       url: params.url,
       method: params.method || 'GET',
       headers,
-      transport,
+      responseType,
     };
 
-    params.body && (request.body = params.body);
+    params.body && (request.data = params.body);
 
     resolve(this.getTokenRequest(request));
   })
-    .then((authResponse) => {
+    .then(({ request, ...authResponse }) => {
       this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
       return authResponse;
     })
