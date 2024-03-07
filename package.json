@@ -68,9 +68,9 @@
   "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
     "atob": "2.1.2",
+    "axios": "^1.5.1",
     "csrf": "^3.0.4",
     "jsonwebtoken": "^9.0.2",
-    "popsicle": "^12.1.2",
     "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
