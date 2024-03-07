@@ -44,8 +44,8 @@ function AuthResponse(params) {
  */
 AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
-  this.body = (response && response.body) || '';
-  this.json = this.body && this.isJson() ? JSON.parse(this.body) : null;
+  this.body = (response && response.data) || '';
+  this.json = this.body && this.isJson() ? this.body : null;
   this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
 };
 
@@ -57,7 +57,6 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
 AuthResponse.prototype.getToken = function getToken() {
   return this.token.getToken();
 };
-
 
 /**
  * Get Token
@@ -92,10 +91,8 @@ AuthResponse.prototype.headers = function headers() {
  * @returns {*|boolean}
  */
 AuthResponse.prototype.valid = function valid() {
-  return (this.response && Number(this.response.status) >= 200
-    && Number(this.response.status) < 300);
+  return this.response && Number(this.response.status) >= 200 && Number(this.response.status) < 300;
 };
-
 
 /**
  * Get Json () { returns token as JSON }
@@ -119,7 +116,6 @@ AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
   return this.intuit_tid;
 };
 
-
 /**
  * isContentType
  * *
@@ -135,7 +131,7 @@ AuthResponse.prototype.isContentType = function isContentType(contentType) {
  * @returns {string} getContentType
  */
 AuthResponse.prototype.getContentType = function getContentType() {
-  return this.response.get(AuthResponse._contentType) || '';
+  return this.response.headers[AuthResponse._contentType] || '';
 };
 
 /**
@@ -147,10 +143,8 @@ AuthResponse.prototype.isJson = function isJson() {
   return this.isContentType('application/json');
 };
 
-
-AuthResponse._contentType = 'Content-Type';
+AuthResponse._contentType = 'content-type';
 AuthResponse._jsonContentType = 'application/json';
 AuthResponse._urlencodedContentType = 'application/x-www-form-urlencoded';
-
 
 module.exports = AuthResponse;
