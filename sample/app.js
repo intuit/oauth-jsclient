@@ -72,7 +72,7 @@ app.get('/callback', function (req, res) {
   oauthClient
     .createToken(req.url)
     .then(function (authResponse) {
-      oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
+      oauth2_token_json = JSON.stringify(authResponse.json, null, 2);
     })
     .catch(function (e) {
       console.error(e);
@@ -95,8 +95,8 @@ app.get('/refreshAccessToken', function (req, res) {
   oauthClient
     .refresh()
     .then(function (authResponse) {
-      console.log(`The Refresh Token is  ${JSON.stringify(authResponse.getJson())}`);
-      oauth2_token_json = JSON.stringify(authResponse.getJson(), null, 2);
+      console.log(`The Refresh Token is  ${JSON.stringify(authResponse.json)}`);
+      oauth2_token_json = JSON.stringify(authResponse.json, null, 2);
       res.send(oauth2_token_json);
     })
     .catch(function (e) {
@@ -118,8 +118,8 @@ app.get('/getCompanyInfo', function (req, res) {
   oauthClient
     .makeApiCall({ url: `${url}v3/company/${companyID}/companyinfo/${companyID}` })
     .then(function (authResponse) {
-      console.log(`The response for API call is :${JSON.stringify(authResponse)}`);
-      res.send(JSON.parse(authResponse.text()));
+      console.log(`The response for API call is :${JSON.stringify(authResponse.json)}`);
+      res.send(authResponse.json);
     })
     .catch(function (e) {
       console.error(e);
