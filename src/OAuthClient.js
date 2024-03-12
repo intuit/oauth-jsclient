@@ -182,10 +182,10 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const { response, ...authResponse } = res.json ? res : null;
+      const { request, ...authResponse } = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -224,9 +224,9 @@ OAuthClient.prototype.refresh = function refresh() {
   })
     .then((res) => {
       const { request, ...authResponse } = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
+      const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -266,7 +266,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
   })
     .then((res) => {
       const { request, ...authResponse } = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
+      const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log(
         'info',
@@ -402,7 +402,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
     resolve(this.getTokenRequest(request));
   })
     .then(({ request, ...authResponse }) => {
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
