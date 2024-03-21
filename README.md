@@ -163,7 +163,7 @@ const parseRedirect = req.url;
 oauthClient
   .createToken(parseRedirect)
   .then(function (authResponse) {
-    console.log('The Token is  ' + JSON.stringify(authResponse.getJson()));
+    console.log('The Token is  ' + JSON.stringify(authResponse.json));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -215,7 +215,7 @@ previous refresh tokens expire 24 hours after you receive a new one.
 oauthClient
   .refresh()
   .then(function (authResponse) {
-    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getJson()));
+    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -232,7 +232,7 @@ You can call the below helper method to refresh tokens by explictly passing the 
 oauthClient
   .refreshUsingToken('<Enter the refresh token>')
   .then(function (authResponse) {
-    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getJson()));
+    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -249,7 +249,7 @@ tokens.
 oauthClient
   .revoke()
   .then(function (authResponse) {
-    console.log('Tokens revoked : ' + JSON.stringify(authResponse.getJson()));
+    console.log('Tokens revoked : ' + JSON.stringify(authResponse.json));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -265,7 +265,7 @@ how to retrieve the `token` object
 oauthClient
   .revoke(params)
   .then(function (authResponse) {
-    console.log('Tokens revoked : ' + JSON.stringify(authResponse.getJson()));
+    console.log('Tokens revoked : ' + JSON.stringify(authResponse.json));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -509,10 +509,10 @@ You can use the below helper methods to make full use of the Auth Response Objec
 
 ```javascript
 oauthClient.createToken(parseRedirect).then(function (authResponse) {
-  console.log('The Token in JSON is  ' + JSON.stringify(authResponse.getJson()));
+  console.log('The Token in JSON is  ' + JSON.stringify(authResponse.json));
   let status = authResponse.status();
   let body = authResponse.text();
-  let jsonResponse = authResponse.getJson();
+  let jsonResponse = authResponse.json;
   let intuit_tid = authResponse.get_intuit_tid();
 });
 ```
