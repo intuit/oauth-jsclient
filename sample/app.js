@@ -95,7 +95,7 @@ app.get('/refreshAccessToken', function (req, res) {
   oauthClient
     .refresh()
     .then(function (authResponse) {
-      console.log(`The Refresh Token is  ${JSON.stringify(authResponse.json)}`);
+      console.log(`\n The Refresh Token is  ${JSON.stringify(authResponse.json)}`);
       oauth2_token_json = JSON.stringify(authResponse.json, null, 2);
       res.send(oauth2_token_json);
     })
@@ -118,7 +118,7 @@ app.get('/getCompanyInfo', function (req, res) {
   oauthClient
     .makeApiCall({ url: `${url}v3/company/${companyID}/companyinfo/${companyID}` })
     .then(function (authResponse) {
-      console.log(`The response for API call is :${JSON.stringify(authResponse.json)}`);
+      console.log(`\n The response for API call is :${JSON.stringify(authResponse.json)}`);
       res.send(authResponse.json);
     })
     .catch(function (e) {
