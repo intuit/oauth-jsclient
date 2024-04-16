@@ -474,8 +474,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
     .then((response) => {
       if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
       // Find the key by KID
-      const responseBody = JSON.parse(response.body);
-      const key = responseBody.keys.find((el) => el.kid === kid);
+      const key = response.data.keys.find((el) => el.kid === kid);
       const cert = this.getPublicKey(key.n, key.e);
 
       return jwt.verify(id_token, cert);
