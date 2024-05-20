@@ -185,7 +185,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -226,7 +226,7 @@ OAuthClient.prototype.refresh = function refresh() {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -271,7 +271,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.log(
         'info',
         'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse.json, null, 2),
+        JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -318,7 +318,7 @@ OAuthClient.prototype.revoke = function revoke(params) {
     .then((res) => {
       const authResponse = res.json ? res : null;
       this.token.clearToken();
-      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -354,7 +354,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       this.log(
         'info',
         'The Get User Info () response is : ',
-        JSON.stringify(authResponse.json, null, 2),
+        JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -404,7 +404,7 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   })
     .then((res) => {
       const authResponse = res.json ? res : null;
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
