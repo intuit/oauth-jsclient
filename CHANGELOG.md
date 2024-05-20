@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [4.1.1](https://github.com/intuit/oauth-jsclient/tree/4.1.1)
+#### Features 
+- Stop using Popsicle and start using Axios
+#### Issues Fixed
+- [fix authResponse.json](https://github.com/intuit/oauth-jsclient/pull/160)
+
+
+## [4.1.0](https://github.com/intuit/oauth-jsclient/tree/4.1.0)
+#### Features 
+- Stop using Popsicle and start using Axios
+#### Issues Fixed
+- [Introduced Axios replacing Popsicle](https://github.com/intuit/oauth-jsclient/pull/157)
+
+
 ## [4.0.0](https://github.com/intuit/oauth-jsclient/tree/4.0.0)
 #### Breaking Changes
 - Minimum Node Version >= 10
