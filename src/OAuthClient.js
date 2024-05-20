@@ -182,10 +182,10 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const { response, ...authResponse } = res.json ? res : null;
+      const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -223,10 +223,10 @@ OAuthClient.prototype.refresh = function refresh() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const { request, ...authResponse } = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -265,13 +265,13 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const { request, ...authResponse } = res.json ? res : null;
-      const json = (authResponse && authResponse.getJson()) || res;
+      const authResponse = res.json ? res : null;
+      const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log(
         'info',
         'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse, null, 2),
+        JSON.stringify(authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -315,9 +315,10 @@ OAuthClient.prototype.revoke = function revoke(params) {
 
     resolve(this.getTokenRequest(request));
   })
-    .then(({ request, ...authResponse }) => {
+    .then((res) => {
+      const authResponse = res.json ? res : null;
       this.token.clearToken();
-      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse, null, 2));
+      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -349,11 +350,11 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const { request, ...authResponse } = res.json ? res : null;
+      const authResponse = res.json ? res : null;
       this.log(
         'info',
         'The Get User Info () response is : ',
-        JSON.stringify(authResponse, null, 2),
+        JSON.stringify(authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -401,8 +402,9 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
 
     resolve(this.getTokenRequest(request));
   })
-    .then(({ request, ...authResponse }) => {
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse, null, 2));
+    .then((res) => {
+      const authResponse = res.json ? res : null;
+      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
