@@ -403,8 +403,15 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      const { body, ...authResponse } = res;
+      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
+
+      if(authResponse.json === null && body) {
+        return {
+          ...authResponse,
+          body: body
+        }
+      }
       return authResponse;
     })
     .catch((e) => {
