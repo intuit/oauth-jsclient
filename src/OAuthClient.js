@@ -185,7 +185,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+       this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -270,8 +270,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.token.setToken(json);
       this.log(
         'info',
-        'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse && authResponse.json, null, 2),
+        'Refresh usingToken () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -353,8 +352,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       const authResponse = res.json ? res : null;
       this.log(
         'info',
-        'The Get User Info () response is : ',
-        JSON.stringify(authResponse && authResponse.json, null, 2),
+        'The Get User Info () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
