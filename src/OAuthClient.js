@@ -185,7 +185,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse.json, null, 2));
+       this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -226,7 +226,7 @@ OAuthClient.prototype.refresh = function refresh() {
       const authResponse = res.json ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -270,8 +270,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.token.setToken(json);
       this.log(
         'info',
-        'Refresh usingToken () response is : ',
-        JSON.stringify(authResponse.json, null, 2),
+        'Refresh usingToken () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -318,7 +317,7 @@ OAuthClient.prototype.revoke = function revoke(params) {
     .then((res) => {
       const authResponse = res.json ? res : null;
       this.token.clearToken();
-      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -353,8 +352,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       const authResponse = res.json ? res : null;
       this.log(
         'info',
-        'The Get User Info () response is : ',
-        JSON.stringify(authResponse.json, null, 2),
+        'The Get User Info () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
       );
       return authResponse;
     })
@@ -403,8 +401,15 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const { body, ...authResponse } = res;
       this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
+
+      if(authResponse.json === null && body) {
+        return {
+          ...authResponse,
+          body: body
+        }
+      }
       return authResponse;
     })
     .catch((e) => {
@@ -477,8 +482,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
     .then((response) => {
       if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
       // Find the key by KID
-      const responseBody = JSON.parse(response.data);
-      const key = responseBody.keys.find((el) => el.kid === kid);
+      const key = response.data.keys.find((el) => el.kid === kid);
       const cert = this.getPublicKey(key.n, key.e);
 
       return jwt.verify(id_token, cert);
