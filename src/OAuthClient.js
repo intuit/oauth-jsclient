@@ -456,9 +456,8 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   })
     .then((res) => {
-      const response = res.json ? res : null;
-      this.log('info', 'The validateIdToken () response is :', JSON.stringify(response.json, null, 2));
-      if (response) return true;
+      this.log('info', 'The validateIdToken () response is :', JSON.stringify(res, null, 2));
+      if (res) return true;
       return false;
     })
     .catch((e) => {
