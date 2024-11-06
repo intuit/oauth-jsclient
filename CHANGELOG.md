@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.1.3](https://github.com/intuit/oauth-jsclient/tree/4.1.3)
+#### Features 
+- None
+#### Issues Fixed
+- [minor fixes OAuthClient.js](https://github.com/intuit/oauth-jsclient/pull/171)
+
+## [4.1.2](https://github.com/intuit/oauth-jsclient/tree/4.1.2)
+#### Issues Fixed
+- [fixed Error converting authResponse to JSON string](https://github.com/intuit/oauth-jsclient/pull/165)
 
 ## [4.1.1](https://github.com/intuit/oauth-jsclient/tree/4.1.1)
 #### Features 

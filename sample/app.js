@@ -59,7 +59,7 @@ app.get('/authUri', urlencodedParser, function (req, res) {
   });
 
   const authUri = oauthClient.authorizeUri({
-    scope: [OAuthClient.scopes.Accounting],
+    scope: [OAuthClient.scopes.Accounting, OAuthClient.scopes.OpenId, OAuthClient.scopes.Profile, OAuthClient.scopes.Email],
     state: 'intuit-test',
   });
   res.send(authUri);
