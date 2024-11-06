@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.1.3](https://github.com/intuit/oauth-jsclient/tree/4.1.3)
+#### Features 
+- None
+#### Issues Fixed
+- [minor fixes OAuthClient.js](https://github.com/intuit/oauth-jsclient/pull/171)
 
 ## [4.1.1](https://github.com/intuit/oauth-jsclient/tree/4.1.1)
 #### Features 
