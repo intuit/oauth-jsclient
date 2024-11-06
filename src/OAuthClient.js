@@ -182,10 +182,10 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const authResponse = res.hasOwnProperty('json')? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-       this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
     })
     .catch((e) => {
@@ -223,7 +223,7 @@ OAuthClient.prototype.refresh = function refresh() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const authResponse = res.hasOwnProperty('json')? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
@@ -265,7 +265,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const authResponse = res.hasOwnProperty('json')? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log(
@@ -315,7 +315,7 @@ OAuthClient.prototype.revoke = function revoke(params) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const authResponse = res.hasOwnProperty('json')? res : null;
       this.token.clearToken();
       this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
       return authResponse;
@@ -349,7 +349,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.json ? res : null;
+      const authResponse = res.hasOwnProperty('json')? res : null;
       this.log(
         'info',
         'The Get User Info () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
@@ -456,7 +456,7 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   })
     .then((res) => {
-      this.log('info', 'The validateIdToken () response is : ', JSON.stringify(res, null, 2));
+      this.log('info', 'The validateIdToken () response is :', JSON.stringify(res, null, 2));
       if (res) return true;
       return false;
     })
