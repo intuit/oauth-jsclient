@@ -58,9 +58,7 @@ function OAuthClient(config) {
 
   if (this.logging) {
     const dir = './logs';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
-    }
+    fs.mkdirSync(dir, { recursive: true });
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(
