@@ -192,7 +192,7 @@ if (!oauthClient.isAccessTokenValid()) {
   oauthClient
     .refresh()
     .then(function (authResponse) {
-      console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json()));
+      console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
     })
     .catch(function (e) {
       console.error('The error message is :' + e.originalMessage);
