@@ -67,7 +67,7 @@ describe('Tests for AuthResponse', () => {
   });
 
   it('Process Text() when there is body ', () => {
-    const text = authResponse.text();
+    const text = authResponse.body;
     expect(text).to.be.a('string');
     expect(text).to.be.equal('{"id_token":"sample_id_token","expires_in":3600,"token_type":"bearer","x_refresh_token_expires_in":8726400,"refresh_token":"sample_refresh_token","access_token":"sample_access_token"}');
   });
@@ -178,7 +178,7 @@ describe('Tests for AuthResponse with not json content', () => {
   });
 
   it('Process Get Json to throw an error', () => {
-    expect(() => authResponse.getJson()).to.throw(Error);
+    expect(() => authResponse.json).to.throw(Error);
   });
 
   it('GetContentType should handle False', () => {
