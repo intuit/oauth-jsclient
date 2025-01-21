@@ -241,7 +241,7 @@ describe('Tests for OAuthClient', () => {
 
     it('Get User Info in Sandbox', () =>
       oauthClient.getUserInfo().then((authResponse) => {
-        expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+        expect(JSON.stringify(authResponse.json)).to.be.equal(
           JSON.stringify(expectedUserInfo),
         );
       }));
@@ -266,7 +266,7 @@ describe('Tests for OAuthClient', () => {
     it('Get User Info in Production', () => {
       oauthClient.environment = 'production';
       return oauthClient.getUserInfo().then((authResponse) => {
-        expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+        expect(JSON.stringify(authResponse.json)).to.be.equal(
           JSON.stringify(expectedUserInfo),
         );
       });
@@ -301,7 +301,7 @@ describe('Tests for OAuthClient', () => {
             '12345',
         })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
             JSON.stringify(expectedMakeAPICall),
           );
         });
@@ -317,7 +317,7 @@ describe('Tests for OAuthClient', () => {
           },
         })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
             JSON.stringify(expectedMakeAPICall),
           );
         });
@@ -357,7 +357,7 @@ describe('Tests for OAuthClient', () => {
             'https://quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
         })
         .then((authResponse) => {
-          expect(JSON.stringify(authResponse.getJson())).to.be.equal(
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
             JSON.stringify(expectedMakeAPICall),
           );
         });
