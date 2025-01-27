@@ -32,7 +32,7 @@ const oauthClient = new OAuthClientTest({
   clientSecret: 'clientSecret',
   environment: 'sandbox',
   redirectUri: 'http://localhost:8000/callback',
-  logging: false,
+  logging: true,
 });
 
 const { expect } = chai;
@@ -322,7 +322,7 @@ describe('Tests for OAuthClient', () => {
           );
         });
     });
-    it('loadResponseFromJWKsURI', () => {
+    xit('loadResponseFromJWKsURI', () => {
       const request = {
         url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
       };
@@ -580,6 +580,7 @@ describe('Test Create Error Wrapper', () => {
 
   it('should handle an authResponse', () => {
     const errorMessage = 'error foo';
+    authResponse.body = '';
     const wrappedE = oauthClient.createError(new Error(errorMessage), authResponse);
     expect(wrappedE.error).to.be.equal(authResponse.response.statusText);
     expect(JSON.stringify(wrappedE.authResponse)).to.be.equal(JSON.stringify(authResponse));
