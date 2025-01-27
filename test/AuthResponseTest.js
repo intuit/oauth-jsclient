@@ -90,7 +90,7 @@ describe('Tests for AuthResponse', () => {
   xit('Process Get Json when content type is not correct to throw an error', () => {
     getStub.returns('blah');
     authResponse.processResponse(expectedResponse);
-    expect(() => authResponse.getJson()).to.throw(Error());
+    expect(() => authResponse.getJson()).to.throw(Error);
   });
 
   it('Process Get Json empty Body', () => {
