@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app",
     "test": "./node_modules/mocha/bin/mocha test/**/*-test.js --reporter spec",
-    "snyk-protect": "snyk protect",
+    "snyk-protect": "snyk-protect",
     "prepublish": "npm run snyk-protect"
   },
   "author": "anil_kumar3@intuit.com",
@@ -22,7 +22,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "snyk": "^1.316.1"
+    "@snyk/protect": "^1.657.0"
   },
   "snyk": true
 }
