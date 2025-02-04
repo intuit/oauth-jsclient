@@ -163,7 +163,7 @@ const parseRedirect = req.url;
 oauthClient
   .createToken(parseRedirect)
   .then(function (authResponse) {
-    console.log('The Token is  ' + JSON.stringify(authResponse.json));
+    console.log('The Token is  ' + JSON.stringify(authResponse.getToken()));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -192,7 +192,7 @@ if (!oauthClient.isAccessTokenValid()) {
   oauthClient
     .refresh()
     .then(function (authResponse) {
-      console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
+      console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getToken()));
     })
     .catch(function (e) {
       console.error('The error message is :' + e.originalMessage);
@@ -215,7 +215,7 @@ previous refresh tokens expire 24 hours after you receive a new one.
 oauthClient
   .refresh()
   .then(function (authResponse) {
-    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
+    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getToken()));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);
@@ -232,7 +232,7 @@ You can call the below helper method to refresh tokens by explictly passing the 
 oauthClient
   .refreshUsingToken('<Enter the refresh token>')
   .then(function (authResponse) {
-    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.json));
+    console.log('Tokens refreshed : ' + JSON.stringify(authResponse.getToken()));
   })
   .catch(function (e) {
     console.error('The error message is :' + e.originalMessage);

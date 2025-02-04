@@ -56,6 +56,7 @@ app.get('/authUri', urlencodedParser, function (req, res) {
     clientSecret: req.query.json.clientSecret,
     environment: req.query.json.environment,
     redirectUri: req.query.json.redirectUri,
+    logging: true,        //NOTE: a "logs" folder will be created/used in the current working directory, this will have oAuthClient-log.log 
   });
 
   const authUri = oauthClient.authorizeUri({
