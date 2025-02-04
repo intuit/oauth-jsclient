@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.2.0](https://github.com/intuit/oauth-jsclient/tree/4.2.0)
+#### Features 
+- None (includes all minor releases and fixes since 4.1.0)
+#### Issues Fixed
+- [updated sync-protect package ref, test suite and enabled logs for the sample client](https://github.com/intuit/oauth-jsclient/pull/184)
+
 ## [4.1.3](https://github.com/intuit/oauth-jsclient/tree/4.1.3)
 #### Features 
 - None
