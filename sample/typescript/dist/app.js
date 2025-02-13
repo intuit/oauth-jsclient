@@ -90,8 +90,9 @@ app.get('/getCompanyInfo', function (req, res) {
     var url = oauthClient.environment == 'sandbox' ? intuit_oauth_1.default.environment.sandbox : intuit_oauth_1.default.environment.production;
     oauthClient.makeApiCall({ url: url + 'v3/company/' + companyID + '/companyinfo/' + companyID })
         .then(function (authResponse) {
-        console.log("The response for API call is :" + JSON.stringify(authResponse));
-        res.send(JSON.parse(authResponse.text()));
+        console.log("authResponse: ", authResponse);
+        console.log("The response for API call is :" + JSON.stringify(authResponse.json));
+        res.send(authResponse.json);
     })
         .catch(function (e) {
         console.error(e);
