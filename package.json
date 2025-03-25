@@ -70,12 +70,14 @@
     "atob": "2.1.2",
     "axios": "^1.5.1",
     "csrf": "^3.0.4",
+    "graphql-request": "^7.1.2",
     "jsonwebtoken": "^9.0.2",
     "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@snyk/protect": "^1.657.0",
     "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -87,8 +89,7 @@
     "nock": "^9.2.3",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
-    "sinon": "^9.0.2",
-    "@snyk/protect": "^1.657.0"
+    "sinon": "^9.0.2"
   },
   "snyk": true
 }
