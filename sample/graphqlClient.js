@@ -11,8 +11,8 @@
 const { GraphQLClient, gql } = require('graphql-request');
 
 //constants
-const GRAPHQL_API_ENDPOINT = "https://qb-e2e.api.intuit.com/graphql";
-const ENV = "E2E";
+const GRAPHQL_API_ENDPOINT = "https://qb-sandbox.api.intuit.com/graphql";
+const ENV = "Sandbox";
 const API_TOKEN = "<your api token here>";
 
 const client = new GraphQLClient(GRAPHQL_API_ENDPOINT, {
