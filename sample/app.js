@@ -119,8 +119,9 @@ app.get('/getCompanyInfo', function (req, res) {
   oauthClient
     .makeApiCall({ url: `${url}v3/company/${companyID}/companyinfo/${companyID}` })
     .then(function (authResponse) {
-      console.log(`\n The response for API call is :${JSON.stringify(authResponse.json)}`);
-      res.send(authResponse.json);
+      const resp = authResponse.json ? authResponse.json : authResponse.data;
+      console.log(`\n The response for API call is :${JSON.stringify(resp)}`);
+      res.send(resp);
     })
     .catch(function (e) {
       console.error(e);
