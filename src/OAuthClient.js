@@ -37,6 +37,11 @@ const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
 
+// Move error classes to a separate file
+const OAuthError = require('./errors/OAuthError');
+const ValidationError = require('./errors/ValidationError');
+const TokenError = require('./errors/TokenError');
+
 /**
  * @constructor
  * @param {string} config.environment
@@ -65,7 +70,7 @@ function OAuthClient(config) {
       level: 'info',
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
       ),
       transports: [
         new winston.transports.File({
@@ -148,6 +153,24 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
 };
 
 /**
+ * Safe JSON stringify that handles circular references
+ * @param {*} obj - Object to stringify
+ * @returns {string} JSON string
+ */
+function safeStringify(obj) {
+  try {
+    return JSON.stringify(obj, (key, value) => {
+      if (key === '_redirectable' || key === '_currentRequest' || key === 'socket') {
+        return undefined;
+      }
+      return value;
+    });
+  } catch (e) {
+    return String(obj);
+  }
+}
+
+/**
  * Create Token { exchange authorization code for bearer_token }
  * *
  * @param {string|Object} uri
@@ -182,14 +205,14 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Create Token response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Create Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Create Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -223,14 +246,14 @@ OAuthClient.prototype.refresh = function refresh() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Refresh Token () response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Refresh Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -265,17 +288,17 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log(
         'info',
-        'Refresh usingToken () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
+        'Refresh usingToken () response is : ', safeStringify(authResponse && authResponse.json)
       );
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Refresh Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -315,13 +338,13 @@ OAuthClient.prototype.revoke = function revoke(params) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       this.token.clearToken();
-      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Revoke Token () response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Revoke Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Revoke Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -349,15 +372,15 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       this.log(
         'info',
-        'The Get User Info () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
+        'The Get User Info () response is : ', safeStringify(authResponse && authResponse.json)
       );
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Get User Info ()  threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Get User Info ()  threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -376,7 +399,13 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
 OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
   return new Promise((resolve) => {
     params = params || {};
-    const responseType = params.responseType ? params.responseType : 'json';
+    
+    // Validate required parameters
+    if (!params.url) {
+      throw new ValidationError('URL is required for API call');
+    }
+
+    const responseType = params.responseType || 'json';
 
     const baseHeaders = {
       Authorization: `Bearer ${this.getToken().access_token}`,
@@ -384,37 +413,109 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
       'User-Agent': OAuthClient.user_agent,
     };
 
-    const headers =
-      params.headers && typeof params.headers === 'object'
-        ? Object.assign({}, baseHeaders, params.headers)
-        : Object.assign({}, baseHeaders);
+    const headers = params.headers && typeof params.headers === 'object'
+      ? { ...baseHeaders, ...params.headers }
+      : { ...baseHeaders };
 
     const request = {
       url: params.url,
       method: params.method || 'GET',
       headers,
       responseType,
+      timeout: params.timeout,
     };
 
-    params.body && (request.data = params.body);
+    if (params.body) {
+      request.data = params.body;
+    }
 
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
       const { body, ...authResponse } = res;
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
+      this.log('info', 'The makeAPICall () response is : ', safeStringify(authResponse.json));
 
-      if(authResponse.json === null && body) {
+      // Handle custom response validation if provided
+      if (params.validateResponse) {
+        params.validateResponse(res);
+      }
+
+      if (authResponse.json === null && body) {
         return {
           ...authResponse,
-          body: body
-        }
+          body,
+        };
       }
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Get makeAPICall ()  threw an exception : ', JSON.stringify(e, null, 2));
-      throw e;
+      this.log('error', 'Get makeAPICall () threw an exception : ', safeStringify(e));
+
+      // Handle network errors first
+      if (e.code === 'ECONNRESET' || e.code === 'ECONNABORTED' || e.code === 'ENOTFOUND' || e.code === 'ETIMEDOUT') {
+        throw new OAuthError(
+          e.message,
+          'NETWORK_ERROR',
+          'A network error occurred while making the request',
+          e.response && e.response.headers && e.response.headers.intuit_tid
+        );
+      }
+
+      // Handle timeout errors
+      if (e.code === 'ECONNABORTED' || e.message.includes('timeout')) {
+        throw new OAuthError(
+          `Request timeout of ${params.timeout}ms exceeded`,
+          'TIMEOUT_ERROR',
+          'The request took too long to complete',
+          e.response && e.response.headers && e.response.headers.intuit_tid
+        );
+      }
+
+      // Handle API errors
+      if (e.response) {
+        const { data: errorData, status, headers: { intuit_tid: intuitTid } = {} } = e.response;
+
+        // Handle rate limit errors
+        if (status === 429) {
+          throw new OAuthError(
+            errorData.error || 'Rate limit exceeded',
+            'RATE_LIMIT_EXCEEDED',
+            errorData.error_description || 'Too many requests, please try again later',
+            intuitTid
+          );
+        }
+
+        // Handle other API errors
+        if (errorData && errorData.error) {
+          throw new OAuthError(
+            errorData.error,
+            'API_ERROR',
+            errorData.error_description || errorData.error,
+            intuitTid
+          );
+        }
+
+        // Handle non-JSON error responses
+        throw new OAuthError(
+          e.response.statusText || 'API Error',
+          'API_ERROR',
+          e.response.statusText || 'An error occurred while making the request',
+          intuitTid
+        );
+      }
+
+      // If it's already an OAuthError, just rethrow it
+      if (e instanceof OAuthError) {
+        throw e;
+      }
+
+      // For any other errors, wrap them in OAuthError
+      throw new OAuthError(
+        e.message || 'Unknown error occurred',
+        'API_ERROR',
+        e.message || 'An unknown error occurred while making the request',
+        e.response && e.response.headers && e.response.headers.intuit_tid
+      );
     });
 };
 
@@ -456,12 +557,12 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   })
     .then((res) => {
-      this.log('info', 'The validateIdToken () response is :', JSON.stringify(res, null, 2));
+      this.log('info', 'The validateIdToken () response is :', safeStringify(res));
       if (res) return true;
       return false;
     })
     .catch((e) => {
-      this.log('error', 'The validateIdToken () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'The validateIdToken () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -491,7 +592,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       this.log(
         'error',
         'The getKeyFromJWKsURI () threw an exception : ',
-        JSON.stringify(e, null, 2),
+        safeStringify(e)
       );
       throw e;
     });
@@ -525,27 +626,69 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
     resolve(this.loadResponse(request));
   })
     .then((response) => {
+      this.validateResponse(response);
       authResponse.processResponse(response);
 
-      if (!authResponse.valid()) throw new Error('Response has an Error');
+      if (!authResponse.valid()) {
+        throw new OAuthError(
+          'Response has an Error',
+          response.status.toString(),
+          response.statusText,
+          response.headers && response.headers.intuit_tid
+        );
+      }
 
       return authResponse;
     })
     .catch((e) => {
-      if (!e.authResponse) e = this.createError(e, authResponse);
+      if (!e.authResponse) {
+        e = this.createError(e, authResponse);
+      }
       throw e;
     });
 };
 
 /**
- * Validate Token
+ * Validate Token { validates if token object has refresh token }
  * *
  * @returns {boolean}
  */
 OAuthClient.prototype.validateToken = function validateToken() {
-  if (!this.token.refreshToken()) throw new Error('The Refresh token is missing');
-  if (!this.token.isRefreshTokenValid())
+  if (!this.token.refreshToken()) {
+    throw new Error('The Refresh token is missing');
+  }
+
+  if (!this.token.isRefreshTokenValid()) {
     throw new Error('The Refresh token is invalid, please Authorize again.');
+  }
+
+  return true;
+};
+
+// Add retry configuration
+OAuthClient.retryConfig = {
+  maxRetries: 3,
+  retryDelay: 1000, // 1 second
+  retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED'],
+};
+
+OAuthClient.prototype.shouldRetry = function shouldRetry(error, attempt) {
+  if (attempt >= OAuthClient.retryConfig.maxRetries) {
+    return false;
+  }
+
+  // Check if it's a retryable status code
+  if (error.response && OAuthClient.retryConfig.retryableStatusCodes.includes(error.response.status)) {
+    return true;
+  }
+
+  // Check if it's a retryable network error
+  if (error.code && OAuthClient.retryConfig.retryableErrors.includes(error.code)) {
+    return true;
+  }
+
+  return false;
 };
 
 /**
@@ -554,7 +697,40 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @returns response
  */
 OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return axios(request).then((response) => response);
+  this.currentRequest = request;
+  let attempt = 0;
+
+  const executeRequest = () => {
+    return axios(request)
+      .then((response) => {
+        this.currentRequest = null;
+        return response;
+      })
+      .catch((error) => {
+        this.currentRequest = null;
+        
+        if (this.shouldRetry(error, attempt)) {
+          attempt += 1;
+          const delay = OAuthClient.retryConfig.retryDelay * (2 ** (attempt - 1));
+          
+          this.log('warn', `Retrying request (attempt ${attempt}/${OAuthClient.retryConfig.maxRetries})`, {
+            error: error.message,
+            delay,
+            url: request.url,
+          });
+
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(executeRequest());
+            }, delay);
+          });
+        }
+
+        throw error;
+      });
+  };
+
+  return executeRequest();
 };
 
 /**
@@ -567,43 +743,62 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI
 };
 
 /**
- * Wrap the exception with more information
- * @param {Error|IApiError} e
- * @param {AuthResponse} authResponse
- * @return {Error|IApiError}
+ * Create Error Wrapper
+ * @param {Error|string} error - Error object or error message
+ * @param {AuthResponse} authResponse - AuthResponse object
+ * @returns {Error} error
  */
-OAuthClient.prototype.createError = function createError(e, authResponse) {
-  if (!authResponse || authResponse.body === '') {
-    e.error = (authResponse && authResponse.response.statusText) || e.message || '';
-    e.authResponse = authResponse || '';
-    e.intuit_tid =
-      (authResponse && authResponse.headers() && authResponse.headers().intuit_tid) || '';
-    e.originalMessage = e.message || '';
-    e.error_description = (authResponse && authResponse.response.statusText) || '';
-    return e;
+OAuthClient.prototype.createError = function createError(error, authResponse) {
+  if (!error) {
+    return new Error('');
   }
 
-  e.authResponse = authResponse;
-  e.originalMessage = e.message;
+  const wrappedError = new Error();
+  wrappedError.error = '';
+  wrappedError.authResponse = authResponse || '';
+  wrappedError.intuit_tid = (authResponse && authResponse.getIntuitTid()) || '';
+  wrappedError.originalMessage = error.message || '';
+  wrappedError.error_description = '';
 
-  e.error = '';
-  if ('error' in authResponse.getJson()) {
-    e.error = authResponse.getJson().error;
-  } else if (authResponse.response.statusText) {
-    e.error = authResponse.response.statusText;
-  } else if (e.message) {
-    e.error = e.message;
+  if (authResponse) {
+    if (authResponse.body) {
+      try {
+        const body = typeof authResponse.body === 'string' ? JSON.parse(authResponse.body) : authResponse.body;
+        if (body.error) {
+          wrappedError.error = body.error;
+          wrappedError.error_description = body.error_description || '';
+          wrappedError.message = body.error;
+          return wrappedError;
+        }
+      } catch (e) {
+        // If parsing fails, use the original body
+        wrappedError.error = authResponse.body;
+        wrappedError.error_description = authResponse.body;
+        wrappedError.message = authResponse.body;
+        return wrappedError;
+      }
+    }
+    
+    if (authResponse.response && authResponse.response.statusText) {
+      wrappedError.error = authResponse.response.statusText;
+      wrappedError.error_description = authResponse.response.statusText;
+      wrappedError.message = authResponse.response.statusText;
+      return wrappedError;
+    }
   }
 
-  e.error_description = '';
-  if ('error_description' in authResponse.getJson()) {
-    e.error_description = authResponse.getJson().error_description;
-  } else if (authResponse.response.statusText) {
-    e.error_description = authResponse.response.statusText;
+  if (error instanceof Error) {
+    wrappedError.error = error.message;
+    wrappedError.message = error.message;
+  } else if (typeof error === 'string') {
+    wrappedError.error = error;
+    wrappedError.message = error;
+  } else {
+    wrappedError.error = error.toString();
+    wrappedError.message = error.toString();
   }
-  e.intuit_tid = authResponse.headers().intuit_tid;
 
-  return e;
+  return wrappedError;
 };
 
 /**
@@ -642,10 +837,90 @@ OAuthClient.prototype.authHeader = function authHeader() {
   return typeof btoa === 'function' ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
 };
 
-OAuthClient.prototype.log = function log(level, message, messageData) {
-  if (this.logging) {
-    this.logger.log(level, message + messageData);
+/**
+ * Log the message
+ * @param {string} level - Log level
+ * @param {string} message - Log message
+ * @param {*} data - Log data
+ */
+OAuthClient.prototype.log = function log(level, message, data) {
+  if (!this.logger) {
+    return;
   }
+
+  if (typeof data === 'string') {
+    this.logger.log(level, message + data);
+    return;
+  }
+
+  const logData = {
+    timestamp: new Date().toISOString(),
+    level,
+    message,
+    environment: this.environment,
+    clientId: this.clientId,
+  };
+
+  // Add safe request context if available
+  if (this.currentRequest) {
+    logData.request = {
+      url: this.currentRequest.url,
+      method: this.currentRequest.method,
+      headers: { ...this.currentRequest.headers },
+    };
+  }
+
+  // Add safe data context
+  if (data) {
+    try {
+      logData.data = JSON.parse(safeStringify(data));
+    } catch (e) {
+      logData.data = String(data);
+    }
+  }
+
+  this.logger.log(level, safeStringify(logData));
+};
+
+OAuthClient.prototype.validateResponse = function validateResponse(response) {
+  if (!response) {
+    throw new ValidationError('Empty response received');
+  }
+
+  if (!response.status) {
+    throw new ValidationError('Response missing status code');
+  }
+
+  const intuitTid = response.headers && response.headers.intuit_tid;
+
+  if (response.status === 429) {
+    throw new OAuthError(
+      'Rate limit exceeded',
+      'RATE_LIMIT_EXCEEDED',
+      'Too many requests, please try again later',
+      intuitTid
+    );
+  }
+
+  if (response.status === 401) {
+    throw new TokenError(
+      'Unauthorized',
+      'UNAUTHORIZED',
+      'Invalid or expired access token',
+      intuitTid
+    );
+  }
+
+  if (response.status === 403) {
+    throw new OAuthError(
+      'Forbidden',
+      'FORBIDDEN',
+      'Insufficient permissions',
+      intuitTid
+    );
+  }
+
+  return true;
 };
 
 module.exports = OAuthClient;

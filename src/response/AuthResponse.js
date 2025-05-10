@@ -44,8 +44,31 @@ function AuthResponse(params) {
  */
 AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
-  this.body = (response && response.body) || (response && response.data) || '';
-  this.json = this.body && this.isJson() ? JSON.parse(this.body) : null;
+  
+  // Handle response data
+  if (response) {
+    if (response.data) {
+      // Handle axios response
+      this.body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      this.json = response.data;
+    } else if (response.body) {
+      // Handle other response types
+      this.body = response.body;
+      try {
+        this.json = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+      } catch (e) {
+        this.json = null;
+      }
+    } else {
+      this.body = '';
+      this.json = null;
+    }
+  } else {
+    this.body = '';
+    this.json = null;
+  }
+
+  // Set intuit_tid
   this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
 };
 
@@ -100,9 +123,15 @@ AuthResponse.prototype.valid = function valid() {
  * @return {object} json
  */
 AuthResponse.prototype.getJson = function getJson() {
-  if (!this.isJson()) throw new Error('AuthResponse is not JSON');
+  if (!this.isJson()) {
+    throw new Error('Response is not JSON');
+  }
   if (!this.json) {
-    this.json = this.body ? JSON.parse(this.body) : null;
+    try {
+      this.json = this.body ? JSON.parse(this.body) : null;
+    } catch (e) {
+      throw new Error(`Invalid JSON response: ${e.message}`);
+    }
   }
   return this.json;
 };
@@ -112,7 +141,7 @@ AuthResponse.prototype.getJson = function getJson() {
  * *
  * @returns {string} intuit_tid
  */
-AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
+AuthResponse.prototype.getIntuitTid = function getIntuitTid() {
   return this.intuit_tid;
 };
 
