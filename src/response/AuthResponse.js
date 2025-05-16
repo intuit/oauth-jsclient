@@ -51,11 +51,28 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
       // Handle axios response
       this.body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
       this.json = response.data;
+      
+      // Handle QuickBooks API error response
+      if (response.data.Fault) {
+        this.json = {
+          Fault: response.data.Fault,
+          time: response.data.time || new Date().toISOString(),
+        };
+      }
     } else if (response.body) {
       // Handle other response types
       this.body = response.body;
       try {
-        this.json = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+        const parsedBody = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+        this.json = parsedBody;
+        
+        // Handle QuickBooks API error response
+        if (parsedBody.Fault) {
+          this.json = {
+            Fault: parsedBody.Fault,
+            time: parsedBody.time || new Date().toISOString(),
+          };
+        }
       } catch (e) {
         this.json = null;
       }
@@ -118,22 +135,38 @@ AuthResponse.prototype.valid = function valid() {
 };
 
 /**
- * Get Json () { returns token as JSON }
+ * Get Json () { returns response as JSON }
  * *
  * @return {object} json
+ * @throws {Error} If response cannot be parsed as JSON
  */
 AuthResponse.prototype.getJson = function getJson() {
-  if (!this.isJson()) {
-    throw new Error('Response is not JSON');
+  // If we already have parsed JSON, return it
+  if (this.json !== null) {
+    return this.json;
   }
-  if (!this.json) {
+
+  // Try to parse the body if we have one
+  if (this.body) {
     try {
-      this.json = this.body ? JSON.parse(this.body) : null;
+      this.json = typeof this.body === 'string' ? JSON.parse(this.body) : this.body;
+      
+      // Handle QuickBooks API error response
+      if (this.json.Fault) {
+        this.json = {
+          Fault: this.json.Fault,
+          time: this.json.time || new Date().toISOString(),
+        };
+      }
+      
+      return this.json;
     } catch (e) {
-      throw new Error(`Invalid JSON response: ${e.message}`);
+      throw new Error(`Failed to parse response as JSON: ${e.message}`);
     }
   }
-  return this.json;
+
+  // If we have no body, return null
+  return null;
 };
 
 /**
