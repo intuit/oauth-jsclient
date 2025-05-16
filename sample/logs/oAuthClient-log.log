@@ -1,0 +1,4164 @@
+
+
+2024-11-30T06:27:48.708Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2024-11-30T06:27:57.507Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..lj_fsUKPOuMn2V-T7wrKAA.0e-y7pVpMJlCoKlDMjS3SitacidKKTOB_TfrZu4GS4UezcX6jalGFw7R_TApVWJMVmoXZMakTUQp6QaakXfyJKzUm6W14aHddgnk8vePXBrWwPTRpRZY4XmYGQ2oumYpryCI5o5zFaw3QsRqoXd1xFBlu3EJ4K95ATFJWfEa36e6O7fLDK84pQqFUnz60bXeIxtDhK8wG62rFloMnwgC1TWW4U1JTdgRtBQYyWEMFkJ5LzmJvmTVGuYpMnaKxTTLp58DjN2x_du_D8u-sOefOw22qzq6o5hGIJ1hhqyz6ooRzcP12ULjz_6uilsYwMh_M-f6hYEe58a_Nm-4Eat2WEjwT1n97M4R_-KbOqBx6Mtwc1ndZnMxnwSnIgxIF9W0wgqsQDIfIi-GqlkL8hhejT_UsFN5BOJFPsQ4XbriyCM63mFqppOXRmpw8NBTXT2JXhS_2vBcE4w0JnW8Aw-ymRETI3qbolwouWQ2wZ3AkOfQ-wekvdgu4lpWMHSQqIf1O7iQO12XGiKxOVsNQFbAeft3U9-M-WrKGeK8BhjzBrg9-PE2cB49rqmloGzROW8DNkPp7UrN18Q3W9YZINI7_yAQBpr4uAhskkMtvFzn1EX967WgZVvlfb0f-piIS3-F20p43rcWpG6zbHSQn7ZeaMN6AJ67MxEDRGLhiq_o8DLpYNRRHYSuvwzq4UlmdzTSGcXDiL8oOhPapx6W4b88FaQHVZ26LAllMD4x258ZEV3fWIJ0MBTY1li3-nAY99We1b2YcMdn7NnzzQyQhbIAvzh7gG8Rzeej4OmSUmmMxEIXHwZftRzzo47o2dulUkG6w44VombgtI4Eo61EtQDjYch35AARVRF7f01rS5skgTg.uCBFW43R7PLsSd3wRBC_Qw",
+  "createdAt": 1732948077507,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3MzI5NDQzMDgsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3MzI5NTE2NzcsImlhdCI6MTczMjk0ODA3N30.kgJegHSJqrAs_eXAWD8zIje0nSdSJzS-X7RlhzGTQQAu-qAcCEJlYh9CQmD8mEaiNnRZfvm6eYErVIBKOEJ3yib2Bvnf_BFwcVUQ8jzuipaduAQpUFe1asV2DgkSaJT-UJ90E3yRtPFkBKY0ZjuCG84m9W39QgxyYYj2Q_ktJFh7jaXsQ_paVMWbr82slK_gq4M4NTOQ0Hqm3KK46LDfGe_cWFQRpupvbo3-EtDjes7mTQ2xjlohY1L3XO8KM7kAm9GkTTP5XEGtY4Pk8cozX6Xh21Elhg83jIXlun7Byod7sJ-fzFkxz7_zT-moNL1zrBEOqYLMxIf9DiRAyjzmSg",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11741674477cohEszo8lZBnOwSzZBdbj4s6WA3x6Ih9Kye6M",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2024-11-30T06:28:17.726Z info: Refresh Token () response is : {
+  "x_refresh_token_expires_in": 8726380,
+  "refresh_token": "AB11741674477cohEszo8lZBnOwSzZBdbj4s6WA3x6Ih9Kye6M",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..2luGy5yjk0BWa-NuhTEAsw.qdkAAV3kJydMt9VADrmT0Cu1e1tdGCQkbYOw6gqlb9l41zSWYRtXRwtuE-KUuWQyMo1jx8VSh_Ym17YBuOi0g9GCDNtwgBkpPdSUdu6eWI06x0fN-_hq1rmMfoj4MGg0u-vT3xBuXJL_TO_r0MKOT24b4eHlVZIO2XDLXhyY6nGTKPQzHru1gmB4hZnFWBsmxOQlaBNJ9L2tm5AIjFCl3LtVEHs9tLpiNrKOnqtIlY-J1oJRhjG_-74qc58Ickcvl_MEeoeC_n97OHUaj5EVL3z9NSJjjDoGRWvuKLVPMwa6_8riAts8rDqu9aRSKqZDXY3XszYdw76ccMMq9bP-HQtWI5nTl-IpYEeJGROdO9oQY8sNyjmqI4ugR_6MORd5JRMyE6BXVxz9ER8vYeJ7H_OsH-ZQe7Ozkw_j1Xzlot4upxvHaVG3ZB5XpGfeFhieZDghilTW5isFZ1GmjQ4Q5ZEvdXE8KhvO_Dmoo08Vb8cp8ynWmOmgsR3sZBPHawaLBvH9-SWQ8JXXfODEooaA6IPnpt9Ld9tmx5YGGLu8vd1Qqr4zH2eWG_rnfHgM1Kl57bWYmbAfmb7cXuREq1-DvfGfCxL7xhcJ9Nn14yCxYdhZvCvW6c4cnNZzv8EOVrxuIegVhwfBfUS37qzFmZfHY-JlCXOyc_i1WN_RkDJ-gWlST7pQvLliiuAfnWBxW1Pmf6du2OYj4Di_PtWYt1NyWByb_rhNFjeVgIzq2b-9pExi4bPv8o1V5W5FdZFDKSXtfCYhTCOFFNvRBp6xetsypVrYLVH6zvVvRYaX0tmPgcFxTSsxF6NgUDOnHWI0eOXenuV3nJuVkIvHbXhhgzEff4yWNcxb0KbjcT1eO7lQHPY.ljqB81uVCqTR_h2g0UjNcg",
+  "token_type": "bearer",
+  "expires_in": 3600
+}
+2024-11-30T06:28:30.313Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2024-11-29T22:28:30.348-08:00"
+}
+2025-01-21T06:52:32.231Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-01-21T06:53:29.610Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..vEMFf3iUjgmF2if8jHQD6A.K-M5pDW7PFdcy9G3M3ls2D7Gfv5E3CgEX3HT0zB90jL0XqduYU7K6O0MNhAbSeptdv0FKxmjvhXdocZ4WpCIQnTPD7H6UH5fxZi-aCLjZeKZ5gfJtGIn0uxkyePFZHYQyC1VDTOco5jOuF1-RnMb6mDKP4qPP2QxVt6x0D2ESXRAekxbTNGYuvTyUZrCTyNErlHPsPlQjjw191tQv1E8Jnx6foC4WyQT8pu4cqkCZ3DAtreY0YCU3yHmlig57IDgTZPb3jzRAbWlwLlCud9GU7aZIYHF7PRFUOxQdI2LT36MWoicbBxvgHr2sC4gJOuTghSEqiXOXyBDXM7HtZ70V4aThrPxlFqoxrZRAQXS6GsqeF4Khdb5S7l-KjwJuy1f8AV44x-iTmxYnG25g-yItnI_Brl0Tb2jMMGNOFCO9oCYnGa3GHJNbk0H6oJ-tWSIFX618EyRKGQmtoY0d8czTdu97ejBu15A1xM8MHa1TUo6fY5elT-fJcOFlOZO9zLdEZBzLvYOS0zWky7_1xTDSOdqFSDiOLYQ1mCJJjJ7xgq-6oLW3UBCD04zjaRf6bK_V9aw3ST5upW8pvGSAHvhN4w6dw4CuAQmhKc7y5o_pMrH3Cc3S2gskHQOkdRXS6HJcq6xP7cNf08us9fC_0fpUlNgapg490YygprHj8slYC2N3VZ64rtZuc_1iNqiYF2nAOhIHZDDyBf_TgfJE8Fo_-JkScKjmq8Cm-uTsxDHq43IWZJnt-TXNCUQewV8_JjK90Q42e-V1BLs3FUp87JlcCXpXwPZpGC47y1yHG8tYS4OL9Nxx4n2vMDkfT6KYrWUfhOsa18Ql6v-9c3x9Y4L6TXjM6vNpocvY3ykVfS-IsY.nJXq7_OOReYyd35U0DDn9A",
+  "createdAt": 1737442409610,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3Mzc0NDIzOTgsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzc0NDYwMDksImlhdCI6MTczNzQ0MjQwOX0.RrWzLHCo8CiwiMIICQIJPpl1ac19CX8O8EGs39-nK-flTTwFww-_ekPBP7rsMJHLw9-_2h6g5Gk5MPFerjBPMO_AGYDuB9klcLSbfT2dCnCOVkmlpG07x5yZmRSbeHH5qI26fwVtUvtt5WhAdRXp-HgBLl7NsRs_2v818Clk_1GMLcIuiKfzYmiuEjWmGv3O_5umq0Wttj3lDTFGm-g6Lfoqp8GDNRzHlZT8OGpCrpcjmjhFoeEmYL0SVNvE8BVNBzggS41dnDuvfbWXF99bdqRycLaOX7cwr16zVmN_qY2tw_eS3z_BOYBw3ssFwSxdVHboBEErmKdpRS6ACoU8GA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11746168809NeLQykx0jQfbFcDI5HrNWFuqSDd9imZgh7K8o",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-01-21T06:53:46.504Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-20T22:53:46.334-08:00"
+}
+2025-01-21T07:56:54.836Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-01-21T07:57:22.351Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..EDxasNM8x_RasSbwaIJVOw.Yr0j2cwpHkpUG8G0VEQi40rmFfEXac9LX49ivo8JhJtPgerYBwls133fLmjIoe1XmXtnkslW0o77fcmGZScp21snoYxhw5fsBJiGblDKxzLzpVh18uikVdtidobHvSteVFd3ain_VI0rvxhU5T6NS50frP2zrkfzBUkFK37WpVpDc-NAYSWFz-YtVc1A9TMpYw8rj-KkzI9RkE1bQAfSyD4ySJA0aBy-QJxN7F5LsugnPUtqnEzp29P4X6AQpVHLRtOleQ0lW14oOnOIcmenpwOD7D0AqIUNtOCoSsEnQnr16stoN17nH3SsBGp50wNhRDooHAx_aMib3YehDSaKhKYyoFms-X0T8jcjDesgYFlA96j3mZaPQ3RDtS5AHekU0P7LRNDp7E7u8NJ_q5oGe_SNKOz6psaf9eRSf_Ubx3O4eVDITL0qmB_uVTXDOiZx6kK5X6WayPxyi_iNMm3rUzjX5VF4a40LYTi-i7ANVTA1cpMoEHwdgXovMDUNRfK2dZwMPlftjuCgXdnZ9EWYsOPov8GB_e_OwQHTar_osoNMQc8B51EQns7-aJdvzv6yDzFGXxOePy6rgT1EZAsyU32aRCdBRc71L73_2WUQBoGLuOwibrWKbV1HRvpkZX9xuHQ5Ukj9KEwJIk2yk1_QXWyO37LNqpO1pCIFD3BdvlpKw008UExVqwuZpRtNwtv8lMOFOcNtvOYnOl60uhsNbdIKvet4JUlgrq9_8b-7zjhTwaU4f2bHH5_HziqdaigGKOXEIJwqgvbOucdWq-dTJol9RAgKfG1K8ujglBq19QcIOHB8eSR3JLtz83w37rn29y-MGIkEAhncV12dkUPJVOXCVyNiGivOKBjtxyrXWRk.ry_2jnonBRF6oBZVHJooDw",
+  "createdAt": 1737446242351,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3Mzc0NDYyMzMsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzc0NDk4NDIsImlhdCI6MTczNzQ0NjI0Mn0.aDPaCCV1o96BZUyirdHG97m82UctZPnZ6WqX3FBwD-7Kl14ANlbXYgcuGiVylN1NzqEnxVhuWuWqElcPhcFnpD_CDDxUBIn8CeCDSaZW0MjrtXR_6VO35wdQAQSenBgFx8_FuEJa5h1oaFM5iy1NzeBmsj3PomeDNdmUkO5mMm6HAzxN1kIcRxp6maNBc_BQZ4sGjg0NUxoOA8bBq7Udpey9jLUgeEElD9eq_NONz1LXG7VmgCvef9SlRNMG5kjXNz5UHvpLeBgr8NqPOvVqnLry9FQtC6TSdJj70RWzprDuJ1_SFBVFeRgbgm3a0wRiYVct8hs1HO1ESNa12BFKQg",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11746172642qSFSxnWmwXpdIx4byl166lpC53rDe4rpyNP0C",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-01-21T07:57:30.668Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-20T23:57:30.602-08:00"
+}
+2025-01-21T07:57:32.867Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..FAC5Y8NntWxeaGAavBgOGw.Ej2iHgg0sRTNEoFa0dOAXfsD-A4yBcswok-Aiu7E5rQbQMbFjICzKYBT-PKTI1oZN_7AXr8Falj7uS2DYE3HW9b1AH6_McEjCRJzR5Yxb0sYx8KuZv9AJGnuXLdMTa085pwXcCwrh9xl0B1mTY8hbfkpm2l_yuCbeern7_FtFEmkelFXrjhzrU_sctdV3mO9On4_gB1ucTrspfjyUxGkOAsTU_G-CGvJMFy2ZHgwAMsZhjqEFHJfc37YpfpE6fRzHom4fqtvOhA-6QKzMwe4n3qUmOqqlln3xwv_rF-7p9WtSgArMaWqpcIjR9Y-wZJ1Z1B3KdzoIQgp99Gn6eL18yJbbpJ-ClQz5xTJTUDgf_VF5KxWUg6v775uNTiszU8oJ8U1XSIuEieBkCSRnW-T9JaL152W8tLiGTnLy902L2D17svu2zrI-N2P4NxAXIjR5kA9wh9UHvwihq4SKiHoB4Ht4WaQwaTPj9-cKpTVZc4l8InlyChjVvJ4TWnXS-dnxFQDEUiEs0rH60UFSvO2KIE01vCfwLTTtttd4U1z_GkU3vz9GhC17ReBmHiWy-_hPQ7z-5c7lqIGExi7RO4_3RYmPRqDdHMcvGQl8s3rIvfo1yrM_tWONA1RXAlX3shW8zsxVGptBQkegBRVr_ZJb3r5BYO0Nba8Fu8_UzYqJ5K0zAQFEAoR_csI-JJSyuoKYbcpLUKXj4NdrBBdkJ7T-yQfmpqs8shZlIOQVwdwc0tG99tuaEOoTP0sproBYLKGxe567DqKBfYOCoH0zVX3fJbZGFt5d_fz8xXO1S4J-8KbzCd4HP8a-MwK74tixH--qOhGULi3j1_JZkayV1EMEzMPcRYR0sNp0PZ3xQBBapo.gxgOsyN4fL4NMdJAkt1TOQ",
+  "refresh_token": "AB11746172642qSFSxnWmwXpdIx4byl166lpC53rDe4rpyNP0C",
+  "x_refresh_token_expires_in": 8726390,
+  "token_type": "bearer"
+}
+2025-01-21T07:57:36.122Z info: Refresh Token () response is : {
+  "token_type": "bearer",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..L-nOLo8EC0cUogE0ZpMg3g.skMHBiOsKS0kRd271xPrsIVgTiSg5cQXaxyp4wBxdJ632Y9As0KAAvwzEgqTuaqS8kfmJYtRMmaIOJzhdq8jROFIgt8AVH1JNqOMESkA3EJJvnOwHqPqL3xVPANMH5v6X_REKPVbBM75WGiEJA7DAvoeb7GjeAqlh1FtkxPIp_NGZe3gLjmX3Jj9sZmGJHe1yBgSgBopIMe1VNK3VEqut10ORdLKzhpUQc4uPF6jyKBbVlcw3BOEgPCO-T1kLx0dS7B-o6TDzyimtqbzlxyGdOfg7S_TynjaQ4SD9vMRbJW4u2F4gWObkbcaAVQwN-zWb9V_q8Oy-N6wuJ7gQU6sNmlLvu_8nmEsJkIKMwuI_aig6NeQZmnfs6P4EUSLgHM1oMZJcw2BDfe-5gKA2rnlVj1zK3avjSMmyHBK7ZRoYz__kw2w6KdlSiBqR_K67vtm-PaUFKzYKTccw0_ux_oFxxEh1nOOID1Zxbhu2d6oN6sYFshrIzIxH1a_Ps5THTgxSF1cCzEnPcB1Zw1DggrHhlN8CglagD1Tzg-bsyqikeTRLl0riy4Ew4vTBkuPKXbPMQX1gEkC5rSSABnfSPfVS8bJx6tB083u3Q7MW0kq6srahImFzzVRBI1xusoDiwHH-Sf9_n2NA3BV0goAhxjKyw8Pxd65j5rHDSEZ84CVZ2r3z8xr1wiHbNvFDKni3lXe3VMuSxzSLfp2Pifyt44-Gr7lEmBCIfw2BmR_shQwOsRRrEev3DpLTXrnk1n9jPxMAPMZ88McgrvJk2pNn48EL0wp7PyGsORJHpiwtdpnJgCrLrey_90aEJSAEerxwreoB6ngpoPGvLbYsaZsE93jHQEA3inejdJ0lMBA3o2CNdY.f7be9kg9_6iBKO__woQLsA",
+  "refresh_token": "AB11746172642qSFSxnWmwXpdIx4byl166lpC53rDe4rpyNP0C",
+  "x_refresh_token_expires_in": 8726387,
+  "expires_in": 3600
+}
+2025-01-21T07:57:43.314Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-20T23:57:43.277-08:00"
+}
+2025-01-26T18:59:28.699Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-01-26T18:59:48.747Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..xqaK32-T63m5XoHzY_ZyCg.WnbPjYIc1vehf-sHb3C_QEc651RxejCiE8izl5c8o8-NfpedxX37kUMvMLTmute839dGFcTXo0-lHTRkW-ZZ0snuF2CczZI9Qiyz1Aupuivh3OUBXX4hr1gCeHVmjvshejMNd5Ej6DjyOJvE-bO0pnUhlIuYrTcKTlZ9PTjqZcefR_DwugjvjdoFUXfT2x2LYRJmPZndgzzVbbHvy3JRI6dFNGLwY1Ax6A1L8Rj6Z-pRGKCe2dcCgaL53SO1BTOKKbl41Xoaxg99Z6_kVK5dO2rK_4-RdaeUwDOjW9quVIRhMM6eJwXlEtPK5ZK8s7ST36eQqhBTYO9EGlugWqXSNtcXjCmQJfvnJLjJSJioJG4662qTEW8_WC3tAMNazBZ5dtgOjSdmQ5AeeL583P-itwUFl1Ce-1IN14TUb3_jmUzLzhhD8LL-ogThq1-1neK1E9reqDChYG2NhaWDdA_Nw96rpzSlyF4dV8Z0RvQ3KAGjz-Qe_Bg1y4AllpgUsfWyCJ7cgFq8-tYv34x7qwQi5zVk7r2tutlSz3nDWId-MfPK6CZdckjx1t_YI8fnH5z3U5nYRs39ZZP0VVwfVptkTGS9xvRuXCr8HcKn4ve2GEvdoBDKjJzGps0zpUu8os4y7hx1h-I5FMV1D56oC47NX7CQJ6UDhksT2Vr4Gbf54IC9VahYWCB0RA40P8rZ4uij5y00x7kiUR53owMOLpKBGAF6mYNkZOcYVuQNtlN1HL3mutNnuFX38KH8IHZnp2g53IpU5eTBCSl3B1diwQWbCAZKprUUa2eDLvGg8Px4hRECqtNGNpR6wPP70SYmx4YM77CG10P98OsatYK_Teo8mHQhWcHg9JsNh95UmgLy5XU.HTSV4jCg701NYkI7N1yALQ",
+  "createdAt": 1737917988747,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3Mzc5MTc5NzksImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzc5MjE1ODgsImlhdCI6MTczNzkxNzk4OH0.HY5_mOrmCZdzcP9PP46urQCbu3OPvQfVzqyn7CGFcovUwQEtoS6eXHkBUNDBaJteOue077tJXl6c7HZpOSk6Bn4M2k8-MQVWKRaRxaBtjZSAUMB6f4O2Oyvgd1W_YDxuwXhpYqq_P85wQTRkgEPMV_pI8loAjljKGYyynGdN7h6GV5vw9aHbkG50-eb_9vdwdMddiuLHFZt3qbHWdseo2nUjolVosnM-KtOVm2Lnw820Du7ZY02_0XM2otmAZVCrWUQOPZelk-wWN0yl025mu_V952i9WVJuLBQYk97KoQmEcU3Ew1T8pLeD8q2qg8V588YWmc7cChqmoRdaBbrIKQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11746644388VwfMz9WmtotxubibHtXT8fZkRMkKQzWfeWn9D",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-01-26T18:59:55.675Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-26T10:59:55.675-08:00"
+}
+2025-01-26T19:00:01.117Z info: Refresh Token () response is : {
+  "token_type": "bearer",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..Sxx_h6_-jH-qKyAUcIRKKQ.PUmq2yiG57GmlVj19mvmnpQxrPxqGrNdjRRY-cHYO4WLscdhC61pKWA-rI_9_XX2x1OOBCQUH4bNUzUpGNjW0iJz3lcQDy28A3AXe3H4O4v6F-2U38AF7AdMn6Za5muw850ob94xHpMx5I7IptuR1stYLbwdSuRC7rDUfiVNsv4icz-Z2rLTtrHxDifAfTsakwvu3sU_NExUr5bj7ps-eXbQEUd249Y34vlrlNnaD_8pklbFGnDo8wFL2UkV_SmWefVY-wIVGvcWpRL9XaFGXleiBPKfIZldiujpzufeY0L6eyMGBtfAF7QV6wrPR9esrRKAs-ERfQNkbDl0RBRUhPf42AsM0qo4vwbSXVPbBN9Ba0CiJFQZD-Bl8DsfPHU-lhIO7q-hNx-6P7yV-46sySm3sG-4OR85oMXsP3qbuaQS--xUZsX9_06swUgtuCJ8YW81pmp-E-9ufc8pF6bjawNnW_oDlhwrbRsRksnYvHSsOD0bahTm4RF3ASXkOKyzmiL62uiKeMTrSuGkgp4Dvd8ZOpONLtMlShL4FmtNhmJA1RuQjdL-MLObvhfMVSRYDoBjbyTe9izlUkRu8zGXxf8osN9hajfmdhqcIcM_1oTl5jsBcrnNAyZGsDNpfXZn42Oz-7MGUguG81O4XsZxHG7oUn9albp32gXudzurY2-D-Z_fSXuZv2HiQzJWWWcJ4TKcxu7zJonB3ZvVDB4n8-skmnfuU2OL_OaIQXYJS8dUsFZ0MG-hufYwvs-3e5K4xlwCAlIbfzGJsEdhPQMBl1At02Ul02pkg6S4MivinRaI2ZjHhIqramzSu3mmy3c83zj-HwXxiRfKKkDmuYay-t-WF-GtiPfz3dy3o0-BXhQ.m7MjtMIonN4bRzDkIoRIFA",
+  "refresh_token": "AB11746644388VwfMz9WmtotxubibHtXT8fZkRMkKQzWfeWn9D",
+  "x_refresh_token_expires_in": 8726388,
+  "expires_in": 3600
+}
+2025-01-26T19:00:08.426Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-26T11:00:08.532-08:00"
+}
+2025-01-26T21:02:16.318Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 401",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 401\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2019:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3135:11)\n    at IncomingMessage.emit (node:events:526:35)\n    at endReadableNT (node:internal/streams/readable:1359:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4269:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..Sxx_h6_-jH-qKyAUcIRKKQ.PUmq2yiG57GmlVj19mvmnpQxrPxqGrNdjRRY-cHYO4WLscdhC61pKWA-rI_9_XX2x1OOBCQUH4bNUzUpGNjW0iJz3lcQDy28A3AXe3H4O4v6F-2U38AF7AdMn6Za5muw850ob94xHpMx5I7IptuR1stYLbwdSuRC7rDUfiVNsv4icz-Z2rLTtrHxDifAfTsakwvu3sU_NExUr5bj7ps-eXbQEUd249Y34vlrlNnaD_8pklbFGnDo8wFL2UkV_SmWefVY-wIVGvcWpRL9XaFGXleiBPKfIZldiujpzufeY0L6eyMGBtfAF7QV6wrPR9esrRKAs-ERfQNkbDl0RBRUhPf42AsM0qo4vwbSXVPbBN9Ba0CiJFQZD-Bl8DsfPHU-lhIO7q-hNx-6P7yV-46sySm3sG-4OR85oMXsP3qbuaQS--xUZsX9_06swUgtuCJ8YW81pmp-E-9ufc8pF6bjawNnW_oDlhwrbRsRksnYvHSsOD0bahTm4RF3ASXkOKyzmiL62uiKeMTrSuGkgp4Dvd8ZOpONLtMlShL4FmtNhmJA1RuQjdL-MLObvhfMVSRYDoBjbyTe9izlUkRu8zGXxf8osN9hajfmdhqcIcM_1oTl5jsBcrnNAyZGsDNpfXZn42Oz-7MGUguG81O4XsZxHG7oUn9albp32gXudzurY2-D-Z_fSXuZv2HiQzJWWWcJ4TKcxu7zJonB3ZvVDB4n8-skmnfuU2OL_OaIQXYJS8dUsFZ0MG-hufYwvs-3e5K4xlwCAlIbfzGJsEdhPQMBl1At02Ul02pkg6S4MivinRaI2ZjHhIqramzSu3mmy3c83zj-HwXxiRfKKkDmuYay-t-WF-GtiPfz3dy3o0-BXhQ.m7MjtMIonN4bRzDkIoRIFA",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_23.6.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365005602820/companyinfo/4620816365005602820",
+    "method": "get",
+    "responseType": "json"
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 401
+}
+2025-01-26T21:02:38.869Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 401",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 401\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2019:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3135:11)\n    at IncomingMessage.emit (node:events:526:35)\n    at endReadableNT (node:internal/streams/readable:1359:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4269:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..Sxx_h6_-jH-qKyAUcIRKKQ.PUmq2yiG57GmlVj19mvmnpQxrPxqGrNdjRRY-cHYO4WLscdhC61pKWA-rI_9_XX2x1OOBCQUH4bNUzUpGNjW0iJz3lcQDy28A3AXe3H4O4v6F-2U38AF7AdMn6Za5muw850ob94xHpMx5I7IptuR1stYLbwdSuRC7rDUfiVNsv4icz-Z2rLTtrHxDifAfTsakwvu3sU_NExUr5bj7ps-eXbQEUd249Y34vlrlNnaD_8pklbFGnDo8wFL2UkV_SmWefVY-wIVGvcWpRL9XaFGXleiBPKfIZldiujpzufeY0L6eyMGBtfAF7QV6wrPR9esrRKAs-ERfQNkbDl0RBRUhPf42AsM0qo4vwbSXVPbBN9Ba0CiJFQZD-Bl8DsfPHU-lhIO7q-hNx-6P7yV-46sySm3sG-4OR85oMXsP3qbuaQS--xUZsX9_06swUgtuCJ8YW81pmp-E-9ufc8pF6bjawNnW_oDlhwrbRsRksnYvHSsOD0bahTm4RF3ASXkOKyzmiL62uiKeMTrSuGkgp4Dvd8ZOpONLtMlShL4FmtNhmJA1RuQjdL-MLObvhfMVSRYDoBjbyTe9izlUkRu8zGXxf8osN9hajfmdhqcIcM_1oTl5jsBcrnNAyZGsDNpfXZn42Oz-7MGUguG81O4XsZxHG7oUn9albp32gXudzurY2-D-Z_fSXuZv2HiQzJWWWcJ4TKcxu7zJonB3ZvVDB4n8-skmnfuU2OL_OaIQXYJS8dUsFZ0MG-hufYwvs-3e5K4xlwCAlIbfzGJsEdhPQMBl1At02Ul02pkg6S4MivinRaI2ZjHhIqramzSu3mmy3c83zj-HwXxiRfKKkDmuYay-t-WF-GtiPfz3dy3o0-BXhQ.m7MjtMIonN4bRzDkIoRIFA",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_23.6.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365005602820/companyinfo/4620816365005602820",
+    "method": "get",
+    "responseType": "json"
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 401
+}
+2025-01-26T21:02:44.670Z info: Refresh Token () response is : {
+  "token_type": "bearer",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0.._l2A7kDAmUhdxHlXTt6Csw.aNaxGuhxN7v6nXJiNqY_ndWXWhaZVn5Cg9xqLBs7KcNrJkaG75I9ToweQTmc4OwZbbgF7d8qIzdk0nPpb4XFGE4A-H6Odkm-kWuViga3ajDblPBlZKA6mBIa7DgYEmvQAzXWrMoRfrIqijllvhHlI-Fh7I4g9VyyOylUydpF8VUwXW4Nkh3INqWy0Av_paAKGQdGDpKzCW5aFXAHvaGfgwYPEKkojCsbAFSN2ho5UCxcpbX0toM2qgUxV6Ixp9m1fmkH14gRy2XN1sFPaPkEaaurM0KLy8WHIOsfzUXaWPngay6xK-sNQ3kKidCq9idp7aPkX5QMwF8RVc4yumznV8wvcvVVxC-jeAEvFWxA_8sokF4xTMB56tmExrHN5pbTAey43KYsO6ICke8HBFtPrMOdUJLww1riALCDbSqFjnBjqbZXlk-TvAGu2f2qJpZMCfxBKP0r7rKKxb-kY5mWLcfK1Ms4Wl-Vzwc0euvS1vA5OcDTmZmFOBRoxpDlXK8aSDoK14nLrNIhDmCwPzX-rQw3rkrWzHjXKtQXmGfAWtCM-YeJdN-eMUewJypzQbcgDdXzPYsmP9IYLEM6YlGp_T7gqdo6C5QbWOzQeLfLSoOEbnZmjAmyLr4WmJukS1vLw7M95jg40cpD9BGIGGBhh1pRLbpDS8yGN0SkPFOdWOskVIASjqvFOHYgFuVeHmK98YfD30YLexLDYDoRCfg-TgEXICdyOZFhI3fBpUYZ9WKQKyiRd68SxrR0pZFmn4kSdVP9hUnu9q6H9TTG0nD_0_BJq5oJmBhL31SanDpRPTZi0dKR_WOvAO_dMUfVbtTw1_mcBMkmOtXJSvqStGO-MD7wFwerXN0NogZ98lwMP3I.WZUDKX91HfWT0jEMhFX_gA",
+  "refresh_token": "AB11746644388VwfMz9WmtotxubibHtXT8fZkRMkKQzWfeWn9D",
+  "x_refresh_token_expires_in": 8719025,
+  "expires_in": 3600
+}
+2025-01-26T21:03:10.036Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-26T13:03:09.873-08:00"
+}
+2025-01-27T08:29:17.999Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-01-27T08:29:38.092Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..fVCmKWJQeumLT9_kiA37zQ.PFQpm5RVqKLFfLuP2GdHaYd8t9P3uErdajpPcPT4wMT4dCibd1xTjs1h7oJOtVQ2amCvXLLTInkZzAupaNqma-xm4geUqo2IT41-gdfLbU_yE6coiD9XSrt0k2sSzXLY7fSZrpogbzyxHWoBkGZgyWUraaMyue0TbIga31qjILROygEpV015lRMVvVRd2zJ1B9RL-hEWQaAbpKWhRDNTeGPmZGiHBERvegeu9IuhnVmy00P1iApd-WL4G1ZBetRqcmFDDvBitDpDxXv2guIDuB6NPKDoCs9wC048q-EB86XdKOLHrB099DS-zSsZm6r1hfulwkndue5odSsggCKGq-zE0PCTXJK4bJtQgDVJLfjUqaVDVqYNNiaE5bZadfI-kXhsCANyRgNFA3DIoaTlUYwTtyFo5TTYIRXqPOnAexH6cCfAfPD1NmSJRQNEwjh2cHpez2GHeEwiPFZHhu6IVCVPl52oh_C0zC_jyHfAzo7LeSAJg6W5saGEiEAmMRmLrlJYXmsAYDPl-bXzJwvhZLbAbH7ErPjIGXTmsnHaNHehysE10pfN4kbgKaz6tGhfKejfBPk2WxETIPdDB4sL58QtzU6HaBXZfeLE7K1M4WWejRWFPioMDuWiB4Vi9gJH4IwmPmKG7YuZA_NlClFz_QroW4dLaq0Mhw-UZpSqk0E0kPE2xnr-QaMX_UiOSgPVL5jjPTiaDqYf17mGCw39uvc3iEuMOE8B0D7f7sTtlbSy4C0strDzO01ym0Ji-Zj4E0mXDwnrSevW3_pLx5d-sC2pwxlDanmWyCQcD6beNg6MwyEEJY6IouCSVeCf6Onz-LB4Ac5FtdOU1HHGyWMXzcmmpvpJoT6Lds5-obe9jw4.H62TiEirt0b9i1eE2oPfTQ",
+  "createdAt": 1737966578092,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMjUzNTQ2OTAiLCJhdXRoX3RpbWUiOjE3Mzc5NjY1NjksImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzc5NzAxNzgsImlhdCI6MTczNzk2NjU3OH0.BBxrh_rj_cEfvTk9cyS37Knb2fhfbq77fu1SyhBDc5bi7FQjd8C4TxNpGzQghLrKbIveYzlUhblSMmMMezvpknwNWRaivZeMO_8dgBaHjjKxuFwlPvSPlCtw6luTE4a7B2_bZgh6VL3YPWIz3f9BfZLW4vkqy4SvKKrnSYSss0JFw_ZyjcjPBtj0sxKHqwvkq109XPBFbRY357fSCPuYS_dpF4aZgbMBGeNVOxKcTRrosctL0mBq_HDPxDKYddz0YPVJfOX_cd5kAfJrrNWkV7LfKMGmVr5MQ5J0sTB5mbniXb3C4uX5WXS0TeUcbNIZEuT1LpeGqENFp8hM0tETog",
+  "latency": 60000,
+  "realmId": "4620816365025354690",
+  "refresh_token": "AB11746692978CAfS3JhB1eDGM0EsrDxqz6JSuEKxvjDGRJgGW",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-01-27T08:29:44.704Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_3",
+    "LegalName": "Sandbox Company_US_3",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-12-03",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-12-03T23:22:58-08:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-12-03T01:04:15-08:00",
+      "LastUpdatedTime": "2020-07-24T04:30:08-07:00"
+    }
+  },
+  "time": "2025-01-27T00:29:44.584-08:00"
+}
+2025-01-27T08:29:53.226Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "token_type": "bearer",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..gN-5_GBFw4fboc6p12y4_Q.Ko20G_lXZXsVy9I3drkWR6OfpAUhQKJnpfM_CGSNi3w-C42tLaozjcOEl5hKej5jsUK4fmYKUgIB5shVZShnJZWzhvKPIC6hPqWHMmeg582s8stwqRVZggjdZ7hJuEzDBKruZsCNSUR1Mt2EhR3A6rLGX0dLkcKOiTJupUZpIAisIjO4CaJ-Sn6_bdOrTYvdkWAqNzZxLbkinQfj3C1-WhvqlATubQBCQOdshieeN30If9z9JwOG7uQsPjXCqRQuduZUzvkZ04LP3_TahvJ8Bv74Ne35hJxT3BG4NsH6xNkebKA9cO_ammf6BGsBZWF5C99YWhtCcTUrBjXw2L0SdLyJd5KMIZ0wwKNT0rMcatgDQAomJD-Q0p72K1En1tgZPdz9tzZyg69bNhc5l_3XWm4CB__SB8myFziusd8HmTtDSJ3bXX6yjQj7DJD_P3xaFrk5mhFsLsCvEte1kYh4CNtPQOOILKvSdz2l8cGv8uPXwarVJeodv63vItDPSRSJdH3bbdz7_K3nbVuCl73ZcE37QNmhIqFStorujdm7VtH1ugP9f-nOtAdPFMqvx03deALbBQSa-xZVVYqwEdd19ebJOPVK513pMoh7CAwxvqU7LmtA20evTDataF2f7tb4LGWfIqBoUiqI1v52iv2crbAtItiCq1TNR2k671LdLggpTn-L0xzye2i_C9yQoygDcbVIMRSz6Elg5BBRxxgfW1xNnNA-WOANAieOPsGIs5AHxO0H9_LvUZxozLt5uXcjzHZeVaoo47A9PJOpRJHbqYYUHQueVfjYnvOoCZlW-aNGV966uyEKRi6PupzGhbaEIMKy1R7PnIfU7sYz4UHooTuo4GU-LAotjZBELWMvj4w.OzlwxmiDUdwCbQmJMcBlZg",
+  "refresh_token": "AB11746692978CAfS3JhB1eDGM0EsrDxqz6JSuEKxvjDGRJgGW",
+  "x_refresh_token_expires_in": 8726385
+}
+2025-01-27T08:29:59.345Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_3",
+    "LegalName": "Sandbox Company_US_3",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-12-03",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-12-03T23:22:58-08:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-12-03T01:04:15-08:00",
+      "LastUpdatedTime": "2020-07-24T04:30:08-07:00"
+    }
+  },
+  "time": "2025-01-27T00:29:59.325-08:00"
+}
+2025-01-27T08:43:10.784Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-01-27T08:43:17.480Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..qz2lhG4QoUpY6KzO50gWjA.EDWiS75N1ZarHaZRW2DwmSe-tM9ck54PO7-NqrmiVcJTYm4Vy13rVgXSCpXgFIh3liJnTJrulzyEckY8qFuTJAXFlgzur1SkU41InZvUF7bgmsTfg2oFdC-EomSjxmcexzC13NMquzPLgr7epWm-jKFEn3dAHVKkXf2nkEkdzCTIv2AsGJuSHhaR08zPJSXJzVG63tY3aIAeY-L7LHlYQUgRs8dBc9dLDc4JvzmJOkT8clsL1msQshmkSgcz0URq7za4txNZeofsP570FwhDI0XvhxB7A4JHeDOS-jxecsYB7_2i90b42J_KBTAXU2dS80OQNoclQcrT9EMeXpc2AKDviQJpYJXoWofK87q9TZ8Uvxj0icI7zPmzKS3j9BHrHZ7WFKBYt-MbzdfMv3ZXA5Hn_xVNy7oKIeZIWCTel-DlEZv7xxmpZ0zWsHCbTjzElmCryVPBUsvfZRlATxFdPp-lb8ejf0CSVpdPxOG5l8PQTVk5aUrC0OmeW63p6ofn7bG4NyPSOX-S4vP9PplgcUOGYu4Uu2yxDxsoUoO0hfmF-IXPeAOdou5UT0e_Tq3DyePG4B44ipvEytDsvdmD8QbzmMYY8MLLwkkayqVviGTwI5ryTFBMQdOa3UgI38eD27b_eZ7SovScs4gZGtEf3eyIcllCDh2ncyYpzZ0wJ1Qi08Ov57uRgrz30ItWxoc_RGrI8w104NYU5FV1BapHlUA61PcT4HlI8pfEGaGEWEPRs5vlDzQqB0xn3vuXHbsnGupwwjySpnyktFKSSX_CuIOTAn1ilBm7JpPs5NQc53lEEFZiZoPChT5WxM5vqFg4CMzdJCg2AhyFL_5AxC7ai8piDNR_z7Ok50wDVcfhfWk.jldvfqoWHrxxq4-WVE2R0A",
+  "createdAt": 1737967397480,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3Mzc5NjY1NjksImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzc5NzA5OTcsImlhdCI6MTczNzk2NzM5N30.dP9ZyZ4RimGv4lyaQmQMh4GKQO5lG5vv3Aq1gFF7hMZlAia3y0gESC69MySm9caug2HtflmmhQW0PBtCpYyCZx5MybmD9wg9wEgNI_Nl-sxTGn1ntwx1l4utZa2LkN3zTN_QC9T0fFyVvM65lEBrLf8kIJdogsilLcLfKh40i3uRYdFALLYlffLhkjgaIf-oFvgGcy1c2KsbEjJoWArFc8wKqapJN_kiMQLU8tqpLo3Cvb9uAc8_RCX2-yjzT_RZR6ZsFr7DfDFYZbCGuE_e_IxH12Zle9u0itXkgMPzbwTiTa9Lf2Ho6NZSQ5LuSL5vj_sWFdrkIR1HdeitYP474w",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11746693797lqsxdQq2j7SurNvyUFqrVj0SjpQnS9tWssMuY",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-01-27T08:43:20.985Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..Q1EKBtSWGT1IfvhhIc0u1Q.s-zAovvBgm9ybAdDCh2RPFVjVCYmH0w7qI1Faaoy4WTdBzL9a3QG4HygUucrldn6nWF-Pn9ahugfz7is62_cyIe0BGQ3vk36j3xVTImIeHVZianWPFYOIbRQXLVsOo08g0A9oA0zG85QJhp21HOzrX1tffre-a7wbuQLYgICWEBuhfjs1QXUkJqstFRquRVwVpuG1dq4NEb8Mj02NcBh8YpFt6_B9rltYo4oei_J75J4JWYOnlHO7JXZvhA_yEfKUXENoPvtIHeBAmUrmxP2wztjAAv0JtoHyO6L0ZfSNks3k5ZeaUBkbj8BPGKRkOh_fDRdS0X85UroElsQBVI2zyiCq0Pj7tFAqMAWHfNMsBKCtIF_d9FxRXfobrLVEs42A3x34tgOSbXoiVmxNw5mTnwzxmm5PpJ6eoKvTvYIc2zAuUzzb5kLoV4kHresHErHRF2DRli-rKfOH75x3dGwBio8peGl4k9_nspkopBlVznrCfGcbOi91_nYmYknIjWF-RP7gTIMAskapzfWD3zqEv0EAeIjd-igDi1CIlc_7yNYF_RATWxWaEhV-fWYRoJ_h8Ss9JNYUvpz2Fzjx6A1d4lCBWS8KTRmfZ9wUcO2kckrQ-f1nHY6-E95YryxET-5KIG61vIP5GEF7hHmcqYSUjDkGjtv25kHdVXYz4qSXEyKGjdrJc_Wv84BccYYcO8RVtSHQDZNs_LT7QezPZMfE8aRO1ECXI4WwfrJrFgZP6pVQ9r5rXQsIflirSKQZ52VY-usLcGBrcjqoAFtCRiA7ZtbV6jyxWLp1ID-v1cZIF3RlAR32JFC8QGBiUkjL5ESyWWNZEqgdbCiWUCryTlqItQtbhv4zLIcoc2WeHacnJE.Phj8SptLayjhJU3a9BMP7Q",
+  "refresh_token": "AB11746693797lqsxdQq2j7SurNvyUFqrVj0SjpQnS9tWssMuY",
+  "x_refresh_token_expires_in": 8726397,
+  "token_type": "bearer"
+}
+2025-01-27T08:43:22.892Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-01-27T00:43:22.774-08:00"
+}
+2025-02-04T03:39:32.611Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-02-04T03:40:22.250Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..LLNmEvKgTHkshdSr2syZzw.08lpDz8bkpVkLAzNtid6SJPd54RXmyo5vufSkvsw8kfdJtCAMcNb0btYI4FfxTiOMW_a6JjRZ-0m4wiXSGZObTGeyEF10KlG28OtN826ActZnwWE0JdKdaU4VLHaj9LzcMxhnoHNczSpLU308krktvRAW88hDxDrnRVlagA-0nSQ1wHKSJJObv34iBVXddiLFfIlXD5eDKe2Zv0YESw_VAh09LZBuOYMpQlo4W2berY9iSNfFqSx_9L98l0m2pHdFKdpnxt-mD2E-bcFVQgi_QLi9e6WAXrV2TwMJvFkv9MwuLm0jeBDDa9fAdf7MWt-RpBP44mMpxY3AfJFqARs1PO9JJLUp8S47OeZWMKk8MiE2V57div-oiHSjBs5zmvH2bHghaGCQVRq-4ZQGB2uZ0ncjbe-Z2K1zP0AUAFxRr41o5UZwRz1kNOrDYRMUCW4r6DXSeX0C2t8ys2O6_KEh-KIC0eRaEz48TpmLQYh-aBu_q6GKiV5bQFPfkle9W1EP11W4SjT31ziyiTay-Y45uXTR-v5rYbL1v8y2MaglL3PPoxIc3O0ft60JQ9EdNTWD_NTANmDoZoalYj4y_wmRdp206lc5YILn4AMF_yLkprYSOaZkhYo_NmZRa3IELSycYsckLBvP3KD2YTLJ9Kp_r9oswiB2gcwhrT7t6VBzv9-tUJpV1N_SDUOe1w2-MY3DcXTe7laDwP2stC3I_USqB9i9lOezghXE4aFiiWlwMPxoYqxx0HlXDtOY2Cc56v1H46OXA_vT4bK2LZyNMro635xxYXO5Yoo6nRmh2G2YNf0AdvWJF9X49csTagk5m3Lz-RNntVq1lFVwwkgDXYt1DE-WtOjwoQ4lg2I1yzCu6w.9Ejxp8JbxPZW2Gmv5pemqw",
+  "createdAt": 1738640422250,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3Mzg2NDA0MTAsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzg2NDQwMjIsImlhdCI6MTczODY0MDQyMn0.glZk2MvHGK5KE6a2uPw4nCKkWMThFE-uiTxWjZQa0jkbG6t4gop42WJJ0_T53bwDfgxCve4d2CwioGCV_DeHP7Vttbyk2zf47sCFD0StR-OK6-ukIFaclLcKwO89p8mQWNjwYiar_qO0peVODn-PdZ5l8LVdbAiAaFAEv8G16zrkftFtEGwOPqgUEC__UoXOolrq92r0hvHhNdaReTxbinl33tWwv17SEHgbXSOoMN44A0Qk19p7jX0huP4jq24-BJrhCLhIIfmWi0ES-DtdS3GOAlhNGXwKBTmV2wRKgGyMCb1537BBv5ou2xY4D5_sUYbgd5XTJOoFAAIsJSibKg",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11747366822IsXPQuWLHUqszwG4gVWnf4OgYp0DuHYJnRk7n",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-02-04T03:40:29.691Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:40:29.487-08:00"
+}
+2025-02-04T03:41:17.181Z info: Refresh Token () response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..lfKqeCClyUTNrd1WvI2EXw.Dsj-jevm2dVwWvavre6QrsuHPltvA9gUWGIpF3W3O9t3KOc-xOPgj1yx9uU7GWIyHnY-xtTmhlBgwwlQgfYfPC9yls-SMSKrTlsUuzYtSCQNvMsJI_Kx7u2TNqx_yVhoThNRiZGU0FqZOMkBr_y1d5pF6032ijpf8l21RVERnQHHJ3JtHf2kmJRfbTrVUuwpU5jZ1y3EEn_Wq_aAvoOxVqLvs3-UCV-GTU05O0V9rEKQp4w48vwZ9-8KMKK2xXhmKRdaO2YkoyvdLgH59ENy5sFRpwfFbOAOnV3Prgesz1J93gLH9kY74iQw9Mx15jwVRy0mWrH_tHZcHFN-5wbcv3yFgOtyEKfKccot823qs0AEF8Kjs17ANh7IkmxSoOzmSAs0UqYZfl0j1G2whzX-p5baF73qf8tfdFQShB_8cIcA9KuiKlmzh5WTDy_wj7T04jIS-TczmupuwLbKoKJMTJiwLflbML5jlaGZRaCvubJmYg0bkXIPlMAua4Sfr1dv4b2dLHBNEH5wos0xXpvH2gJPgErigugQUDL4X7DvrFgi-zHqEsSqwXMXdF6iXu8C-Pe-vmyOpMb7slhRWrSYoRVVAMfPL5GFrxJ2vhStwBTWvPpA-aY-NgC-g-rieFXSXFXcMzodQUWnezHQ21ByoyVGWzgI--UHAGw4hHdHEGM5VLhbVvErUHyfcZos3S70WW1bx_BBLWK5n8ra0UBPOEM3NUUXNekr9Vhn9eBfHvSKKucbrV45Mb-3WFX6WbmHKgwm1sbb5UKURG47btrMCWOjsxGvi__dTp8cMAhcqO9dm1VRB8TGhfFzxrkgIenz4OYb4hodMiuRZANERazaPTJ1tpPymrfBK3H0TeFmjUQ.1UplEiTFzBAFHuLcV2TTnA",
+  "refresh_token": "AB11747366822IsXPQuWLHUqszwG4gVWnf4OgYp0DuHYJnRk7n",
+  "x_refresh_token_expires_in": 8726346,
+  "token_type": "bearer",
+  "expires_in": 3600
+}
+2025-02-04T03:41:26.061Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:26.019-08:00"
+}
+2025-02-04T03:41:27.748Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:27.703-08:00"
+}
+2025-02-04T03:41:29.694Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:29.651-08:00"
+}
+2025-02-04T03:41:34.152Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726329,
+  "refresh_token": "AB11747366822IsXPQuWLHUqszwG4gVWnf4OgYp0DuHYJnRk7n",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..DZfl7g3Rgz2f_Ozof7jLiw.Mamqg0m-J0jMPp3Nu7CBvRNs3biKGOhirUwBaayzSTKeG6-vMP6HELMS8eYaR8WpraEz_LomnpxSehcbFlLhwzjrUv75lbqMvpv54sREJTI2w0Vrf34oSv3YPEYWFhX0Ux_A_OEWgm503J7y0dmcY0NeIIfrAe53G-ITiAjfFDNBmkvV4_8vOfLKx8OQJtltzzIyo5o9GT_wAKOTCEA4nzfkNGMCJjgEFEUX8WALRW0J8Gu35xsVJ2ZDRf2lqHoUOvgVhRmPJgC3xdrONsutxvmt1wapqv60W1hLuk-9HgQQxM5BgRUAInu_PRXYpcnDiUlYgOQxHo6SAAaUtYNtqqSWSt5e_D_EXeqAhYj8ZB-kDMDwtWqtaYSiz3SHkB_Q08MtHI4mI0HNixEmpTxLRm8eckhhF_xJy92lz8SbEF1LbI2Pqka6j9QDoricQ2U2NI-0q5YrCwvPaxrPUPoQoi3a_dmGpPFfT5q7ZXu5x344JAMgUoMaGUUHKt4G72ATPftZ77PgQKhH5N_-1iQ76jUKZjuabjCMKCmOtbbAW3WBOebiLcBbpEw3tWlVzfFi_1iff7Ysy73V-4rEImqs6B2lYsL02FQvhp16526omRN5FtEWurazSj9HHtXKrkq7P3ZxSA94YkwwXw9NFZeJpclVAHjxvvHRAXtjFKEhGIwQZ6aaUrWgPztFalyC6r94hFbz9iOVQTZ1ElBfkiA0WbAHb9EEpmH-5t2Qu8YmWhZOwtDPLkjJ0eOfejaPSfbv79-JnRBVC4cwZXxeYFrF9FMGjJGK9PEBKMq6SPtXjbN0bsWjyYF6YDztGJa1nTjw079ubHwg3SyH-gHNjtl5vlevoxgqef8rUwWuhBrsOj4.aaX_peu1EZLC7l_ghPI7RQ",
+  "token_type": "bearer"
+}
+2025-02-04T03:41:39.867Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:39.838-08:00"
+}
+2025-02-04T03:41:40.913Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:40.870-08:00"
+}
+2025-02-04T03:41:43.033Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:41:42.989-08:00"
+}
+2025-02-04T03:42:33.639Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-02-03T19:42:33.606-08:00"
+}
+2025-02-04T04:25:01.172Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-02-04T04:25:09.766Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..sNn-eVUNBuSHShLFsWX7Ww.mf7MNg_0RHv5FsKHIrtcheHrG1CWbUEMOkDJM1KlgAymH8FF6P-_HT3wTxZCCW8JDHWy_q-BIULILgXixgzOP5UV52YYsUgESIKbL0DhDBQDeF_xp0f9N01Tt6sd4rgGCC2ah8bN1KmmuF3bq4t99AmiKWpqg57aZ4ZkCZHngmnTcvCWNTbBqVk16azbRzODRaFiu9KOpuTE9Vg_MJ2hYndgCtwuLmFMuLMtPD5YXj_h1QQinRFaAclOnp-5oRvBxVobeRMKW9CidsLghyDoyOGDsjAkl2m0rZXpvx1g_CgITWCtWPWhW2JsayzkCzdNThqak-1ncoHTxUi33z7fF2_TP3AXmhivbs9zbu7-aRimKgtlBoa-48Jw4kSDk3SAnR0vS6gTPLjrmFoR6yUSRyMP04gS_1T9ywus1t8IGiglh17D83mrhhR0oXLq076YYGe-cZ27GNXjMmDrPoTEKlbB-6mZQMG9ENe1fJBlpgxkPGHKGHPfqFtavSlC0mQnuSEPmR8NATBcWHCdMIJCzUjpCuc8XChrXi8J_SfJXizvlhzfQxSEhsG5y5X9Yzh9cMt4SMzejZomVeEJE6bTiVwXYXJVedoHJ1uJvfIbjqYQvvoWyI8uctUK8P3yJz1CTijdVgAqnhPnrf0jgjeLqAmZv5BdqD9jSkSkhV2TdmgsIRbkeDezvi20MRFsC83_5AdxXAAwNkYjvDHBPe5TQzLOUbtrewkyXow4OeLt34eefS4h13NNJohdaUPtzsgHgr8dX9UXfshpm7vtxsyAB0blzdxAFUddOBixYdXYU0YbVJQTNDhh0Ezq-eqX-yikFuEx4fIr_5P3AmTSQml3dECyKlhk0Y_PXUS0AKqHfIQ.wUD63MwgnzxZxWamwfa7JA",
+  "createdAt": 1738643109766,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMjUzNTQ2OTAiLCJhdXRoX3RpbWUiOjE3Mzg2NDA0MTAsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3Mzg2NDY3MDksImlhdCI6MTczODY0MzEwOX0.Qqv-iNZfSFD4yQn3O7MRxckcwYCuofx8g6wRkdLw5RK1HHbCaBqcE3Umj6DkhnHR_k5t5cpblvP4aKcHpWPjE6IAKYvM-FomnTPAbIOF5gELKfroPro97jKtXl85-jOZt1K3jIQ0tbk6QrNuElybw2bNEGKxB0f_OIop8n7arM5c6KXhldW72lrQEtVsw7ykBrS1yqGohvO7Dr1NK5bDejbQdNPo1a0RM6gtvLVKTNHYyUzqDIbj8rjAgZhb_h4moU7Oex_ZjjtwNk0LtSw0R78fEw6U9uOwGIUT8G9EMYyirsX5owQ1QuLauRYJ3nZCh2GTzp6qAfQNv2PCi96ejw",
+  "latency": 60000,
+  "realmId": "4620816365025354690",
+  "refresh_token": "AB11747369509dKVdwLvVodbOAPXNzYRkKZ3CqGdkPuCsrXVUi",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-02-04T04:25:15.368Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_3",
+    "LegalName": "Sandbox Company_US_3",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-12-03",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-12-03T23:22:58-08:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-12-03T01:04:15-08:00",
+      "LastUpdatedTime": "2020-07-24T04:30:08-07:00"
+    }
+  },
+  "time": "2025-02-03T20:25:15.248-08:00"
+}
+2025-02-04T04:25:18.294Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726392,
+  "refresh_token": "AB11747369509dKVdwLvVodbOAPXNzYRkKZ3CqGdkPuCsrXVUi",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..uqc5XOavE4ME2Z6OmySQbA.SdL0U3h9g1TUt3VQyV8Z9YFbtpJVroIn247speTNxfXnevKzYsvh-5Y5v0cXJ9t-svjUhQY9H4WMXWlM8P9lAZWZfkTTeuImGhalLQ4g5OnrQpd6Q4j7yAS_E9LDzkGQvUZC2eMghAUlE-Amj8_vWodE5U-J1Gqr86zE_amK-3xkAzPq7xQCZF0x30Qn72hl7kMUiR8ZEzBxvIVIAH6QeGTGrPsk6zeNFnZWGR9Km-VKe0CV_H7mK6kG8u-8S0_gvxEcM5xaz3hgXuQF16PR3NkVxH5fjv-cnEObSpHtrG8UKY92zrl4KGNUX3bJEQZoQjKPe-4-VST-4Ej9HNVNvn-HsomOk2dwO3Duckmleg4M1lSoRfmnyt-pZRtdD1atfDYq4F6z3NMAvBrc93oF4Xcf1FPno0qBOhXqj5apmTyUtwKIQ6q15wfAelhga3Oys5UCM_VPstyBEH1P7FdPMAA7fYWjLvyt5Ss_tgKQOjkUCUMf3kVrCoZgXXE5yLJgrDhmiJhdQB22ACa2GasOBG8AQ6L4fUXoZ-5bPlcnL3T_9dX7XNdFSXenhLDIwX1uNdJP8UmYPZluOYBHazGmS9eGHLyabhQGHZ7LjDN8xfGqYDXltEgegDxW3O61HjmtcdU_I4nFnPYxahqWCxoF8YQZ1amqq3CjHLh0OqlLi1znSqW9TShhzo5dwFZfH4kF4pHeiHiKgI4Ww7SgbG9oDbEoatEKk7kuFUq635o0nvl5en5mnlOk-Ye6-mOKA9O7g4IaNkg3qJ8Ll0WuCf4Hm5CZFXuBdq8T7HPYEuP5BM_ybYVuKDAzA-lo8OMGdd1nSAsaOiEFFqF0wF0Z78xKoQEVjTK_LP4OcR_61a3PIQM.ZH_Jba58BZn3wTGIsh7kfw",
+  "token_type": "bearer"
+}
+2025-02-04T04:25:22.747Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_3",
+    "LegalName": "Sandbox Company_US_3",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-12-03",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-12-03T23:22:58-08:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-12-03T01:04:15-08:00",
+      "LastUpdatedTime": "2020-07-24T04:30:08-07:00"
+    }
+  },
+  "time": "2025-02-03T20:25:22.703-08:00"
+}
+2025-03-25T04:53:42.877Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=%20http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-03-25T04:54:57.921Z error: Create Token () threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": "Basic QUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGM6VjZ6ZjNEU1JDVlRXMHlGVlZjcmNGNzFJd3ZRZEFDaU82aXA4bVdOYw==",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.3.0_darwin",
+      "Content-Length": "140",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+    "data": "grant_type=authorization_code&code=AB11742878797xMnUuNc0wZRLAKJQAeEuwr0Ftx6KjABNeejxW&redirect_uri=+http%3A%2F%2Flocalhost%3A8000%2Fcallback",
+    "method": "post",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
+2025-03-25T04:55:03.295Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer ",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.3.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365005602820/companyinfo/4620816365005602820",
+    "method": "get",
+    "responseType": "json",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
+2025-03-25T04:58:05.277Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=&redirect_uri=&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-03-25T04:58:55.622Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-03-25T04:59:03.609Z info: Create Token response is : {
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..xDqqSNSv9bkHiNr5vVtoWw.vy1ivYaOKiQi6gnx-2x07sINJJLKat-bjnjMZ_xuel0APsOKVWozqDjZchivScvMbsDiudk8O7aTSTU7YcZMlc9QBYMznUAaLad6DcjNM8Qtq7RtEis7PQybkxdYm52kAMAQEEvwAuAitPPEmI56hxhim-sAQ7bPzaXVlYEVyhK5y6mNAnyBG-RtUSL6DqCNshp4lhGLFK_m5cmYsUbB5Xk9DgZtz6pP7C-dnyrBHcUr0H-4IlrA63pavli5lweFbOx5_qIaRMi2Si_Ob1vr6_rTSId_yUTObl_WwWk-pKSMbj8dUZldD9xMh22--q1ZQR5Dt-njndRLE9--2dMIRk3Q9u8bhON3gsHLlxS2Bxuqhc28X64GEiiMdPTUCnGV1TpKINs-eJmaBwBATCscjyqU7e2UeCEUcm5yFnFZr-zpNTMzvdvNnSXuPxIbFY4TNvvuXfKQt-pTFglpovjeXlKSE-25mI0MhmB-8vrbePtTvkIvmVTrEF-GqW2UPy_R-eHzmGRA9cXJbOdsqnzoFa4whojwQiXRylL8H4QIJWvwZp3-g0wlXcPhQ3m6F-_O1IdFHk5wEOWOOEMISvyAeAsseaETaYnimy_5Aby14Q4ovhab3LCT5KIKl1ALe3pxBNYQcAKFlTTWdH-rv-rGuG0At58Dc2zHI0Ctz0b-HBj1Kwk70PoRzjN8yvee7d0Ddj5Lnt9PnCCQsE-9QPrfAyfmxqqaGJI5U2zemibLFYEJ7x9ktmfZC30P0jdGXtfkbvzXr6zRML8Q3KKxPlRAPh6a_qKcaiDQPmbtLWOJ-SQpf0sMQ856PtoUK4TYW8dFutR_aUxjVC0mYpD_zSmByXo1mNtGACRfKfL2b0bJv7g.dNv71rpnT2nQ_W_BuYWZOQ",
+  "createdAt": 1742878743609,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI5MmU0ZjI1ZC0zMDA4LTQ1ZjAtODJmNy1hN2MzZTZlNmY0MTgiLCJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDI4Nzg0NjgsImlzcyI6Imh0dHBzOlwvXC9vYXV0aC5wbGF0Zm9ybS5pbnR1aXQuY29tXC9vcFwvdjEiLCJleHAiOjE3NDI4ODIzNDMsImlhdCI6MTc0Mjg3ODc0M30.RMyAEWvX_ce3xKGU1FyNLctr4ZGKd2aKrRkM6YIy-OSjmTYSHw_-vYjzrSmMDxJx8z8Rnjc8m9DI8TCyETZ1iCN0XXTGJpaqprm0kWO9VZ1LcbHgMcMZL8dVPUAXY4e1Ajug3iIPmohcVvJNaslr65AC1xCDZLej3BeCQTwcd5PAFmZda7pMYQdynp3zKt_aEFPX2yvyZ788sUQjC6ReNkLkgKqBNs7QIsfKS9Huk-1rcphwQ7GcQkd6ioe5u57ieQfktNHJN28lQm8vwnFOAbR53xi6QHEWqCnWCUUi6_QaXF1GNXBVFpr0Qp2FcuDSW28YN_hFY7fR_ZWO7OQ-OQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "AB11751605143N2uZ9qTfyUk2bcjyEqg8HetelNuQXMJ31sPVY",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-03-25T04:59:06.330Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-03-24T21:59:06.172-07:00"
+}
+2025-03-25T04:59:15.086Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "refresh_token": "AB11751605143N2uZ9qTfyUk2bcjyEqg8HetelNuQXMJ31sPVY",
+  "access_token": "eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..AcSMjTO8mu9pcsYgtbvDiA.uV8vOl0FDlxlbN0KIKVEsStpZottDaq3dWnL6PJAXdSwW9pTBYhdYU85zv0owwqx-4RbNW_PQe8a03y4gb4l01lwjYXoggFFfJ6Qw-Ej6fqzCXGEluVnQSG1Cvw63wkrMCQpyWc1lD90Cp2gEpaTAhMU7xvjc_6mpw3AULjeqjM_afRYtThJFL4BlKnd-w2sXMoT54isHpDKSZ8OcGdwL8-tzQoM_k1MxIDfnt7SuaZGctc45eq9vDOFBzD59AJpf8WbV7xPZrY8uJDBZ8zLmf5yFTKDuXMGcH5QuvOFr_8IWXlyQSdmf6zcOkRQZ1U1EhYxTi0YRyAW2AuqNisRvPx7EeH8GJZHnVj4QJ9U3GnDhHu1lsJvYFS2KpwaEI-7qUFJuIL7DUPzA18xpADit1_z_0PHPuHAY8TowSXmuXSiZvaDDWoPQV9_joeGQwKdclVmKHjbGh6OZoQNbUqmtstITi8iXW1W5tuwjgSTJWj4F2dIyjYxHQ_HOglleQZ9z_qj5ZPOUVD0mY5w-tgj5H49JLalpSVBKWAyrD22cp-F7vI9raZ6AJCE2z59cUh5jQecf9lMAndT_nEsfVzOAsnntK3jMQ-RQsxqhwCg6fEXoTTdv5ano4SHV0BB4psM0j3G06v-oYoL62AUY3YcS7JOPjrLP7kBFGVeuSeTJsuOJTz1wrnIjnOIPF8cSF4H8GIoOt61S_5gaTuRen-QUANbFuhI4_RYjz2i4CAxOUQTenZSsIzdfmf4LYIW7M2Qyz9PTlQkH3zX3yfoazhiftkJqPhkKdxUBYH4ebbfH9URqjIx7Iapjd1mKW7kmcrlmULdOuMXDGUB_BfAU4plMJ6qWC_HlXJYYc5uxhFgslU.ojEhPOgB4OCOk9WdwHw13A",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726389
+}
+2025-03-25T04:59:18.820Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-03-24T21:59:18.729-07:00"
+}
+2025-04-18T21:28:30.987Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-04-18T21:28:51.186Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..lFlnzMjFFM3r7bY9TfP58Q.A6eQXGpz2GaUngwpSoaBvKFwJWfJslUEvABgXbfnAFEq9rSd-ctbpK5_1l1_zFtp1qGBUjdOtJ-CKUTkpucFRzlvFeMiWjLd9ecFcZ-8KVoiaauqDxCYLeFmVyak_BkJ7TqdhoqSG2ExLIhMhcsi-tkJ2Rf-0T__RmpbEilCpd_xj0b-NYTsu9WWXKgwBPA1RwDSukc4a5b7lgSxMz4v24jKeC7CVvx4u-AUoaN9nkswdVEn-uNn3viGDGnpGVGHBANuqITfms73OS8dgxL9LfR4PsjW8HpbWwwopuOmiESqGcnCtHdbtFFTECD4aXYhS9DHhoPWvy6b2lgiuzcNSVLmoGOL2gQ6VKMQ2Gm37tyUtBvL7D8aT8eYRQEEXZSclm6OzD2MOQRsnCnqb0vDzOdr0El6vKZauG8cZFwlTN8nDFY4fB27gMSVWlkypQdYceqhIXptx7PdVSKFLeK1WAllkHHmldPvZoz13ubdgujbPYU8Xjk1LLoGNVa9xsb6cGroBNXEl_Z53j_V6WPuGX3iWTkgXA4WUZVbWhmPEmLYuy2E--sylPu5oZN_sDTPVQKsVIDlV6BDRDRex5f_puvfSoBd2pTMys2IjTWx6Mk.zvZ3DHfY8i-w6qJpaRkTzw",
+  "createdAt": 1745011731186,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDUwMTE3MzAsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NTAxNTMzMSwiaWF0IjoxNzQ1MDExNzMxfQ.gh0lc1ahS4nInCiKY3IvTRrL9dS6skmc4gnoXdmzRqXUkaj3WRT6cQeQOEruBONocy06Rv8zuruyefjOQALkpW6aLDfFMNDRwWjvfH073YC7tl6g_lK1b7x9YN7x-rr-TiEBZy7ANoyrizO4gfJ5cM6CrEYjEypnDYj7GD2W1ESCCNTHLfiawmGTTT6W_GITWETBI_7gIZA9CgUxWcHNziyrzzXZFIKG7GBAF8lQCluHSfZnY2jEH3ZTdTgYh5YRvZC0gmiavxs4KumCIWARG_F-LqImp6DogOmCvgDotbe0DTHEdkwCi1RF3lSbcMoYXmdx516wNT-pbrC-ze7PWQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-47-H0-17537381300lmxm1mbt277exhkljbs",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-04-18T21:28:54.250Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=&redirect_uri=&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-04-18T21:28:59.494Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer ",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.4.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company//companyinfo/",
+    "method": "get",
+    "responseType": "json",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
+2025-04-18T21:29:11.036Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-04-18T21:29:16.808Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..mG1sNhu83p1rMIfTCwObSg.Bdx0ygswg9BdD0AS9zgPuotxuSU5DYe4rdKl6F2mXNm18kf-FKk0Jda5_pyHhHim_8VpplVKF8i4yil8OAnmHuHNlNCAI4Ul5-8IM302N04tp35Fe5sebUajt63s2792WLLaixcD6Y38JR2NxXZQzKsGexLd3_8uNQYDORuHnKmAQEhfbZXN5rWEkg4l-CEpYFmee9--A3Di6GFpg20Zg9te6u0iSkpy-eQOeFVfp6lEwbX8Yy1DpFxUVnqjFh9Du8NM9G6ardvRzP1Ic_pLCERQ6NTEhoIur2pM9_e7HsNU1R68h1aq0vQHkMlIVZs0GBY4O8LMMNZZH0CBZOn5r7sEckFdg2MQYgdrHu-fJMPq8-MwKB2QdLarlob5_e2w2EVvkP1SJTWD8jtnNMhXKSGT_vVebbwBuwt0E5Crl5lUFCBI4qmJonnfZ9-JbOSoqLAqnGukbiE0uRN0vLXvlWb1_FuLglCKFGgKEYZ6paSY1Ly6IQ1RE3kCwHYBOCw3epPxR0T1hfhpGS_sgI874jFCZOrKVxwsE5K8NmJ5zan70B2EtBLopH3ZwvnOgej3KgIi0lTpGhAny2rtO_ulRDjnjW8NAD64FfSCNLA-ueg.T2dyVpcUnt_BCK9wWETIGQ",
+  "createdAt": 1745011756808,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDUwMTE3NTYsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NTAxNTM1NiwiaWF0IjoxNzQ1MDExNzU2fQ.KXLUOhZ3AqM99yBY3F_m74wJCuRRH3wx0KGeibn9cEDjMFOITqUy0KbD8tqiMM5v3VZeeQEg0jpNPwXc2F0Jc_Nf68fs7HKLjn1Uin6HnA-ToPPDmMqXbROtt_YjMFD9V4mdpeoLYbaHPpU8uD-V-UhfBFWXbd3lyRfylj1r9_z6wsV3ez_QOryhkFaL9R60EdU-G2U_BfgREzOkEvhWG5R0zemqy89Rf9tkx-1OnsjnPFMPzcsPKDLeirUN7tvNDl-VmWNR1iuOk03FvwDnbh1rqjs-L_k-5gORi2D0QCh5XSf-8RTlVQwHTEnqPP1iZQ0PMRiQRw631k87GzDoYA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-95-H0-1753738156meob1fb1clfj3528zf81",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-04-18T21:29:19.012Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-04-18T14:29:18.965-07:00"
+}
+2025-04-18T21:39:34.898Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-04-18T21:39:42.598Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..PmlsUsyJb4sn-YxwNMMfRg.wirPNzKXf4dNg9LmDsgIKKIOTjqxhrs7dAfpVp3BhksK0cvy9a08B9ioF4MAUscS1EqfNuQFBgOV-HmFC4s5oLdI0aKGJOqJGc9tQ9KAkQA3il3jD-K1tB7RCIaxahZWcJtiOkYBZWD0PhflMzN9gu0GM3fUTH3HFQpZC75pXhEC_C41examXTlc117TRd_SSS5ysIsurVZIIUkbbKebw3XRk9sY4_A8ry33IA8Goz_DN52KoV8DXjhobZAP0btttfPk6MglhvuwWXW0s9hJJyMqQr7VIfU0FLcVjLh-cKbWjFDufB0Muh95X3YlkRcyfznSH9BGqNLWaBCq_ClW0Gwb9OZla2Q7KeiIlBGTUH-bF_018vTklpdlYYZBaFdohSzla9PEEYmxxZE849JRZFgPqWnIbPnM9cdJmHpH-qHOjWAwp0LskNqfJkDR_sqLADG01t14S4TGtMewqBI1VjpGUCbzH7qp4ezcVSntGj7YAMcLrohHz35gLK3B7Dp6E200IJq6xYJcwA1iczeh7Uvdqn0EI307IXcoLBdxMe_dggMVcgRmk6rqCImGhyOqZydg6aeQ5KK6NkbhDXqGm8RF1ZkG2xRn6nVYC88kKLc.ZJYLSDy9atP91hgyP1f4Hw",
+  "createdAt": 1745012382598,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDUwMTIzODEsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NTAxNTk4MiwiaWF0IjoxNzQ1MDEyMzgyfQ.ftqWmui6FNlvBDR7frVQ1L88dflKRFZpx1b8iFhFoE-iDUPtOHi0ikvlc45O34OznBV6xRtfhNrKAys0BKOJhoIdu5UPUityeIjcWygpfEjqIMyydi1X55l69cfbAjYcoHPFcKh4bUX3J9EwyR4qipVnfazWwmZnU1dh3gx1QQB1NSCB4QyrmUSaeVVpp0rzHBZ2fQKdxJAADQ4wIZfYbrwz-47gHNF8arHzUPVt4FVWUZ_Ep1jx9wh42UjVx3eSGL0DIYO9J3bq53k41TlFQgKPdP_Q7fvGmbeY8Kh4gAxhtkJm12FP76KTSY8GQkbFSPl1SVHDpmcU96mOlkEaiQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-220-H0-1753738782gjpoz37yi6ole0bkqi0p",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-04-18T21:39:49.368Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-04-18T14:39:49.341-07:00"
+}
+2025-05-09T20:30:42.024Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T20:31:00.042Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..I3pJQ0r-d2256IFjNmAdew._VvqSC971WypJtN4ZM7Qpnbh1IGiB5WXgQAf74qrUgHuA2kXEFxhJjXrGm2p9Q-UUPl_TT49Jvw4QZ2kwzKczR0s3xLZBr-ZtpNonqVoV8Vgj0tPQOdozT4VbZELXtH5KaVtjYdeBieIwaAZCVzuEY52eAFWkYIsGxcWs2knDAg_SnZE2OqqK3kiNKy5DhG9knr12-v1HggB-_ShkZ2O1q6H5mWoVuzsRW_10xylX5TVxQ7HyXCZIpcjTWVR8sbyBjAbg3SLJglfd7C-zQBNHgq2XqQxjcVw6bmeGlN_kIXrxR5hDbAi7dh6X8e7GANl5b-Izw0_LlBAnoq5ANxPPzfmZIGFop3yx9ixocrSpIhagHMvKvxhkv32LRzayKl-fP8QNu6AfC4wNxiYO8lB2uUpUnlt43nZtRakjcz70A3cRIYQMzXEdPFb-chEWNU15YRUGYy7PMskQHCuftbQcU4_uryP8ZO0MfgmDIO-wCEY1pmazlytyXdRlU8xUc7H2TgqsXZ6M23u4jJSnU7C96zy1wi0Bg6zOjG2Iu4EpVMoqfZEaROGk1CfGUSeZH-1K2qqp_0OqcGWTyh5emHGmFWOQsUXuaCZJx8y2UhWCLU.-ztBlu52sFHIgsZIB-tJJQ",
+  "createdAt": 1746822660042,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDY4MjI2NTksImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgyNjI1OSwiaWF0IjoxNzQ2ODIyNjU5fQ.U2NhdK-h1fkllWFiv8RRhl3SwtO-M-8sNu5qMM714iB-eIVb-gM4bV9WpCDLGIUbdNrw2Mnl6TujAIBabHZMHUKNF6IlaKlaWXE5WePVaV1gxG4Fj5ky4FWFd5kum4QicaJwHtgMiT34C5Lh1T_DxtcEheai7aTlu2Sp9CemjoZm1cRbmzyd9kN-ffA2QkCFtYKTJ0gtwd47dzN083d74Gqu_JtEWUU6Qw-3oQDykHNuNEE1znll3dnu3MfDmLcqIwfqTpmFqvH6Hmb5S1LCp53zHUMbJ6DcfbVpP-srwF_QlQPojlgfAqt8Ns4XZ5ZQIA8Oioibkvo5bptPdi_0xQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-149-H0-1755549059pmontwzqwb89m4rljnol",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-09T20:31:01.469Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=&redirect_uri=&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T20:31:08.519Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer ",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.4.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company//companyinfo/",
+    "method": "get",
+    "responseType": "json",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
+2025-05-09T20:31:23.193Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T20:31:30.798Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer ",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.4.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company/4620816365025354690/companyinfo/4620816365025354690",
+    "method": "get",
+    "responseType": "json",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
+2025-05-09T20:31:31.114Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..dM-pqVtx_J3-uS-Vgx1_mw.ugJjA-c5NgL5ZfUONcb_9qEixqhooMm_0Il3SL9HSVm4WZoDAH4kKiSe_CQF4nfEXsXkXrdMPTxUh-lO81IcWudfxv6CJvpvcmvK0A4ZKejF3W4-iUYcOiVwSUT0I6ONUmw0o2CfnruwzxpmzcxDnZ-uM8nW_9oaerSGBsTEdKb4bfh_xJwnOG6RIxATmyGLjOy92daogr6bfIxuxXLVe0J64LtULjsc-CFWargoadHDNjwfcgCpuzRcM4PkGVXjxujjx2IWj6ppATdpiIr6ZMs5x89KMArFxNLLeF5pTXB3_0oOBM1rv9Shv7fd5Lln2sYaUvQCP1_L1mnvi3OpiGWaXOnqP2GrGlvXEf2sEEBVwgO9ziok1FnBM_PczmG5mbbSfwrwUVV0i_lBXsPgJISiHM48Qcu05SHWOzwkC8T9_AtCjYnx2F9G8ND13QF9R1zdPW8TYFn6qWSL7gbn09jZ3YboKM2IQGQiGoILQjiRgxA2ELivm93jCAWOv0hTazbqFJJ7KlbPgvg065F4iaFRLQy31c-qINwGCjgeSBrSoIYhQQ5goy70rG8P8JLuMBRN2KEYhQlhuavxaqxxDJiHth-P37vBH4jCvZqvfp8.fbwo3ziYBxGXVxMBq-g2nQ",
+  "createdAt": 1746822691114,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMjUzNTQ2OTAiLCJhdXRoX3RpbWUiOjE3NDY4MjI2OTAsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgyNjI5MCwiaWF0IjoxNzQ2ODIyNjkwfQ.IDzu0JGJ2Ns5nKarPm7Otku7jhZZXfif12iv0bEYUypfUVnoP3rN7izEdIgnCniRS0A9KAO0D4mlmlwcXU7gAhdz6RbD-Y_bl-_8RYcL0eowTon5VXEXLp_2ldt3fGSOVvwKxNzDRSz7xee787EDrnzVK4HrvIYrtVJRd3YtvDpyIsnWLk3psnPI6NIpYnq_Y3XI6WRnZF9PEx5pnGVjmiZdfl82mel8480g-P-vB4DzsI7QsB1eQ3anGfH7NK-8whPZA89dcdHAgy9KsJGToMNBYzOnMKjWULHdPDJtK_ZTAGrk8SEKM7gUcfLtV5E2mJFHcd4okfmApdijhEOTdw",
+  "latency": 60000,
+  "realmId": "4620816365025354690",
+  "refresh_token": "RT1-227-H0-17555490902swcgwzsc4j0twppgxyt",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-09T20:31:39.002Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_3",
+    "LegalName": "Sandbox Company_US_3",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-12-03",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-12-03T23:22:58-08:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-12-03T01:04:15-08:00",
+      "LastUpdatedTime": "2020-07-24T04:30:08-07:00"
+    }
+  },
+  "time": "2025-05-09T13:31:38.892-07:00"
+}
+2025-05-09T21:02:47.237Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T21:02:55.155Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..6pPJfoQF7qQ8L5ZDrmzlmA.dnbOsPNqP7qKWn1cOIlD0sfrZLcTbuo_2Sf9IJk3oclabAUmUkzZdAB8uwE8L8np_ACD_3f_qlJxKAoF37_ianF9s74eiEY1KOfdbiYakL_QcSJGYPh-Uu0XR9pg2nC0jVDAw-TGP3S0RFztiMN18cinSs4leSjPMJ4dWpg3ZHRjAasBQW-Q5hNiTE9wPNCAZxlzvPsVguNH6f2rxWINJeHjcglg7eZ-b171E69PjrbNJ-gSDS1xOqDHL5dupGEZWB_-jllkBUrS8AKlSPb-b0PWDywZFBB2IhG7rMAvmzmH1RtY2KKltOhCetuT08A-jSSfo3RS_LgV5ujFTAxH-6h6GlVbqw9cyoN91oFGe4P1QuvV62rcGnVEWYW0JPCs0V5FvXkQwwzBPL6cg929SvA8zYwxJ_elt_iPBJ5hyZ8Ocofftklv1sA7Ho0kF1N08SA7et45C4KLgoRR5G9IyVRuZ0XAP0XYSXrog9nvDIQ9b9Vn7q_NTncRJuoVOyloAcgS-m-G28p-agFNAa1NRwvRY4kXv0cTmsEP3LsJBs-YlAlgWwa3y0z_4iDG1FVNQVJm9KQETeLOrNpjVjym3umSKHsR9KKioEDpts32hIU.PVA8fFlgWMXZU5POUz1Y2A",
+  "createdAt": 1746824575155,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDY4MjQ1NzQsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgyODE3NCwiaWF0IjoxNzQ2ODI0NTc0fQ.VyhMSOQs6AjLtFqtPGhN697m2L7ALfMc1PIphMTiXAMUQDWSkZsraB6KpyZND21zbKwuRl6MMMgUc1lPfVYLZj--Sz46Rc2_Xj_WT2YP-QT6WXWLWfL3YZqiuzBysvIsKAxEjS9peEs6r6LKBw-sfWQQWP1UvQMbe-FT78dtF5mj9ebbOt5xO15ySltsjDOgr912apuZVoc9ZWVQAbfRGy4mvCfYEWypFD3SZO18mydZnpzrMlYQ3wOh8ImTOETRSp5K7ARhMBX1TadWjKf1I3OHVsv6L3bF3Rsg4AMOyGq1UY8RwJT2dtGqNRMdFLvdtsYYnqK0tle5_mjijrYm6A",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-189-H0-1755550974d8oywkowwz7c46yv3jjl",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-09T21:02:58.951Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T14:02:58.807-07:00"
+}
+2025-05-09T21:06:31.314Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726183,
+  "refresh_token": "RT1-189-H0-1755550974d8oywkowwz7c46yv3jjl",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..Igl4oYHz3qVV0UWHyff2rw.6BcDxEOR0NsBpc4LpfQsvYuom4p0BsBubLzt7kOfWEn3d6IIdxpjS-x2zQukUUqiWIH4T_CdBRRBuqdfb7WVrV2zP6FV5q_XZSHHcap8f1-7JCM-FAjDdJORrP3RGzQgVFpSs-HGy64O9vVyX9R1G9jGX6zzOTuMTi7uQkbYLzyd9DMlqFUWl7kMuwuZbQZCJei6vaaXF-zU3Y81YFmp2pFVf9ZD6GfjAR0g7hFo33aui_8-e37jv9lTVsBCJi8wvvfbbgNbg4rSAriQLkojWJtqvET5bJF7WKG6V06jPArDdRdTgjdFMoGdzJmrID2JYY3sn4MOd8QXAI66hlRgky2izjQbTVMiIard_0GEXQkrGwNnm9fpQHaJxwtiiu7sZvC25fMVzxTLVLBag2Hyv4z9nc_n1VkV3ZMNyiP1EZvptkgQwd2W-feP6p_GtfDOHyIxSWGCxApxU_qK-QhywNoy5eUgyn1D0ADYZBiIqrn4c6Ykv-yhqneI_ywc29lQigEPXRzsT8GB6ABYr7hM-h7GRxNeT_CGQ-0ByFMUT0LrlEHsAvU4Gwk-v387-fQIPiGxknD8Hp3lEkQHf-WHr8PglqUJyINLR9T0GfE7pwE.bPfCNRV7ff_cRAFj2uJ7ig",
+  "token_type": "bearer"
+}
+2025-05-09T21:06:35.559Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T14:06:35.450-07:00"
+}
+2025-05-09T21:24:49.526Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T21:24:56.917Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..RNp-OUThemAqq6oi2_pg8Q.UMepe2VLFIeo92B7aEdmF4VTvMS9JPdWuQ1kEjDh16gKCzcels_YyG-ZsyAxqVrZyoX9lrOjBk-7iMTUsDiOlSCQaZ3wH8o7VVfyztBLYDB4WmRKN4B7iKeq-NQ5CR_gywoAiC907uAifkBLTClHtRdi2TGUjbu8ydc9Th7sJ_YNYZCd3_lz_2SuIZjZ8S9HMUlJ5IhcNI2tbm1QLC_qkhQ3ed29yPewRTe_9LQ1HjASPksQo5seJ-kdREHztefR_2X2AOifrcFdmv3OqvaF91AcXIUKpxk57U7o6aaSV5VsSks-hQX2exlsnTFlPwe3Qi9_sdsHRyr6t2TKemGJG9CsE6Z22jCs_1G-yp2yPhlMv3s4K7VNFxMjyh6hEmbuVdl17m0mGibswNnf04u0c3nCj4-xe3KLiLFXZ4RS4MEqCyGuOg_uACPQpuLlI6o0xMEPebFbrO5FaeLNopYyOPGSTwYPHySbmLlEZTXM_YnNMZ5L2e0RBIagbExaHcdn9uheQ7umoWD1YUvwtGQcSTc89iXUPa2O7fzSmpQaSKTcr58GCNANQ0QHAKtcv2PPaJ0K4BWieitZW4QF78jO8HseiWJlV-aFeAbZ7ZPXBlc.jS3KNWJpUHcyp1t3X7y28w",
+  "createdAt": 1746825896917,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDY4MjU4OTUsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgyOTQ5NiwiaWF0IjoxNzQ2ODI1ODk2fQ.OIj11TSlJTW4IZ3wO0Rb3YOPAy2YIHAHawqqDkEbuajAHCPsXP7rs0qWWqognZaaM4P5t7BVXQ1DBVnTxsVFC3cS5uq3g8jq5J_yVQL5vHqTPoKXcGPnM7v1JjFRhinUHpDZczDnHivb9jp2t9voDEHxgUoTXycoVnDMJvn6fv53hU7r1gFQMZiT1bRYeN_ZOxAIEjYHqxbjPpAFFFih-QiASX1wNS5CUix2Deo4XevbZDZZSjJ9T0H4pOqLaIeHPgiW9knqayD823K_t3wZyqJdpUxWE9bgj99rCjvM8YYQ7YmFkDXugtrzOAiTnQQWSH25xb528A1dwNNR8Q_RDA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-153-H0-175555229610bhb2z5rfbnzxl9dc01",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-09T21:24:59.453Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T14:24:59.341-07:00"
+}
+2025-05-09T21:25:04.556Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726392,
+  "refresh_token": "RT1-153-H0-175555229610bhb2z5rfbnzxl9dc01",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..Li0Um9-lim0OxC_JHwe1zw.ynRmWUUXSfnvHRb0doTnEAq8SREPbZECtVtbbgoSpItC6KGJXIpdIS2rf9OOYXOmkQDS-13O7L5Fc-w64KPxHBIVzHiRFsEWbeZPXAQz7bU76YstIC-NTUTy5cGfBF2GDrmYWj8mnUXsTK8TVBkW8zDEM1SXAGQeQ23TQWCUHAZkHhv9V1SjEMel1L8V1v7kZyHRVQbKx2R_fURv5UTzA-bsGjePNKDk03yldrqFeUfD9mXd6esPbHilJbZh1sML31jfto47JwpJ7TfpyMHyup_CoBWNAlWpABaJ7YRUCye7vHKjQlRD6Kvjay3-RHVYnvLkIX4Ty6-1-V_6Zq2PP_QegbRGtpn6QslaZk0QpMmVrHQp7NWUQmDMbW3sCS_JZdtf51AJl5mSXUs0e4vrPBNp5JCAvZpkqef5UMva5AVy8cX99KZ5DzZk4YnELp9l5sigmZRptRcq4VRmRhgCSVHruCReou2H01vrcEPx4EtwlBnwcdJ572r9JepJRO-GfaVdAUzcKdyFn3YguEGRqkemeSO7dGEbVSnMZFPM6wuI9t7OeSIYNqM84Ei7B3Pg8IEH6O1luT8IIiy8goNZwQLM5vVAFNt_gJlq-k3aKMA.6HpXWF_2FGFpHBYn9EztQg"
+}
+2025-05-09T21:25:05.659Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=&redirect_uri=&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T21:25:17.273Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-09T21:25:22.830Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..wf8onAZ4LHu-JYMGM3hPug.fmH0bY8_ps_XI5inUf1pQ0Jh2XJKMHUF0uRRqxCepSrN7MzsxwAk2SbNF7cUdBOjaL8BG0mFD3pEH0jRuyyXqozMDSylFPwJ02sh7vhkzt5dUy8oGOLzFib7svbXs_kjSCaacDCENHTArtimTjbSj1l5zTJ9sAeqJt1SdfscMRWTbjULn4_lBbvYugaMmbd8G3J0ZMXxlsTvLCo8OV_fmD1b4R7Q5kTNhGygtZ0sArbVCf4ggAfs_2caQ4ILFUGcrp-1yTdDdxcyDvm67sHmumFg_GCIlVnzb7kG7FnqfqdUyzjhlbCB37SoucziQOLMZ2zQdzs5GD5MX9JFpHifPrULGwX1z4D3pcPkpT30zIvh1ftn7UC2x8eLQ4nfR0aZpwbgOIX1JNK3gscubjgb1Yv1wJamSllBFGH7JSAp5MtFIN8tXbhDWyB5H7qLJJ9BmnNPIHLgWpHzYxLh282CznNd5_SNyMq9k-zvGlLN8KZDbk_AOpyaL-4WPLHdkDO8io1uZU-zq5ywcC2sYdTj3LiXGxgtDsd78yMfA94Zch2rfUtEGfMPrLICTOO7UOT86DeG6kuO4PRDCQUQwbC4aWnf9SsojM903PzEDPwJgPU.4H5PTlVBX_UGFqZyYoNvJQ",
+  "createdAt": 1746825922830,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDY4MjU5MjEsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgyOTUyMiwiaWF0IjoxNzQ2ODI1OTIyfQ.VDelR8XmB8E8UZlOBCxEHtNOYBzHB6cHTrGDrkLS3vEBtLOkhoMyrqrE1iUC7QbuYGj2fGtbrf1SgIQ_GHpOGG57CJ0-wNH4hX9m4Hw_GJzCHQCUwchCtDpVf1Td0NtbE-dqz7A7-17CnPD6PnIcbPlWg0gEIlg9f7SXu0n94qmwEr0o65Y8J2MYPvx_HQc0oI21gRAL5kofn-_Wb5tuGLyrTEUYB9h_ZTmYuvoHJ03qGsHNdfgrnoJBKzCcGAGp7VNLEAPZFRtqEWm3y1aEfxkUoZiHIsIihKqiKytHVe7CQh-kz-_ocuEsVqtT1k4OTmM3d7F_BDH9nmUBUtdSBQ",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-7-H0-1755552322r4hg60lhyqqfgfamkkwf",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-09T21:25:25.038Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726398,
+  "refresh_token": "RT1-7-H0-1755552322r4hg60lhyqqfgfamkkwf",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..koGU67Sga7b6fvbGAjaWbw.BMQcCFeHFAI_1aF1paDnOw3sJUKwXioF7MHh6Mla-qB1ePiWeuVslggL06BfLceDKP_ibV-XLBw3RvzyBl_Z5Ym_B4BLrLhwCXST-ZcgEVj8Z8LzaqC9uRO1Exj3fu--AY4zt3ssJlpQFNQ7Y-0wj3n9UPl6u9tXrn54Tm0s1zouCXqfzt9lssvMxbQAslMPv9MWp_BwDwtQietDpaUP8PR_y_Fbqice4RtXhnWZDOGsQhHB2JC4CxmEK1TKOBQIOtv4Oe2RsEMO5GS1ME2wUdFn5sLiyBz4lXDoEIhtPF8CLZjOmFZ3kdii_ljauXoR0NL-XFCsC6tjKChvXRBKKlTGft4nqkDYUmXcapA8UMFrGmYHHLhhpyHeq5xsuwerb8SOeHfTwshPr7AVyCz2gMgYx_B7jtIWw_n7U8ZiFVJJ1gupGQq0QIGvoLSPm2XDHkrBKlvB3LWb0XkyVmCVWbZ6bpTjMrxvujdEugFWjbdzxMFLFftaScZ_fGBqjncAutVvC2EgQbjhGXXoHioV-8wTlmeDipVrj0XcTfMzRzKM-2dM1b5y38Dd_syBWnKJ7Fv3MVmH9XyIU6cgn0PnbS1WOSS_ddBOfdhd5e5Q-xw.ILz02bXuue8AqpIwuygeEQ",
+  "token_type": "bearer"
+}
+2025-05-09T21:25:28.025Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T14:25:27.949-07:00"
+}
+2025-05-09T21:25:30.719Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "x_refresh_token_expires_in": 8726392,
+  "refresh_token": "RT1-7-H0-1755552322r4hg60lhyqqfgfamkkwf",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..FwatN8Zf_WDiKgYJfGFL9Q.zrXD8sfPVKz6P7ktsEf2YlKUXacG17p6o-uwFxKl5OemZBXmVWX0l7u-2uMJvDxr5j0iqwjsVO3absU0FPgenveqsJxEDG160g7m_UhvKJZ7ROZUGwqQosMRxcSPa1vevGQvA8qsUCdXmtLYlOd3lIofiDQRo2Io3y-2Gt94k-kUHMGs4f015cFBqUKlLMS7KgM1CKFczP31b2UHv6k8bRF-cGs7Bwc8HWM53CDdDEq8FiSPHcUO9nEjC-nz4deMEkiLdjDgK_zX9Ilzf-fMFuUCjjhhwEYWBwv8CqJYJqeKOeMlFxABBOLg-YJl9avoLDm92AgLeVJEqCVfv4fhuExRuDZv1IBsfDffrOpJbMQlQn8Ziby0bpwYlTxEYoNXTIT1HkDZgn5ZSIIR_QZlfN5T94Wi2fl1-zU_zFA_GLe7MzGb1uY8b1vUtYMInmOC88dBx21T5Kq8z7nBd0HU3H5Uan64N5i28hBTCjf2Ous7kt-NB7A6ByIxsLNlFzGf-E7uG76sqkfTeCF-ERfgbJYxWgLOA_EfcK8To8Tsmt6utCbltYGSrIin2mWm2YOO_cSFcrGDr4r1sNRLog93XI_n7Yn3i2v5xihhz5WYiOA.cuzUUBMuKxMtCqCs6T3_Bg",
+  "token_type": "bearer"
+}
+2025-05-09T21:25:34.036Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T14:25:33.953-07:00"
+}
+2025-05-10T00:10:50.957Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-10T00:11:27.360Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..LLgLhThiFCNHuh0qT0uR5w.vdnbzRVm8swmxw6lUjrRMvTpb1no11m3dNJ6yPjGKmtV5D5Ec7alEEm3aF9u75WPtkx9Y54FnaFc8yNi_444YBu_L9MSXKUPcjL9bY2pxtSlXOpvizfcjm24xc1-E-wMOcGr6PWcdAbM-Fdm32ptJs2QBUX54jxHq7IAkJdnRo9NJHq-6Uq7dnvT9xtquIcwTvA15jDTgc0tSdy72HCS2QW-EdsYU8Hwex2lZvL8vY635wP-SxHxfZbT74f04WC9SKRoEm8QiOMXeChqixQMaeEJgUaq9eIIkNwVLRUULKxH-teP3gPrPLApPM8R-xtFNSzYv-0ilhYS6uC23xWhPVToWvxsYxwwXx8uR9LAEHso_MY9r7NpgnZdvmZ-5w_JaE6vUwzr95SSRHTfrJz0E2q2wrdXjGzCgKHHgMjH0Z4_Oa5D_IBYdkdABrTBp8BPznRma0zrNJBLuZRiD02b9CLaQB0gICUGZCpyhmfSvE6x4bkwpQnmVySkM6wMJhj_q8sDXpuKLr4ZrseEslR_iGVRyUltnMnLIT1-8It_OA8SfwnHaeDA7t-8UnP3qCGlAPsweXwFboxjEDja9PQ0am2v-jNNT0i90kE23L_CUeQ.DwPHAQYqnQyA5553wk4ShQ",
+  "createdAt": 1746835887360,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDY4MzU4ODYsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NjgzOTQ4NywiaWF0IjoxNzQ2ODM1ODg3fQ.nT3S1h-iNpeN2p77IL1jXmTHqFkUTKrIUPBcWXcbtzXfBPpHo3SO_RUecbr9807bCLSKBnXeKhxHGBdznRzEgQd6nKj73ax6Ngq9Ny2IOvscN1jKq1MQgp65JqjkDqnjYdwxF3ZhDt4L-EzQZIWpUQ5htcerBm4Ps56psdfAG1ChdZUeMr1VycmFefU8Q_q_2T2L004uA1AfHMjcugPlnlzMEvJ0oX_4GZ-WmMDnBtECRWCiD0eNhiehmsZhn19MHcEin6AHciYd598ATqEBZ9w0EGpLp6emyElyHesbz3bbHb1L39r9Cv6KDW0JjAZlg2lpRm0mBhl4DM-QDUX6FA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-115-H0-175556228794y9moezxof29qlizoyi",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-10T00:11:34.727Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T17:11:34.595-07:00"
+}
+2025-05-10T00:11:37.834Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "token_type": "bearer",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..E7GrizqMwOpFTcoriDKmhA.MX-s2cnbLAlYztyvCNhPP42Fu9PY5QLzfCztkIqiY8A33QdiwmXM2NSZUdUqM_yAx6FjJ17qjzCi9ljXX7gUwHEUYqUtHvidIwqbYBs_OhK3Cz2UopL-STRjzDABMEvakKd_ZmhdTEU_zSCeAOLx6WMXd5OOkiVL3a7IxGbdz4_kPB_dAJU1eb2LQ7NAe2zYCibTlo1iJ6DJgyWJNjiYR2Ws5Vs6-84Jf9n-qqJZxyh6SXGR1f6UycN1CDN9SBE8s1EWBGFIKjSXoPZvhbwIXdOlBYKzAzwsr0TTlqFfQOvtbDwWM8hJPMAzknM2x2XVhlabAwCZjc96MLuO6W6e6k5LLB_Yk-asvg_A7hyelfjgNUaxYBTXhQO2DhfxTjbpy8PbtiKCjfvjTueLdN4PIp3I6KEqOmLkK_3bLEDZemB5HibwEb4NCHJedI-MTjw0ub_KlaJ8mTryYHJo0ilByX5qiCo6R1f3lWKTwPTV9Dcm3C0PIvoFW0zqr981XSo738NbZTUMqWw4lhSfSV694EbtPn_-a4mndOTlf39Lp-RYmkWnMX2NL618puDMeU9c-EijSWMAmzCIJeLN6ZGa1uHr2rFb7Q7Fgs-r4KIxF1w.zlZWa38JYqXA7NJkRoR3qA",
+  "refresh_token": "RT1-115-H0-175556228794y9moezxof29qlizoyi",
+  "x_refresh_token_expires_in": 8726390
+}
+2025-05-10T00:11:42.998Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "refresh_token": "RT1-115-H0-175556228794y9moezxof29qlizoyi",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..BQxOOrueC7KccDfvBu1b0Q.ZjGQuObhaktu86pQE-EEuCFl8cXT6jbm0ftFM2sjTsjOoJWsHQXVAHA-lslH-IEC1IdoKM5-RmQUvobgnA8if0NeEkaE5bZs0sJE5AquQ7SyWNR6rV-AifWrGGOf5hkZz9c5J0X_AmAxLceVVV-Cl_P4jNt3GpUoDKBTsmiWtOIuIU8CUl2XGPPmT9RFIO47bqRz4Me4LylqaiVKXa3ExtPMsmwu4FXLmQQR5svU2XsWm5y7MCTQVVcwg6LJn8dyz74S3Ir028uqWliF6f5Ft5lScHAQy2tYGAoDsvahaw0f7oYK7nhw5a4EJ2RIobHg6WX8f44noRPIuTKh1Z7kLknH0Z8Pu6srVRCpBNrWzD_Wh_IPVswTCG77su6EYXpR1OXrBcSyvdnzMWluTo6aZwnoKSoS9qb_JDP2Zv8q55O9eC6P0-Nxm-5qUchKz5CRxRdzP755XDFxmaSQ6kRl0IlbtubKD9PGSm6GVO5KY3zJn_45q2xBpVyyfZxfWo4O01XaeQjp6T5un0aY95DiB0U-XBzVunzUeTlFKiT6-46kzG-CDR2dYXZCnGiYQLH-ieO77nC-GhVZS7tNEhX6zsu5UiUY5o18V2bp598AcQ0.pUZ2fozZBQEKhrayBbdp1g",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726385
+}
+2025-05-10T00:11:45.970Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T17:11:45.883-07:00"
+}
+2025-05-10T00:11:55.784Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T17:11:55.689-07:00"
+}
+2025-05-10T00:11:59.782Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..OF2QMUa4CiS5U0pRfrCCRg.1Xph_xhD900IAUG9ECchS8kLaP3IcCEnR6ZdYiQxpzkejSEyfoys_yGM6EmkgXRPMYL5PMsmTsLSlYJMlPjix0D9u17PFoyHOs0J0C2Gf3xiCf-QymBbXVi5VO0OkCDygN5O29KcZd2klFv-X2EZjQpUqm-mK2u6V9bjn5z37X3zbpqexim8t-7sUYBWVahuf1CiQ6LGn0igVWJkexXO2PjwQkDmvErW8h208PjuFIBzPkDHNG8DhxpALQCe8lxIc22kpb1wa9JrJleDGynse1CAl5UskVdVleEh3Wzkg16XqRUdRIfQ1aHMCkjfzS_OwD9cWqeh-o3b2xzLVwuo4YRaSjt5guCRTevnHEmEy39TrkflZEo7DKFkIm78CP8M1FAWJBqRloSpWoKyALaoOBqJwL6gu3RrIR2bRrmGlxVfN3dynjeQtS-zHttlBT9FyjQBJNG7SbDrEk52nmBG1CUizwlJOEg-jEN2ojHpo-ZRDuu64ndZubPTitPXLn1SNtSOL7FiMc3b1BrlrhLlTeL4iRuKQn4EGalT6TCCcBRvUH9o3QBLiQj31q2L7lhpY2NS3ho2Kc8j-FP01VBAW7TE6MuB8Q6J2WbfnCFuAcw.PCL4C5nbeUadLCbgW6kduQ",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726368,
+  "refresh_token": "RT1-115-H0-175556228794y9moezxof29qlizoyi"
+}
+2025-05-10T00:12:02.656Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-09T17:12:02.547-07:00"
+}
+2025-05-14T07:06:37.739Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-14T07:08:07.443Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..i3T6pUDhFWeivrpa2ryBgg.3cL9o1U6BzgqMW7OOBs4Ja-zGh3QBMSdll69FBYkJeruVw2TkDnfoVwsmOi5RkG63dEh08Dz4Jh5RU2H7alQ7cAeAHRvXAY9SKJR8h4oQTIT3R7atb3ETVuESLHPni5Hy-KNpXRdLTbNY8W3_p3w3Ifbfd4p8MD_r-46EmxmZcTe6HBT_Tas2wCsT4bX8gD-DFY761r8qM0Ib21eqI0detVZzljcEyEYNsWYx4a0ZC0z1VElTmPBd8JuPf-fC2w6UeOJC1h4V1-mHS_eKksVX1VJbEz1QbQ5_XtFhhkPm6eGZzofNDPFbuUthXyX4nMNuZRbOWFVuZtNtKAtCpefAqltnfjFPzNTzQPuwcv3KYAGNVflZHoJC3xzGpgJr_x9NRJh9altAQPKGqi6Dm3DqFkTNvWkYCNMuOxqdxXyzR7fIicIzpgb8baKqnLmjqL9JQaEUE16qHQP-34IYdPGse86AyB8F5ZFVfco5CgfyrRTD6-c__Wsp6mtcCAapZDe5RI4iV1-YvnfIF6QYIFqeZ2ZFqGsJyJNEzJprepy2G_D7G8p_qRj2esjxscOt_xbnUk7YPcMkmQX_rxYB7bLBrwBZWQpkairn4wOHrofYTI.qXBsYYRofgZmLBk6_0d7xA",
+  "createdAt": 1747206487442,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDcyMDY0ODYsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NzIxMDA4NywiaWF0IjoxNzQ3MjA2NDg3fQ.Fqh9ScNPVYEbU_6jG4fYKdodTvbN15DwEZ60bgTIxh-GwoC0MsT35bcDH2vUNJyMVB9V5O64s-oCG7NajchWiKGgStvEhp82CJFpp9fAS2JV7Br_8jOEB-Yv6WojcDNVQt9pJCSkbm8UAmN9IGBxLkY8w7ihqThfh_CFAtTACqTKa53qG4_0GfwCYclEtDnq8oYDIYet_XMnlfakIyXWBO9RWpMRyjrpjcjw6cu2ayr0y_7ncrGNUceEtQ3g4SzdGtnK9HH31UcC9ENu8W4Inioe5DHzZo3rU2ajLUSAvbhuOXrgzBDmbK8qGCr-khVJHrl9LNHUpgAEbhQoTh23EA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-148-H0-1755932887ggagj1mby6vyf5yjibrx",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-16T07:33:44.485Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-16T07:34:06.314Z info: Create Token response is : {
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..Rs8lNkRNQkkrrenXjlN1Jw.1ZIpvC1wBsOEbEedDWBkLYZoyV5tXa6nPwxTYmkqp-Nc4Z2qbfd4g9CoXmjQuw-QcMscmeA5gWzm5snPAlRgqDfVLow7A-l3GyTLeuG-QQ37zclmGZH7b2DiPWPqWsE54pFFmTzdDRlLsOAefGF_z_ASrvIQAq3MLAgifeuW_s0aWXDdp9kdhwrderLLn9v9tQh1Jc2sWXph_UvBeHZXxJID5Obcu_c3PsBfXVaK1uVv6NqEKONL18vpy-fHwFrsKua1KVHrHls_YYBzk1l6LGaYhpcTe32rSQ24i5WQo8SRcGlaTnWpql0PL6Jcz-vzrXB5xKJLnUpX7gk8-ZXcGpPfBSK-qNzU5iicHq0gU8Dsa3NTpzFJFEW49ehnsq0dSeVrictHX72EnBtdow_l5HQp7TsgCNYafQ2O7WBRGSE4wkdEcIWhFgn0SckrBgPhzs-2m_LBMo1orxhJPhOkXdNg6GANxLE_edaS1q1CSJoarya_OKYTs7zZEA0wJzSEVLiGD_-Bit3s8uNMtjEdGJP3BLV32w3RWDdth9oFivajM6ZkCIK6dWon_W3mipE-_Q4WhpP_S0DhLAY6JUH_UZlR19mWwxs-xKB8cUPX_dQ.-iGgS6PO0dDIZoXgxXntOw",
+  "createdAt": 1747380846314,
+  "expires_in": 3600,
+  "id_token": "eyJraWQiOiJPUElDUFJEMDUxMDIwMjMiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOlsiQUJNNUJKRkFyamlWczlZSFBZN1RraWVQU1pua3NNSnd1ZHA0RjFKUmV1VFgyTWV1VGMiXSwic3ViIjoiOTJlNGYyNWQtMzAwOC00NWYwLTgyZjctYTdjM2U2ZTZmNDE4IiwicmVhbG1pZCI6IjQ2MjA4MTYzNjUwMDU2MDI4MjAiLCJhdXRoX3RpbWUiOjE3NDczODA4NDUsImlzcyI6Imh0dHBzOi8vb2F1dGgucGxhdGZvcm0uaW50dWl0LmNvbS9vcC92MSIsImV4cCI6MTc0NzM4NDQ0NiwiaWF0IjoxNzQ3MzgwODQ2fQ.B1KKIVFVCgExeDfiFyh9mjKA0rqYscuy0muMMzq88IircZXRtM35UsTGYZh6IhGrNgbHz7m6Ja_mrzcBIBUU2xrhSsEbmNKzE41ee5ecfd9AwwX6MNCboyIdRNLs7RPUoMnV6uFWWFgRfVTntjQK6Fk1Sqyi_hV0SCkalSe_4ojLaHMgJp8hKESgrMChdHBcGarMUS4raKDH-hLeHherY13xvwd5SIJsZMVDxU96yeGfbTQHLoc4Z_To7H2x7zt_oOiPJHkv9_FHvviQtnwba0a0DqPxJp4mFjJCx686nqOOa4ErCefmbSmyx1zD3Zgbv3Tv8trmA0mOP9zOI3guIA",
+  "latency": 60000,
+  "realmId": "4620816365005602820",
+  "refresh_token": "RT1-209-H0-17561072461qob5pi76cf09920cfku",
+  "state": "intuit-test",
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400
+}
+2025-05-16T07:34:09.405Z info: Refresh Token () response is : {
+  "expires_in": 3600,
+  "refresh_token": "RT1-209-H0-17561072461qob5pi76cf09920cfku",
+  "token_type": "bearer",
+  "access_token": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwieC5vcmciOiJIMCJ9..xo98Xs3_EZExYVFzBQsL0Q.bNeki3cPVZD5NPqjZ19F75ndWe78K_AFhIdYSQlMunzBxXlaix8Vj9mPzyFxXMwkdPABYUCKMSX3flVAwxvSpbX3pHgCe5rPThrMBx-rw5FHZD_GC5w5yr5QV6QlAsJoNYNGK7ZoS7OaTLbqfR-WCp4XH_I9gG00pasHoVDK_WCCKfOy-q26My53Wv5gtNw9-YvhNuKDPRvU755RdfnAa33tAQu47NnYhuWIJCN8SseTwh8Ad15IsfP04LNZvtCWYz4cOYPDIRRdjicqmxdYe8x3j-k0Z2SdACz1Deikfcvim8Ixm4zXL_p_vhusYzTh_i0s-oql0NJXyxx38h_gEkv0acm7v26G8Jj-k2Lxm11iov8t1tRYA0odDF1srImPq7zYPV2fdRNKIKXgU9ad4uEqTGWh41kj3nXF6l_h5erVmmxuXEscUXfWPRI8uk1th6X9Q0Oxouv596UnDi6kvnPDODyHP3ZOK5_T3YvGPupydYjXl7mWQirZCrk5QTnpR3YjbCMs00QAer7OzRSeEMS9CPAcmwQv6HFDsNBrWj9es4hMAgsgWvN6IqHXzo2T1Tye6ABsySJGZweXhjOX4CBU5JVmulpU4Y2f6JjtxJ0.-FUv_0ZGECkTo4GodxTfzA",
+  "x_refresh_token_expires_in": 8726397
+}
+2025-05-16T07:34:14.079Z info: The makeAPICall () response is : {
+  "CompanyInfo": {
+    "CompanyName": "Sandbox Company_US_1",
+    "LegalName": "Sandbox Company_US_1",
+    "CompanyAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "LegalAddr": {
+      "Id": "1",
+      "Line1": "123 Sierra Way",
+      "City": "San Pablo",
+      "CountrySubDivisionCode": "CA",
+      "PostalCode": "87999",
+      "Lat": "36.6788345",
+      "Long": "-5.4464622"
+    },
+    "CustomerCommunicationEmailAddr": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "PrimaryPhone": {},
+    "CompanyStartDate": "2019-07-27",
+    "FiscalYearStartMonth": "January",
+    "Country": "US",
+    "Email": {
+      "Address": "noreply@quickbooks.com"
+    },
+    "WebAddr": {},
+    "SupportedLanguages": "en",
+    "DefaultTimeZone": "America/Los_Angeles",
+    "NameValue": [
+      {
+        "Name": "NeoEnabled",
+        "Value": "true"
+      },
+      {
+        "Name": "NonTracking",
+        "Value": "false"
+      },
+      {
+        "Name": "IsQbdtMigrated",
+        "Value": "false"
+      },
+      {
+        "Name": "CompanyType",
+        "Value": "Other"
+      },
+      {
+        "Name": "SubscriptionStatus",
+        "Value": "SUBSCRIBED"
+      },
+      {
+        "Name": "OfferingSku",
+        "Value": "QuickBooks Online Plus"
+      },
+      {
+        "Name": "PayrollFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "AccountantFeature",
+        "Value": "false"
+      },
+      {
+        "Name": "QBOIndustryType",
+        "Value": "Landscaping Services"
+      },
+      {
+        "Name": "ItemCategoriesFeature",
+        "Value": "true"
+      },
+      {
+        "Name": "AssignedTime",
+        "Value": "2019-07-28T20:20:29-07:00"
+      }
+    ],
+    "domain": "QBO",
+    "sparse": false,
+    "Id": "1",
+    "SyncToken": "9",
+    "MetaData": {
+      "CreateTime": "2019-07-27T01:03:23-07:00",
+      "LastUpdatedTime": "2019-12-03T10:49:06-08:00"
+    }
+  },
+  "time": "2025-05-16T00:34:13.999-07:00"
+}
+2025-05-16T07:34:24.572Z info: The Authorize Uri is :https://appcenter.intuit.com/connect/oauth2?client_id=&redirect_uri=&response_type=code&scope=com.intuit.quickbooks.accounting%20openid%20profile%20email&state=intuit-test
+2025-05-16T07:34:33.893Z error: Get makeAPICall ()  threw an exception : {
+  "message": "Request failed with status code 400",
+  "name": "AxiosError",
+  "stack": "AxiosError: Request failed with status code 400\n    at settle (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:2031:12)\n    at IncomingMessage.handleStreamEnd (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:3148:11)\n    at IncomingMessage.emit (node:events:530:35)\n    at endReadableNT (node:internal/streams/readable:1698:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\n    at Axios.request (/Users/rgupta24/Documents/GitHub/oauth-jsclient/sample/node_modules/axios/dist/node/axios.cjs:4258:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)",
+  "config": {
+    "transitional": {
+      "silentJSONParsing": true,
+      "forcedJSONParsing": true,
+      "clarifyTimeoutError": false
+    },
+    "adapter": [
+      "xhr",
+      "http",
+      "fetch"
+    ],
+    "transformRequest": [
+      null
+    ],
+    "transformResponse": [
+      null
+    ],
+    "timeout": 0,
+    "xsrfCookieName": "XSRF-TOKEN",
+    "xsrfHeaderName": "X-XSRF-TOKEN",
+    "maxContentLength": -1,
+    "maxBodyLength": -1,
+    "env": {},
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "Bearer ",
+      "User-Agent": "Intuit-OAuthClient-JS_4.1.0_Darwin_24.4.0_darwin",
+      "Accept-Encoding": "gzip, compress, deflate, br"
+    },
+    "url": "https://sandbox-quickbooks.api.intuit.com/v3/company//companyinfo/",
+    "method": "get",
+    "responseType": "json",
+    "allowAbsoluteUrls": true
+  },
+  "code": "ERR_BAD_REQUEST",
+  "status": 400
+}
