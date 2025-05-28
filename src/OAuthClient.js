@@ -43,6 +43,7 @@ const Token = require('./access-token/Token');
  * @param {string} config.appSecret
  * @param {string} config.appKey
  * @param {string} [config.cachePrefix]
+ * @param {Object} [config.logger] - Custom logger instance (if provided, logging will be enabled automatically)
  */
 function OAuthClient(config) {
   this.environment = config.environment;
@@ -50,13 +51,23 @@ function OAuthClient(config) {
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
   this.token = new Token(config.token);
-  this.logging = !!(
-    Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true
-  );
-  this.logger = null;
+
+  // If a custom logger is provided, use it and enable logging
+  if (config.logger) {
+    this.logging = true;
+    this.logger = config.logger;
+  } else {
+    // Use existing logging behavior
+    this.logging = !!(
+      Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true
+    );
+    this.logger = null;
+  }
+
   this.state = new Csrf();
 
-  if (this.logging) {
+  // Only create winston logger if logging is enabled but no custom logger was provided
+  if (this.logging && !config.logger) {
     const dir = './logs';
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
@@ -413,7 +424,51 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Get makeAPICall ()  threw an exception : ', JSON.stringify(e, null, 2));
+      let errorMessage = 'Get makeAPICall () threw an exception : ' + JSON.stringify(e, null, 2);
+      let errorObject = null;
+
+      // If there's a response with data, log the response body for text or json content
+      if (e.response && e.response.data) {
+        try {
+          let responseBody = '';
+          const contentType = e.response.headers && e.response.headers['content-type'];
+
+          if (contentType) {
+            if (contentType.includes('application/json')) {
+              responseBody = typeof e.response.data === 'object'
+                ? JSON.stringify(e.response.data, null, 2)
+                : e.response.data;
+              // Attach the error object if it's JSON
+              errorObject = e.response.data;
+            } else if (contentType.includes('text/')) {
+              responseBody = e.response.data;
+            }
+          } else {
+            // If no content-type, try to stringify if it's an object
+            responseBody = typeof e.response.data === 'object'
+              ? JSON.stringify(e.response.data, null, 2)
+              : e.response.data;
+            // Attach the error object if it appears to be JSON (object)
+            if (typeof e.response.data === 'object') {
+              errorObject = e.response.data;
+            }
+          }
+
+          if (responseBody) {
+            errorMessage += ' | Response Body: ' + responseBody;
+          }
+        } catch (bodyParseError) {
+          // If we can't parse the response body, just note that
+          errorMessage += ' | Response Body: [Could not parse response body]';
+        }
+      }
+
+      if (errorObject) {
+        this.log('error', errorMessage, { body: errorObject });
+      } else {
+        this.log('error', errorMessage);
+      }
+
       throw e;
     });
 };
