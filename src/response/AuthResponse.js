@@ -47,16 +47,34 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
   
   // Handle response data
   if (response) {
+    // Set intuit_tid from headers if available
+    this.intuit_tid = (response.headers && response.headers.intuit_tid) || '';
+
     if (response.data) {
       // Handle axios response
       this.body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
-      this.json = response.data;
       
       // Handle QuickBooks API error response
       if (response.data.Fault) {
         this.json = {
           Fault: response.data.Fault,
           time: response.data.time || new Date().toISOString(),
+          intuit_tid: this.intuit_tid,
+        };
+        // Store the full response including headers and status
+        this.response = {
+          ...response,
+          data: this.json,
+          status: response.status || 400,
+          statusText: response.statusText || 'Bad Request',
+        };
+      } else {
+        // Store the raw response data
+        this.json = response.data;
+        // Store the full response for successful responses
+        this.response = {
+          ...response,
+          data: this.json,
         };
       }
     } else if (response.body) {
@@ -64,29 +82,44 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
       this.body = response.body;
       try {
         const parsedBody = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
-        this.json = parsedBody;
         
         // Handle QuickBooks API error response
         if (parsedBody.Fault) {
           this.json = {
             Fault: parsedBody.Fault,
             time: parsedBody.time || new Date().toISOString(),
+            intuit_tid: this.intuit_tid,
+          };
+          // Store the full response including headers and status
+          this.response = {
+            ...response,
+            data: this.json,
+            status: response.status || 400,
+            statusText: response.statusText || 'Bad Request',
+          };
+        } else {
+          // Store the raw response data
+          this.json = parsedBody;
+          // Store the full response for successful responses
+          this.response = {
+            ...response,
+            data: this.json,
           };
         }
       } catch (e) {
         this.json = null;
+        this.response = response;
       }
     } else {
       this.body = '';
       this.json = null;
+      this.response = response;
     }
   } else {
     this.body = '';
     this.json = null;
+    this.response = null;
   }
-
-  // Set intuit_tid
-  this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
 };
 
 /**
@@ -156,6 +189,7 @@ AuthResponse.prototype.getJson = function getJson() {
         this.json = {
           Fault: this.json.Fault,
           time: this.json.time || new Date().toISOString(),
+          intuit_tid: this.intuit_tid,
         };
       }
       

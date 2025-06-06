@@ -25,9 +25,43 @@ class OAuthError extends Error {
     this.name = 'OAuthError';
 
     // Set error properties
-    this.code = code || 'OAUTH_ERROR';
+    this.message = message;
     this.description = description || message;
     this.intuitTid = intuitTid || '';
+
+    // Set error code
+    if (typeof code === 'number' || (typeof code === 'string' && /^\d{3}$/.test(code))) {
+      const statusCode = parseInt(code, 10);
+      switch (statusCode) {
+        case 400:
+          this.code = '400';
+          break;
+        case 401:
+          this.code = '401';
+          break;
+        case 403:
+          this.code = '403';
+          break;
+        case 404:
+          this.code = '404';
+          break;
+        case 429:
+          this.code = '429';
+          break;
+        case 500:
+          this.code = '500';
+          break;
+        case 502:
+        case 503:
+        case 504:
+          this.code = statusCode.toString();
+          break;
+        default:
+          this.code = code;
+      }
+    } else {
+      this.code = code || 'OAUTH_ERROR';
+    }
 
     // Ensure proper prototype chain for instanceof checks
     Object.setPrototypeOf(this, OAuthError.prototype);

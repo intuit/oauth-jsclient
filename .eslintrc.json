@@ -7,16 +7,7 @@
     "strict": ["error", "safe"],
     "prefer-object-spread": "off",
     "no-param-reassign": "off",
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-      }
-    ],
+    "comma-dangle": ["error", "always-multiline"],
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off"
   },

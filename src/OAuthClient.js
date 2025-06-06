@@ -61,6 +61,13 @@ function OAuthClient(config) {
   this.logger = null;
   this.state = new Csrf();
 
+  // Configure Axios instance
+  this.axiosInstance = axios.create({
+    validateStatus(status) {
+      return status >= 200 && status < 500;
+    },
+  });
+
   if (this.logging) {
     const dir = './logs';
     if (!fs.existsSync(dir)) {
@@ -69,8 +76,10 @@ function OAuthClient(config) {
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+        winston.format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss.SSS Z',  // This will include local timezone offset
+        }),
+        winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
       ),
       transports: [
         new winston.transports.File({
@@ -293,7 +302,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       this.token.setToken(json);
       this.log(
         'info',
-        'Refresh usingToken () response is : ', safeStringify(authResponse && authResponse.json)
+        'Refresh usingToken () response is : ', safeStringify(authResponse && authResponse.json),
       );
       return authResponse;
     })
@@ -375,7 +384,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
       const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       this.log(
         'info',
-        'The Get User Info () response is : ', safeStringify(authResponse && authResponse.json)
+        'The Get User Info () response is : ', safeStringify(authResponse && authResponse.json),
       );
       return authResponse;
     })
@@ -396,127 +405,220 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
  * @param {string} params.responseType (optional) default is json - options are json, text, stream, arraybuffer
  * @returns {Promise}
  */
-OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
-  return new Promise((resolve) => {
-    params = params || {};
-    
-    // Validate required parameters
-    if (!params.url) {
-      throw new ValidationError('URL is required for API call');
-    }
+OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, headers: customHeaders, body, params, timeout, responseType, maxRetries = 3 }) {
+  if (!url) {
+    throw new ValidationError('URL is required for API call');
+  }
 
-    const responseType = params.responseType || 'json';
+  let attempt = 0;
+  let lastError = null;
 
-    const baseHeaders = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
+  while (attempt < maxRetries) {
+    try {
+      const requestConfig = {
+        method: method || 'GET',
+        headers: {
+          ...this.authHeader(),
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': OAuthClient.user_agent,
+          ...customHeaders,
+        },
+        timeout: timeout || 30000,
+        responseType: responseType || 'json',
+        data: body,
+        params,
+      };
 
-    const headers = params.headers && typeof params.headers === 'object'
-      ? { ...baseHeaders, ...params.headers }
-      : { ...baseHeaders };
+      // Make the API call
+      const response = await this.axiosInstance(url, requestConfig);
+      
+      // Wrap successful response in expected format
+      return {
+        status: 'success',
+        data: response.data,
+      };
+    } catch (error) {
+      attempt += 1;
+      lastError = error;
 
-    const request = {
-      url: params.url,
-      method: params.method || 'GET',
-      headers,
-      responseType,
-      timeout: params.timeout,
-    };
+      // Detailed error analysis and logging
+      const errorAnalysis = {
+        // Basic error properties
+        basic: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+          code: error.code,
+        },
+        // Response analysis
+        response: error.response ? {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          headers: error.response.headers,
+          // Deep analysis of response data
+          data: error.response.data,
+          // Specific Fault object analysis
+          fault: error.response.data && error.response.data.Fault ? {
+            type: error.response.data.Fault.type,
+            error: error.response.data.Fault.Error ? error.response.data.Fault.Error.map(err => ({
+              message: err.Message,
+              detail: err.Detail,
+              code: err.code,
+              element: err.element,
+              additionalInfo: err.additionalInfo
+            })) : null,
+            timestamp: error.response.data.time
+          } : null,
+          // OAuth error fields
+          oauth: {
+            error: error.response.data && error.response.data.error,
+            error_description: error.response.data && error.response.data.error_description
+          }
+        } : null,
+        // Request analysis
+        request: error.request ? {
+          method: error.request.method,
+          path: error.request.path,
+          headers: error.request.headers
+        } : null,
+        // Context
+        context: {
+          attempt,
+          url,
+          timestamp: new Date().toISOString()
+        }
+      };
 
-    if (params.body) {
-      request.data = params.body;
-    }
+      // Log the detailed error analysis
+      this.log('error', 'Exception Analysis:', {
+        hasFaultObject: !!(error.response && error.response.data && error.response.data.Fault),
+        faultType: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.type,
+        faultErrors: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.Error,
+        fullAnalysis: errorAnalysis
+      });
 
-    resolve(this.getTokenRequest(request));
-  })
-    .then((res) => {
-      const { body, ...authResponse } = res;
-      this.log('info', 'The makeAPICall () response is : ', safeStringify(authResponse.json));
+      // Log the error for debugging
+      this.log('error', 'API call failed:', {
+        error: (error.response && error.response.data) || error.message,
+        status: error.response && error.response.status,
+        attempt,
+        url,
+      });
 
-      // Handle custom response validation if provided
-      if (params.validateResponse) {
-        params.validateResponse(res);
-      }
+      // Handle Axios errors
+      if (error.response) {
+        const { status, data, headers: responseHeaders } = error.response;
+        const intuitTid = responseHeaders && responseHeaders.intuit_tid;
 
-      if (authResponse.json === null && body) {
-        return {
-          ...authResponse,
-          body,
-        };
-      }
-      return authResponse;
-    })
-    .catch((e) => {
-      this.log('error', 'Get makeAPICall () threw an exception : ', safeStringify(e));
-
-      // Handle network errors first
-      if (e.code === 'ECONNRESET' || e.code === 'ECONNABORTED' || e.code === 'ENOTFOUND' || e.code === 'ETIMEDOUT') {
-        throw new OAuthError(
-          e.message,
-          'NETWORK_ERROR',
-          'A network error occurred while making the request',
-          e.response && e.response.headers && e.response.headers.intuit_tid
-        );
-      }
-
-      // Handle timeout errors
-      if (e.code === 'ECONNABORTED' || e.message.includes('timeout')) {
-        throw new OAuthError(
-          `Request timeout of ${params.timeout}ms exceeded`,
-          'TIMEOUT_ERROR',
-          'The request took too long to complete',
-          e.response && e.response.headers && e.response.headers.intuit_tid
-        );
-      }
-
-      // Handle API errors
-      if (e.response) {
-        const { data: errorData, status, headers: { intuit_tid: intuitTid } = {} } = e.response;
+        // Handle 400 errors with Fault object
+        if (status === 400) {
+          if (data && data.Fault) {
+            const fault = data.Fault;
+            const faultError = fault.Error && fault.Error[0];
+            
+            // Extract detailed error information from Fault object
+            const errorMessage = (faultError && faultError.Message) || 'Bad Request';
+            const errorCode = (faultError && faultError.code) || '400';
+            const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
+            const faultType = (fault && fault.type) || 'ValidationFault';
+            
+            // Create a more descriptive error message
+            const detailedMessage = `${errorMessage} (${faultType})`;
+            
+            throw new OAuthError(
+              detailedMessage,
+              errorCode,
+              errorDetail,
+              intuitTid,
+              {
+                faultType,
+                fault: fault, // Include the full fault object for debugging
+                timestamp: data.time // Include timestamp if available
+              }
+            );
+          }
+          
+          // Handle other 400 errors
+          throw new OAuthError(
+            (data && data.error) || 'Bad Request',
+            '400',
+            (data && data.error_description) || 'Request validation failed',
+            intuitTid
+          );
+        }
 
         // Handle rate limit errors
         if (status === 429) {
           throw new OAuthError(
-            errorData.error || 'Rate limit exceeded',
-            'RATE_LIMIT_EXCEEDED',
-            errorData.error_description || 'Too many requests, please try again later',
+            'Rate limit exceeded',
+            '429',
+            'Too many requests',
             intuitTid
           );
         }
 
-        // Handle other API errors
-        if (errorData && errorData.error) {
-          throw new OAuthError(
-            errorData.error,
-            'API_ERROR',
-            errorData.error_description || errorData.error,
-            intuitTid
-          );
-        }
-
-        // Handle non-JSON error responses
+        // Handle other HTTP errors
         throw new OAuthError(
-          e.response.statusText || 'API Error',
-          'API_ERROR',
-          e.response.statusText || 'An error occurred while making the request',
+          (data && data.error) || error.message || 'Unknown error',
+          status === 500 ? 'INTERNAL_SERVER_ERROR' : status.toString(),
+          (data && data.error_description) || 'An error occurred during the API call',
           intuitTid
         );
       }
 
-      // If it's already an OAuthError, just rethrow it
-      if (e instanceof OAuthError) {
-        throw e;
+      // Handle network errors
+      if (error.code === 'ECONNABORTED') {
+        throw new OAuthError(
+          `Request timeout of ${timeout || 30000}ms exceeded`,
+          'TIMEOUT_ERROR',
+          'The request took too long to complete'
+        );
       }
 
-      // For any other errors, wrap them in OAuthError
+      // Handle other errors (no response received)
+      if (error.request) {
+        throw new OAuthError(
+          'Connection reset by peer',
+          'NETWORK_ERROR',
+          'The request was made but no response was received'
+        );
+      }
+
+      // Handle any other errors
       throw new OAuthError(
-        e.message || 'Unknown error occurred',
-        'API_ERROR',
-        e.message || 'An unknown error occurred while making the request',
-        e.response && e.response.headers && e.response.headers.intuit_tid
+        error.message || 'Unknown error',
+        'OAUTH_ERROR',
+        'An unexpected error occurred'
       );
-    });
+    }
+
+    // Add delay between retries
+    if (attempt < maxRetries) {
+      const delay = 2 ** attempt * 1000;
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  // If we've exhausted all retries, throw the last error
+  if (lastError) {
+    if (lastError instanceof OAuthError) {
+      throw lastError;
+    }
+    throw new OAuthError(
+      lastError.message || 'Maximum retry attempts reached',
+      'MAX_RETRIES_EXCEEDED',
+      'The request failed after multiple retry attempts'
+    );
+  }
+
+  // This should never be reached, but TypeScript needs it
+  throw new OAuthError(
+    'Unexpected error in makeApiCall',
+    'UNKNOWN_ERROR',
+    'An unexpected error occurred in the API call'
+  );
 };
 
 /**
@@ -592,7 +694,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       this.log(
         'error',
         'The getKeyFromJWKsURI () threw an exception : ',
-        safeStringify(e)
+        safeStringify(e),
       );
       throw e;
     });
@@ -634,7 +736,7 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
           'Response has an Error',
           response.status.toString(),
           response.statusText,
-          response.headers && response.headers.intuit_tid
+          response.headers && response.headers.intuit_tid,
         );
       }
 
@@ -898,7 +1000,7 @@ OAuthClient.prototype.validateResponse = function validateResponse(response) {
       'Rate limit exceeded',
       'RATE_LIMIT_EXCEEDED',
       'Too many requests, please try again later',
-      intuitTid
+      intuitTid,
     );
   }
 
@@ -907,7 +1009,7 @@ OAuthClient.prototype.validateResponse = function validateResponse(response) {
       'Unauthorized',
       'UNAUTHORIZED',
       'Invalid or expired access token',
-      intuitTid
+      intuitTid,
     );
   }
 
@@ -916,7 +1018,7 @@ OAuthClient.prototype.validateResponse = function validateResponse(response) {
       'Forbidden',
       'FORBIDDEN',
       'Insufficient permissions',
-      intuitTid
+      intuitTid,
     );
   }
 
