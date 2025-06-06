@@ -792,7 +792,7 @@ describe('Test ValidationError', () => {
   });
 });
 
-describe.skip('Test OAuthClient Error Handling', () => {
+describe('Test OAuthClient Error Handling', () => {
   beforeEach(function() {
     this.timeout(5000);
     nock.cleanAll();
@@ -836,7 +836,7 @@ describe.skip('Test OAuthClient Error Handling', () => {
       expect.fail('Should have thrown an error');
     } catch (error) {
       expect(error).to.be.instanceof(OAuthError);
-      expect(error.code).to.equal('API_ERROR');
+      expect(error.code).to.equal('INTERNAL_SERVER_ERROR');
       expect(error.message).to.equal('Internal Server Error');
       expect(error.description).to.equal('Something went wrong');
     }
@@ -920,6 +920,125 @@ describe.skip('Test OAuthClient Error Handling', () => {
       expect(error.description).to.equal('Too many requests, please try again later');
     }
     scope.done();
+  });
+});
+
+describe('Test 400 Error Handling with Fault Object', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle 400 response with Fault object correctly', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: "Unsupported Operation",
+            Detail: "Operation No resource method found for POST, return 405 with Allow header is not supported.",
+            code: "500"
+          }
+        ],
+        type: "ValidationFault"
+      },
+      time: "2025-05-28T23:25:54.056-07:00"
+    };
+
+    const scope = nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/customer')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': '1234-1234-1234-123'
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/customer',
+        method: 'POST',
+        body: { /* test data */ }
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Unsupported Operation');
+      expect(error.code).to.equal('500');
+      expect(error.description).to.equal('Operation No resource method found for POST, return 405 with Allow header is not supported.');
+      expect(error.fault).to.deep.include({
+        type: 'ValidationFault',
+        time: '2025-05-28T23:25:54.056-07:00'
+      });
+      expect(error.fault.errors).to.deep.equal([
+        {
+          message: 'Unsupported Operation',
+          detail: 'Operation No resource method found for POST, return 405 with Allow header is not supported.',
+          code: '500'
+        }
+      ]);
+    }
+
+    scope.done();
+  });
+});
+
+describe('Ensure 400 does not throw AxiosError', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should not throw AxiosError for 400 response', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: 'Test 400 error',
+            Detail: 'This is a test 400 error',
+            code: '400',
+          },
+        ],
+        type: 'ValidationFault',
+      },
+      time: '2025-05-28T23:25:54.056-07:00',
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/customer')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'test-tid-400',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/customer',
+        method: 'POST',
+        body: { /* test data */ },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      // Should NOT be an AxiosError
+      expect(error.isAxiosError).to.not.be.true;
+      expect(error.name).to.not.equal('AxiosError');
+      // Should be an OAuthError
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Test 400 error');
+      expect(error.code).to.equal('400');
+      expect(error.fault.type).to.equal('ValidationFault');
+    }
   });
 });
 
