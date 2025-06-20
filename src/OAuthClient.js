@@ -389,8 +389,23 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
         ? Object.assign({}, baseHeaders, params.headers)
         : Object.assign({}, baseHeaders);
 
+    let baseURL = '';
+    let endpoint = '';
+    // backward compatibility: 
+    // checking to see if user has supplied the full url
+    if (params.url.startsWith(OAuthClient.environment.sandbox) || params.url.startsWith(OAuthClient.environment.production)) {
+      baseURL = params.url;
+      
+    } else {
+      baseURL = (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
+      // checking to see if user supplied the endpoint only and if it begins with a slash
+      // if it does, we remove the slash to avoid double slashes in the url
+      endpoint = params.url.startsWith('/') ? params.url.slice(1) : params.url;
+
+    }
+    
     const request = {
-      url: params.url,
+      url: baseURL + endpoint,
       method: params.method || 'GET',
       headers,
       responseType,
