@@ -90,6 +90,10 @@ OAuthClient.environment = {
   sandbox: 'https://sandbox-quickbooks.api.intuit.com/',
   production: 'https://quickbooks.api.intuit.com/',
 };
+OAuthClient.qbo_environment = {
+  sandbox: 'https://sandbox.qbo.intuit.com/app/',
+  production: 'https://qbo.intuit.com/app/',
+};
 OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
   Accounting: 'com.intuit.quickbooks.accounting',
@@ -123,9 +127,15 @@ OAuthClient.prototype.setAuthorizeURLs = function setAuthorizeURLs(params) {
   return this;
 };
 
-OAuthClient.prototype.getEnvironmentURL = function getEnvironmentURL() { 
+OAuthClient.prototype.getEnvironmentURI = function getEnvironmentURI() { 
   return (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
 }
+
+
+OAuthClient.prototype.getQBOEnvironmentURI = function getQBOEnvironmentURI() {
+  return (this.environment && this.environment === 'production') ? OAuthClient.qbo_environment.production : OAuthClient.qbo_environment.sandbox;
+}
+
 
 /**
  * Redirect  User to Authorization Page
