@@ -728,6 +728,40 @@ describe('Test Logging', () => {
   });
 });
 
+describe('Tests whether the correct environment urls is returned', () => {
+  describe('tests sandbox environment', () => {
+    it('returns the sandbox environment URL when environment is not set', () => {
+      oauthClient.environment = null;
+      const environmentURL = oauthClient.getEnvironmentURL();
+      expect(environmentURL).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+    it('returns the sandbox environment URL when environment is sandbox', () => {
+      oauthClient.environment = 'sandbox';
+      const environmentURL = oauthClient.getEnvironmentURL();
+      expect(environmentURL).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+    it('returns the sandbox environment URL when sandbox environment is misspelt', () => {
+      oauthClient.environment = 'sandoboxo';
+      const environmentURL = oauthClient.getEnvironmentURL();
+      expect(environmentURL).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+
+  });
+  describe('tests production environment', () => {
+    it('returns the production environment URL when environment is production', () => {
+      oauthClient.environment = 'production';
+      const environmentURL = oauthClient.getEnvironmentURL();
+      expect(environmentURL).to.be.equal(OAuthClientTest.environment.production);
+    });
+    it('returns the sandbox environment URL when production environment is misspelt', () => {
+      oauthClient.environment = 'productio';
+      const environmentURL = oauthClient.getEnvironmentURL();
+      expect(environmentURL).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+  });
+});
+
+
 // must be last test as it changes the endpoints
 describe('Tests for OAuthClient to set custom Authorization URIs', () => {
   describe('set the authorizationURIs', () => {

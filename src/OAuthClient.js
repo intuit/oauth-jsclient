@@ -123,6 +123,10 @@ OAuthClient.prototype.setAuthorizeURLs = function setAuthorizeURLs(params) {
   return this;
 };
 
+OAuthClient.prototype.getEnvironmentURL = function getEnvironmentURL() { 
+  return (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
+}
+
 /**
  * Redirect  User to Authorization Page
  * *
