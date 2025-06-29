@@ -306,12 +306,74 @@ describe('Tests for OAuthClient', () => {
           );
         });
     });
+    it('Make API Call in Sandbox Environment using relative endpoint - starting slash', () => {
+      oauthClient.environment = 'sandbox';
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url:
+            '/v3/company/' + '12345' + '/companyinfo/' + '12345',
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
+    it('Make API Call in Sandbox Environment using relative endpoint - no starting slash', () => {
+      oauthClient.environment = 'sandbox';
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url:
+            'v3/company/' + '12345' + '/companyinfo/' + '12345',
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
     it('Make API Call in Sandbox Environment with headers as parameters', () => {
       oauthClient.getToken().realmId = '12345';
       // eslint-disable-next-line no-useless-concat
       return oauthClient
         .makeApiCall({
           url: `https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345`,
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
+    it('Make API Call in Sandbox Environment with headers as parameters, relative endpoint path - starting slash', () => {
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url: `/v3/company/12345/companyinfo/12345`,
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
+    it('Make API Call in Sandbox Environment with headers as parameters, relative endpoint path - no starting slash', () => {
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url: `v3/company/12345/companyinfo/12345`,
           headers: {
             Accept: 'application/json',
           },
@@ -355,6 +417,36 @@ describe('Tests for OAuthClient', () => {
         .makeApiCall({
           url:
             'https://quickbooks.api.intuit.com/v3/company/' + '12345' + '/companyinfo/' + '12345',
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
+    it('Make API Call in Production Environment with relative endpoint path - starting slash', () => {
+      oauthClient.environment = 'production';
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url:
+            '/v3/company/' + '12345' + '/companyinfo/' + '12345',
+        })
+        .then((authResponse) => {
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+        });
+    });
+    it('Make API Call in Production Environment with relative endpoing path - no starting slash', () => {
+      oauthClient.environment = 'production';
+      oauthClient.getToken().realmId = '12345';
+      // eslint-disable-next-line no-useless-concat
+      return oauthClient
+        .makeApiCall({
+          url:
+            'v3/company/' + '12345' + '/companyinfo/' + '12345',
         })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.json)).to.be.equal(
@@ -634,4 +726,125 @@ describe('Test Logging', () => {
     expect(oauthClient.logger.log.firstCall.args[0]).to.be.equal(level);
     expect(oauthClient.logger.log.firstCall.args[1]).to.be.equal(message + messageData);
   });
+});
+
+describe('Tests whether the correct environment urls is returned', () => {
+  describe('tests sandbox environment', () => {
+    it('returns the sandbox environment URL when environment is not set', () => {
+      oauthClient.environment = null;
+      const environmentURI = oauthClient.getEnvironmentURI();
+      expect(environmentURI).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+    it('returns the sandbox environment URL when environment is sandbox', () => {
+      oauthClient.environment = 'sandbox';
+      const environmentURI = oauthClient.getEnvironmentURI();
+      expect(environmentURI).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+    it('returns the sandbox environment URL when sandbox environment is misspelt', () => {
+      oauthClient.environment = 'sandoboxo';
+      const environmentURI = oauthClient.getEnvironmentURI();
+      expect(environmentURI).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+
+  });
+  describe('tests production environment', () => {
+    it('returns the production environment URL when environment is production', () => {
+      oauthClient.environment = 'production';
+      const environmentURI = oauthClient.getEnvironmentURI();
+      expect(environmentURI).to.be.equal(OAuthClientTest.environment.production);
+    });
+    it('returns the sandbox environment URL when production environment is misspelt', () => {
+      oauthClient.environment = 'productio';
+      const environmentURI = oauthClient.getEnvironmentURI();
+      expect(environmentURI).to.be.equal(OAuthClientTest.environment.sandbox);
+    });
+  });
+});
+
+
+
+describe('Tests whether the correct Quickbooks online (QBO) environment urls is returned', () => {
+  describe('tests sandbox environment', () => {
+    it('returns the sandbox QBO environment URL when environment is not set', () => {
+      oauthClient.environment = null;
+      const qboEnvironmentURI = oauthClient.getQBOEnvironmentURI();
+      expect(qboEnvironmentURI).to.be.equal(OAuthClientTest.qbo_environment.sandbox);
+    });
+    it('returns the sandbox environment URL when environment is sandbox', () => {
+      oauthClient.environment = 'sandbox';
+      const qboEnvironmentURI = oauthClient.getQBOEnvironmentURI();
+      expect(qboEnvironmentURI).to.be.equal(OAuthClientTest.qbo_environment.sandbox);
+    });
+    it('returns the sandbox environment URL when sandbox environment is misspelt', () => {
+      oauthClient.environment = 'sandoboxo';
+      const qboEnvironmentURI = oauthClient.getQBOEnvironmentURI();
+      expect(qboEnvironmentURI).to.be.equal(OAuthClientTest.qbo_environment.sandbox);
+    });
+
+  });
+  describe('tests production environment', () => {
+    it('returns the production environment URL when environment is production', () => {
+      oauthClient.environment = 'production';
+      const qboEnvironmentURI = oauthClient.getQBOEnvironmentURI();
+      expect(qboEnvironmentURI).to.be.equal(OAuthClientTest.qbo_environment.production);
+
+    });
+    it('returns the sandbox environment URL when production environment is misspelt', () => {
+      oauthClient.environment = 'productio';
+      const qboEnvironmentURI = oauthClient.getQBOEnvironmentURI();
+      expect(qboEnvironmentURI).to.be.equal(OAuthClientTest.qbo_environment.sandbox);
+
+    });
+  });
+});
+
+
+
+// must be last test as it changes the endpoints
+describe('Tests for OAuthClient to set custom Authorization URIs', () => {
+  describe('set the authorizationURIs', () => {
+    it('throws an error when no params provided', () => {
+      expect(() => { oauthClient.setAuthorizeURLs() }).to.throw("Provide the custom authorize URL's");
+    });
+    it('throws an error when no params provided', () => {
+      expect(() => { oauthClient.setAuthorizeURLs(null) }).to.throw("Provide the custom authorize URL's");
+    });
+    it('sets the Authorise urls to custom ones - sandbox', async (done) => {
+      const customURLs = {
+        authorizeEndpoint: "https://custom.Authorize.Endpoint",
+        tokenEndpoint: "https://custom.Token.Endpoint",
+        revokeEndpoint: "https://custom.Revoke.Endpoint",
+        userInfoEndpoint: "https://custom.User.Info.Endpoint",
+      }
+
+      oauthClient.environment = 'sandbox';
+      oauthClient.setAuthorizeURLs(customURLs);
+      done();
+      expect(OAuthClientTest.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
+      expect(OAuthClientTest.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
+      expect(OAuthClientTest.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
+      expect(OAuthClientTest.userinfo_endpoint_sandbox).to.be.equal('https://custom.User.Info.Endpoint');
+      expect(OAuthClientTest.userinfo_endpoint_production).to.be.equal('https://accounts.platform.intuit.com/v1/openid_connect/userinfo');
+
+    });
+    it('sets the Authorise urls to custom ones - production', async (done) => {
+      const customURLs = {
+        authorizeEndpoint: "https://custom.Authorize.Endpoint",
+        tokenEndpoint: "https://custom.Token.Endpoint",
+        revokeEndpoint: "https://custom.Revoke.Endpoint",
+        userInfoEndpoint: "https://custom.User.Info.Endpoint",
+      }
+
+      oauthClient.environment = 'production';
+      oauthClient.setAuthorizeURLs(customURLs);
+      done();
+      expect(OAuthClientTest.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
+      expect(OAuthClientTest.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
+      expect(OAuthClientTest.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
+      expect(OAuthClientTest.userinfo_endpoint_sandbox).to.be.equal('https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo');
+      expect(OAuthClientTest.userinfo_endpoint_production).to.be.equal('https://custom.User.Info.Endpoint');
+
+    });
+  });
+
 });

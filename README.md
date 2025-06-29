@@ -437,6 +437,50 @@ oauthClient
   });
 ```
 
+
+You can also make the calling using the endpoint path:
+
+```javascript
+// Body sample from API explorer examples
+const body = {
+  TrackQtyOnHand: true,
+  Name: 'Garden Supplies',
+  QtyOnHand: 10,
+  InvStartDate: '2015-01-01',
+  Type: 'Inventory',
+  IncomeAccountRef: {
+    name: 'Sales of Product Income',
+    value: '79',
+  },
+  AssetAccountRef: {
+    name: 'Inventory Asset',
+    value: '81',
+  },
+  ExpenseAccountRef: {
+    name: 'Cost of Goods Sold',
+    value: '80',
+  },
+};
+
+oauthClient
+  .makeApiCall({
+    url: '/v3/company/1234/item',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  .then(function (response) {
+    console.log('The API response is  : ' + response);
+  })
+  .catch(function (e) {
+    console.log('The error is ' + JSON.stringify(e));
+  });
+```
+
+
+
 The client validates the ID Token and returns boolean `true` if validates successfully else it would
 throw an exception.
 
