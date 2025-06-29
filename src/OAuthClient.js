@@ -90,6 +90,10 @@ OAuthClient.environment = {
   sandbox: 'https://sandbox-quickbooks.api.intuit.com/',
   production: 'https://quickbooks.api.intuit.com/',
 };
+OAuthClient.qbo_environment = {
+  sandbox: 'https://sandbox.qbo.intuit.com/app/',
+  production: 'https://qbo.intuit.com/app/',
+};
 OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
   Accounting: 'com.intuit.quickbooks.accounting',
@@ -122,6 +126,16 @@ OAuthClient.prototype.setAuthorizeURLs = function setAuthorizeURLs(params) {
 
   return this;
 };
+
+OAuthClient.prototype.getEnvironmentURI = function getEnvironmentURI() { 
+  return (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
+}
+
+
+OAuthClient.prototype.getQBOEnvironmentURI = function getQBOEnvironmentURI() {
+  return (this.environment && this.environment === 'production') ? OAuthClient.qbo_environment.production : OAuthClient.qbo_environment.sandbox;
+}
+
 
 /**
  * Redirect  User to Authorization Page
@@ -389,8 +403,23 @@ OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
         ? Object.assign({}, baseHeaders, params.headers)
         : Object.assign({}, baseHeaders);
 
+    let baseURL = '';
+    let endpoint = '';
+    // backward compatibility: 
+    // checking to see if user has supplied the full url
+    if (params.url.startsWith(OAuthClient.environment.sandbox) || params.url.startsWith(OAuthClient.environment.production)) {
+      baseURL = params.url;
+      
+    } else {
+      baseURL = (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
+      // checking to see if user supplied the endpoint only and if it begins with a slash
+      // if it does, we remove the slash to avoid double slashes in the url
+      endpoint = params.url.startsWith('/') ? params.url.slice(1) : params.url;
+
+    }
+    
     const request = {
-      url: params.url,
+      url: baseURL + endpoint,
       method: params.method || 'GET',
       headers,
       responseType,
