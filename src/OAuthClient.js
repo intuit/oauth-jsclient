@@ -616,7 +616,7 @@ OAuthClient.prototype.createError = function createError(e, authResponse) {
   e.originalMessage = e.message;
 
   e.error = '';
-  if ('error' in authResponse.getJson()) {
+  if (authResponse.isJson() && 'error' in authResponse.getJson()) {
     e.error = authResponse.getJson().error;
   } else if (authResponse.response.statusText) {
     e.error = authResponse.response.statusText;
@@ -625,7 +625,7 @@ OAuthClient.prototype.createError = function createError(e, authResponse) {
   }
 
   e.error_description = '';
-  if ('error_description' in authResponse.getJson()) {
+  if (authResponse.isJson() && 'error_description' in authResponse.getJson()) {
     e.error_description = authResponse.getJson().error_description;
   } else if (authResponse.response.statusText) {
     e.error_description = authResponse.response.statusText;
