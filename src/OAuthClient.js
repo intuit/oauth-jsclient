@@ -499,28 +499,28 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
               detail: err.Detail,
               code: err.code,
               element: err.element,
-              additionalInfo: err.additionalInfo
+              additionalInfo: err.additionalInfo,
             })) : null,
-            timestamp: error.response.data.time
+            timestamp: error.response.data.time,
           } : null,
           // OAuth error fields
           oauth: {
             error: error.response.data && error.response.data.error,
-            error_description: error.response.data && error.response.data.error_description
-          }
+            error_description: error.response.data && error.response.data.error_description,
+          },
         } : null,
         // Request analysis
         request: error.request ? {
           method: error.request.method,
           path: error.request.path,
-          headers: error.request.headers
+          headers: error.request.headers,
         } : null,
         // Context
         context: {
           attempt,
           url: fullUrl,
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       };
 
       // Log the detailed error analysis
@@ -528,7 +528,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
         hasFaultObject: !!(error.response && error.response.data && error.response.data.Fault),
         faultType: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.type,
         faultErrors: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.Error,
-        fullAnalysis: errorAnalysis
+        fullAnalysis: errorAnalysis,
       });
 
       // Log the error for debugging
@@ -571,12 +571,12 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
                   errors: fault.Error ? fault.Error.map(err => ({
                     message: err.Message,
                     detail: err.Detail,
-                    code: err.code
+                    code: err.code,
                   })) : [],
-                  time: data.time
+                  time: data.time,
                 },
-                timestamp: data.time
-              }
+                timestamp: data.time,
+              },
             );
           }
           
@@ -585,7 +585,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
             (data && data.error) || 'Bad Request',
             '400',
             (data && data.error_description) || 'Request validation failed',
-            intuitTid
+            intuitTid,
           );
         }
 
@@ -595,7 +595,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
             'Rate limit exceeded',
             'RATE_LIMIT_EXCEEDED',
             'Too many requests, please try again later',
-            intuitTid
+            intuitTid,
           );
         }
 
@@ -604,7 +604,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
           (data && data.error) || error.message || 'Unknown error',
           status === 500 ? 'INTERNAL_SERVER_ERROR' : status.toString(),
           (data && data.error_description) || 'An error occurred during the API call',
-          intuitTid
+          intuitTid,
         );
       }
 
@@ -613,7 +613,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
         throw new OAuthError(
           `Request timeout of ${timeout || 30000}ms exceeded`,
           'TIMEOUT_ERROR',
-          'The request took too long to complete'
+          'The request took too long to complete',
         );
       }
 
@@ -622,7 +622,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
         throw new OAuthError(
           'Connection reset by peer',
           'NETWORK_ERROR',
-          'A network error occurred while making the request'
+          'A network error occurred while making the request',
         );
       }
 
@@ -630,7 +630,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
       throw new OAuthError(
         error.message || 'Unknown error',
         'OAUTH_ERROR',
-        'An unexpected error occurred'
+        'An unexpected error occurred',
       );
     }
 
@@ -650,7 +650,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
     throw new OAuthError(
       lastError.message || 'Maximum retry attempts reached',
       'MAX_RETRIES_EXCEEDED',
-      'The request failed after multiple retry attempts'
+      'The request failed after multiple retry attempts',
     );
   }
 
@@ -658,7 +658,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
   throw new OAuthError(
     'Unexpected error in makeApiCall',
     'UNKNOWN_ERROR',
-    'An unexpected error occurred in the API call'
+    'An unexpected error occurred in the API call',
   );
 };
 
@@ -843,8 +843,7 @@ OAuthClient.prototype.loadResponse = function loadResponse(request) {
   this.currentRequest = request;
   let attempt = 0;
 
-  const executeRequest = () => {
-    return axios(request)
+  const executeRequest = () => axios(request)
       .then((response) => {
         this.currentRequest = null;
         return response;
@@ -871,7 +870,6 @@ OAuthClient.prototype.loadResponse = function loadResponse(request) {
 
         throw error;
       });
-  };
 
   return executeRequest();
 };
