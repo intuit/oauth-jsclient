@@ -37,6 +37,11 @@ const AuthResponse = require('./response/AuthResponse');
 const version = require('../package.json');
 const Token = require('./access-token/Token');
 
+// Move error classes to a separate file
+const OAuthError = require('./errors/OAuthError');
+const ValidationError = require('./errors/ValidationError');
+const TokenError = require('./errors/TokenError');
+
 /**
  * @constructor
  * @param {string} config.environment
@@ -56,6 +61,13 @@ function OAuthClient(config) {
   this.logger = null;
   this.state = new Csrf();
 
+  // Configure Axios instance
+  this.axiosInstance = axios.create({
+    validateStatus(status) {
+      return status >= 200 && status < 500;
+    },
+  });
+
   if (this.logging) {
     const dir = './logs';
     if (!fs.existsSync(dir)) {
@@ -64,7 +76,9 @@ function OAuthClient(config) {
     this.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(
-        winston.format.timestamp(),
+        winston.format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss.SSS Z',  // This will include local timezone offset
+        }),
         winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
       ),
       transports: [
@@ -162,6 +176,24 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
 };
 
 /**
+ * Safe JSON stringify that handles circular references
+ * @param {*} obj - Object to stringify
+ * @returns {string} JSON string
+ */
+function safeStringify(obj) {
+  try {
+    return JSON.stringify(obj, (key, value) => {
+      if (key === '_redirectable' || key === '_currentRequest' || key === 'socket') {
+        return undefined;
+      }
+      return value;
+    });
+  } catch (e) {
+    return String(obj);
+  }
+}
+
+/**
  * Create Token { exchange authorization code for bearer_token }
  * *
  * @param {string|Object} uri
@@ -196,14 +228,14 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Create Token response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Create Token response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Create Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Create Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -237,14 +269,14 @@ OAuthClient.prototype.refresh = function refresh() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
-      this.log('info', 'Refresh Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Refresh Token () response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Refresh Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -279,17 +311,17 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       const json = (authResponse && authResponse.json) || res;
       this.token.setToken(json);
       this.log(
         'info',
-        'Refresh usingToken () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
+        'Refresh usingToken () response is : ', safeStringify(authResponse && authResponse.json),
       );
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Refresh Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Refresh Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -329,13 +361,13 @@ OAuthClient.prototype.revoke = function revoke(params) {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       this.token.clearToken();
-      this.log('info', 'Revoke Token () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2));
+      this.log('info', 'Revoke Token () response is : ', safeStringify(authResponse && authResponse.json));
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Revoke Token () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Revoke Token () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -363,15 +395,15 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
     resolve(this.getTokenRequest(request));
   })
     .then((res) => {
-      const authResponse = res.hasOwnProperty('json')? res : null;
+      const authResponse = Object.prototype.hasOwnProperty.call(res, 'json') ? res : null;
       this.log(
         'info',
-        'The Get User Info () response is : ', JSON.stringify(authResponse && authResponse.json, null, 2),
+        'The Get User Info () response is : ', safeStringify(authResponse && authResponse.json),
       );
       return authResponse;
     })
     .catch((e) => {
-      this.log('error', 'Get User Info ()  threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'Get User Info ()  threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -387,64 +419,241 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
  * @param {string} params.responseType (optional) default is json - options are json, text, stream, arraybuffer
  * @returns {Promise}
  */
-OAuthClient.prototype.makeApiCall = function makeApiCall(params) {
-  return new Promise((resolve) => {
-    params = params || {};
-    const responseType = params.responseType ? params.responseType : 'json';
+OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, headers: customHeaders, body, params, timeout, responseType, maxRetries = 3 }) {
+  if (!url) {
+    throw new ValidationError('URL is required for API call');
+  }
 
-    const baseHeaders = {
-      Authorization: `Bearer ${this.getToken().access_token}`,
-      Accept: AuthResponse._jsonContentType,
-      'User-Agent': OAuthClient.user_agent,
-    };
-
-    const headers =
-      params.headers && typeof params.headers === 'object'
-        ? Object.assign({}, baseHeaders, params.headers)
-        : Object.assign({}, baseHeaders);
-
-    let baseURL = '';
-    let endpoint = '';
-    // backward compatibility: 
-    // checking to see if user has supplied the full url
-    if (params.url.startsWith(OAuthClient.environment.sandbox) || params.url.startsWith(OAuthClient.environment.production)) {
-      baseURL = params.url;
-      
-    } else {
-      baseURL = (this.environment && this.environment === 'production') ? OAuthClient.environment.production : OAuthClient.environment.sandbox;
-      // checking to see if user supplied the endpoint only and if it begins with a slash
-      // if it does, we remove the slash to avoid double slashes in the url
-      endpoint = params.url.startsWith('/') ? params.url.slice(1) : params.url;
-
-    }
+  // Determine the full URL - backward compatibility for relative endpoints
+  let fullUrl = url;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    // User provided a relative endpoint
+    const baseURL = (this.environment && this.environment === 'production') 
+      ? OAuthClient.environment.production 
+      : OAuthClient.environment.sandbox;
     
-    const request = {
-      url: baseURL + endpoint,
-      method: params.method || 'GET',
-      headers,
-      responseType,
-    };
+    // Remove leading slash if present to avoid double slashes
+    const endpoint = url.startsWith('/') ? url.slice(1) : url;
+    fullUrl = baseURL + endpoint;
+  }
 
-    params.body && (request.data = params.body);
+  let attempt = 0;
+  let lastError = null;
 
-    resolve(this.getTokenRequest(request));
-  })
-    .then((res) => {
-      const { body, ...authResponse } = res;
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(authResponse.json, null, 2));
+  while (attempt < maxRetries) {
+    try {
+      const requestConfig = {
+        method: method || 'GET',
+        headers: {
+          ...this.authHeader(),
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': OAuthClient.user_agent,
+          ...customHeaders,
+        },
+        timeout: timeout || 30000,
+        responseType: responseType || 'json',
+        data: body,
+        params,
+      };
 
-      if(authResponse.json === null && body) {
-        return {
-          ...authResponse,
-          body: body
+      // Make the API call
+      const response = await this.axiosInstance(fullUrl, requestConfig);
+      
+      // Wrap successful response in expected format
+      return {
+        status: 'success',
+        data: response.data,
+      };
+    } catch (error) {
+      attempt += 1;
+      lastError = error;
+
+      // Detailed error analysis and logging
+      const errorAnalysis = {
+        // Basic error properties
+        basic: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+          code: error.code,
+        },
+        // Response analysis
+        response: error.response ? {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          headers: error.response.headers,
+          // Deep analysis of response data
+          data: error.response.data,
+          // Specific Fault object analysis
+          fault: error.response.data && error.response.data.Fault ? {
+            type: error.response.data.Fault.type,
+            error: error.response.data.Fault.Error ? error.response.data.Fault.Error.map(err => ({
+              message: err.Message,
+              detail: err.Detail,
+              code: err.code,
+              element: err.element,
+              additionalInfo: err.additionalInfo
+            })) : null,
+            timestamp: error.response.data.time
+          } : null,
+          // OAuth error fields
+          oauth: {
+            error: error.response.data && error.response.data.error,
+            error_description: error.response.data && error.response.data.error_description
+          }
+        } : null,
+        // Request analysis
+        request: error.request ? {
+          method: error.request.method,
+          path: error.request.path,
+          headers: error.request.headers
+        } : null,
+        // Context
+        context: {
+          attempt,
+          url: fullUrl,
+          timestamp: new Date().toISOString()
         }
+      };
+
+      // Log the detailed error analysis
+      this.log('error', 'Exception Analysis:', {
+        hasFaultObject: !!(error.response && error.response.data && error.response.data.Fault),
+        faultType: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.type,
+        faultErrors: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.Error,
+        fullAnalysis: errorAnalysis
+      });
+
+      // Log the error for debugging
+      this.log('error', 'API call failed:', {
+        error: (error.response && error.response.data) || error.message,
+        status: error.response && error.response.status,
+        attempt,
+        url: fullUrl,
+      });
+
+      // Handle Axios errors
+      if (error.response) {
+        const { status, data, headers: responseHeaders } = error.response;
+        const intuitTid = responseHeaders && responseHeaders.intuit_tid;
+
+        // Handle 400 errors with Fault object
+        if (status === 400) {
+          if (data && data.Fault) {
+            const fault = data.Fault;
+            const faultError = fault.Error && fault.Error[0];
+            
+            // Extract detailed error information from Fault object
+            const errorMessage = (faultError && faultError.Message) || 'Bad Request';
+            const errorCode = (faultError && faultError.code) || '400';
+            const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
+            const faultType = (fault && fault.type) || 'ValidationFault';
+            
+            // Create a more descriptive error message
+            const detailedMessage = `${errorMessage}`;
+            
+            throw new OAuthError(
+              detailedMessage,
+              errorCode,
+              errorDetail,
+              intuitTid,
+              {
+                faultType,
+                fault: {
+                  type: faultType,
+                  errors: fault.Error ? fault.Error.map(err => ({
+                    message: err.Message,
+                    detail: err.Detail,
+                    code: err.code
+                  })) : [],
+                  time: data.time
+                },
+                timestamp: data.time
+              }
+            );
+          }
+          
+          // Handle other 400 errors
+          throw new OAuthError(
+            (data && data.error) || 'Bad Request',
+            '400',
+            (data && data.error_description) || 'Request validation failed',
+            intuitTid
+          );
+        }
+
+        // Handle rate limit errors
+        if (status === 429) {
+          throw new OAuthError(
+            'Rate limit exceeded',
+            'RATE_LIMIT_EXCEEDED',
+            'Too many requests, please try again later',
+            intuitTid
+          );
+        }
+
+        // Handle other HTTP errors
+        throw new OAuthError(
+          (data && data.error) || error.message || 'Unknown error',
+          status === 500 ? 'INTERNAL_SERVER_ERROR' : status.toString(),
+          (data && data.error_description) || 'An error occurred during the API call',
+          intuitTid
+        );
       }
-      return authResponse;
-    })
-    .catch((e) => {
-      this.log('error', 'Get makeAPICall ()  threw an exception : ', JSON.stringify(e, null, 2));
-      throw e;
-    });
+
+      // Handle network errors
+      if (error.code === 'ECONNABORTED') {
+        throw new OAuthError(
+          `Request timeout of ${timeout || 30000}ms exceeded`,
+          'TIMEOUT_ERROR',
+          'The request took too long to complete'
+        );
+      }
+
+      // Handle other errors (no response received)
+      if (error.request) {
+        throw new OAuthError(
+          'Connection reset by peer',
+          'NETWORK_ERROR',
+          'A network error occurred while making the request'
+        );
+      }
+
+      // Handle any other errors
+      throw new OAuthError(
+        error.message || 'Unknown error',
+        'OAUTH_ERROR',
+        'An unexpected error occurred'
+      );
+    }
+
+    // Add delay between retries
+    if (attempt < maxRetries) {
+      const delay = 2 ** attempt * 1000;
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  // If we've exhausted all retries, throw the last error
+  if (lastError) {
+    if (lastError instanceof OAuthError) {
+      throw lastError;
+    }
+    throw new OAuthError(
+      lastError.message || 'Maximum retry attempts reached',
+      'MAX_RETRIES_EXCEEDED',
+      'The request failed after multiple retry attempts'
+    );
+  }
+
+  // This should never be reached, but TypeScript needs it
+  throw new OAuthError(
+    'Unexpected error in makeApiCall',
+    'UNKNOWN_ERROR',
+    'An unexpected error occurred in the API call'
+  );
 };
 
 /**
@@ -485,12 +694,12 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     return resolve(this.getKeyFromJWKsURI(id_token, id_token_header.kid, request));
   })
     .then((res) => {
-      this.log('info', 'The validateIdToken () response is :', JSON.stringify(res, null, 2));
+      this.log('info', 'The validateIdToken () response is :', safeStringify(res));
       if (res) return true;
       return false;
     })
     .catch((e) => {
-      this.log('error', 'The validateIdToken () threw an exception : ', JSON.stringify(e, null, 2));
+      this.log('error', 'The validateIdToken () threw an exception : ', safeStringify(e));
       throw e;
     });
 };
@@ -520,7 +729,7 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       this.log(
         'error',
         'The getKeyFromJWKsURI () threw an exception : ',
-        JSON.stringify(e, null, 2),
+        safeStringify(e),
       );
       throw e;
     });
@@ -554,27 +763,69 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
     resolve(this.loadResponse(request));
   })
     .then((response) => {
+      this.validateResponse(response);
       authResponse.processResponse(response);
 
-      if (!authResponse.valid()) throw new Error('Response has an Error');
+      if (!authResponse.valid()) {
+        throw new OAuthError(
+          'Response has an Error',
+          response.status.toString(),
+          response.statusText,
+          response.headers && response.headers.intuit_tid,
+        );
+      }
 
       return authResponse;
     })
     .catch((e) => {
-      if (!e.authResponse) e = this.createError(e, authResponse);
+      if (!e.authResponse) {
+        e = this.createError(e, authResponse);
+      }
       throw e;
     });
 };
 
 /**
- * Validate Token
+ * Validate Token { validates if token object has refresh token }
  * *
  * @returns {boolean}
  */
 OAuthClient.prototype.validateToken = function validateToken() {
-  if (!this.token.refreshToken()) throw new Error('The Refresh token is missing');
-  if (!this.token.isRefreshTokenValid())
+  if (!this.token.refreshToken()) {
+    throw new Error('The Refresh token is missing');
+  }
+
+  if (!this.token.isRefreshTokenValid()) {
     throw new Error('The Refresh token is invalid, please Authorize again.');
+  }
+
+  return true;
+};
+
+// Add retry configuration
+OAuthClient.retryConfig = {
+  maxRetries: 3,
+  retryDelay: 1000, // 1 second
+  retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED'],
+};
+
+OAuthClient.prototype.shouldRetry = function shouldRetry(error, attempt) {
+  if (attempt >= OAuthClient.retryConfig.maxRetries) {
+    return false;
+  }
+
+  // Check if it's a retryable status code
+  if (error.response && OAuthClient.retryConfig.retryableStatusCodes.includes(error.response.status)) {
+    return true;
+  }
+
+  // Check if it's a retryable network error
+  if (error.code && OAuthClient.retryConfig.retryableErrors.includes(error.code)) {
+    return true;
+  }
+
+  return false;
 };
 
 /**
@@ -583,7 +834,40 @@ OAuthClient.prototype.validateToken = function validateToken() {
  * @returns response
  */
 OAuthClient.prototype.loadResponse = function loadResponse(request) {
-  return axios(request).then((response) => response);
+  this.currentRequest = request;
+  let attempt = 0;
+
+  const executeRequest = () => {
+    return axios(request)
+      .then((response) => {
+        this.currentRequest = null;
+        return response;
+      })
+      .catch((error) => {
+        this.currentRequest = null;
+        
+        if (this.shouldRetry(error, attempt)) {
+          attempt += 1;
+          const delay = OAuthClient.retryConfig.retryDelay * (2 ** (attempt - 1));
+          
+          this.log('warn', `Retrying request (attempt ${attempt}/${OAuthClient.retryConfig.maxRetries})`, {
+            error: error.message,
+            delay,
+            url: request.url,
+          });
+
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(executeRequest());
+            }, delay);
+          });
+        }
+
+        throw error;
+      });
+  };
+
+  return executeRequest();
 };
 
 /**
@@ -596,43 +880,62 @@ OAuthClient.prototype.loadResponseFromJWKsURI = function loadResponseFromJWKsURI
 };
 
 /**
- * Wrap the exception with more information
- * @param {Error|IApiError} e
- * @param {AuthResponse} authResponse
- * @return {Error|IApiError}
+ * Create Error Wrapper
+ * @param {Error|string} error - Error object or error message
+ * @param {AuthResponse} authResponse - AuthResponse object
+ * @returns {Error} error
  */
-OAuthClient.prototype.createError = function createError(e, authResponse) {
-  if (!authResponse || authResponse.body === '') {
-    e.error = (authResponse && authResponse.response.statusText) || e.message || '';
-    e.authResponse = authResponse || '';
-    e.intuit_tid =
-      (authResponse && authResponse.headers() && authResponse.headers().intuit_tid) || '';
-    e.originalMessage = e.message || '';
-    e.error_description = (authResponse && authResponse.response.statusText) || '';
-    return e;
+OAuthClient.prototype.createError = function createError(error, authResponse) {
+  if (!error) {
+    return new Error('');
   }
 
-  e.authResponse = authResponse;
-  e.originalMessage = e.message;
+  const wrappedError = new Error();
+  wrappedError.error = '';
+  wrappedError.authResponse = authResponse || '';
+  wrappedError.intuit_tid = (authResponse && authResponse.getIntuitTid()) || '';
+  wrappedError.originalMessage = error.message || '';
+  wrappedError.error_description = '';
 
-  e.error = '';
-  if ('error' in authResponse.getJson()) {
-    e.error = authResponse.getJson().error;
-  } else if (authResponse.response.statusText) {
-    e.error = authResponse.response.statusText;
-  } else if (e.message) {
-    e.error = e.message;
+  if (authResponse) {
+    if (authResponse.body) {
+      try {
+        const body = typeof authResponse.body === 'string' ? JSON.parse(authResponse.body) : authResponse.body;
+        if (body.error) {
+          wrappedError.error = body.error;
+          wrappedError.error_description = body.error_description || '';
+          wrappedError.message = body.error;
+          return wrappedError;
+        }
+      } catch (e) {
+        // If parsing fails, use the original body
+        wrappedError.error = authResponse.body;
+        wrappedError.error_description = authResponse.body;
+        wrappedError.message = authResponse.body;
+        return wrappedError;
+      }
+    }
+    
+    if (authResponse.response && authResponse.response.statusText) {
+      wrappedError.error = authResponse.response.statusText;
+      wrappedError.error_description = authResponse.response.statusText;
+      wrappedError.message = authResponse.response.statusText;
+      return wrappedError;
+    }
   }
 
-  e.error_description = '';
-  if ('error_description' in authResponse.getJson()) {
-    e.error_description = authResponse.getJson().error_description;
-  } else if (authResponse.response.statusText) {
-    e.error_description = authResponse.response.statusText;
+  if (error instanceof Error) {
+    wrappedError.error = error.message;
+    wrappedError.message = error.message;
+  } else if (typeof error === 'string') {
+    wrappedError.error = error;
+    wrappedError.message = error;
+  } else {
+    wrappedError.error = error.toString();
+    wrappedError.message = error.toString();
   }
-  e.intuit_tid = authResponse.headers().intuit_tid;
 
-  return e;
+  return wrappedError;
 };
 
 /**
@@ -671,10 +974,90 @@ OAuthClient.prototype.authHeader = function authHeader() {
   return typeof btoa === 'function' ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
 };
 
-OAuthClient.prototype.log = function log(level, message, messageData) {
-  if (this.logging) {
-    this.logger.log(level, message + messageData);
+/**
+ * Log the message
+ * @param {string} level - Log level
+ * @param {string} message - Log message
+ * @param {*} data - Log data
+ */
+OAuthClient.prototype.log = function log(level, message, data) {
+  if (!this.logger) {
+    return;
   }
+
+  if (typeof data === 'string') {
+    this.logger.log(level, message + data);
+    return;
+  }
+
+  const logData = {
+    timestamp: new Date().toISOString(),
+    level,
+    message,
+    environment: this.environment,
+    clientId: this.clientId,
+  };
+
+  // Add safe request context if available
+  if (this.currentRequest) {
+    logData.request = {
+      url: this.currentRequest.url,
+      method: this.currentRequest.method,
+      headers: { ...this.currentRequest.headers },
+    };
+  }
+
+  // Add safe data context
+  if (data) {
+    try {
+      logData.data = JSON.parse(safeStringify(data));
+    } catch (e) {
+      logData.data = String(data);
+    }
+  }
+
+  this.logger.log(level, safeStringify(logData));
+};
+
+OAuthClient.prototype.validateResponse = function validateResponse(response) {
+  if (!response) {
+    throw new ValidationError('Empty response received');
+  }
+
+  if (!response.status) {
+    throw new ValidationError('Response missing status code');
+  }
+
+  const intuitTid = response.headers && response.headers.intuit_tid;
+
+  if (response.status === 429) {
+    throw new OAuthError(
+      'Rate limit exceeded',
+      'RATE_LIMIT_EXCEEDED',
+      'Too many requests, please try again later',
+      intuitTid,
+    );
+  }
+
+  if (response.status === 401) {
+    throw new TokenError(
+      'Unauthorized',
+      'UNAUTHORIZED',
+      'Invalid or expired access token',
+      intuitTid,
+    );
+  }
+
+  if (response.status === 403) {
+    throw new OAuthError(
+      'Forbidden',
+      'FORBIDDEN',
+      'Insufficient permissions',
+      intuitTid,
+    );
+  }
+
+  return true;
 };
 
 module.exports = OAuthClient;

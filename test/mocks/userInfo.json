@@ -1,7 +1,16 @@
 {
-  "sub": "1182d6ec-2a1f-4aa3-af3f-bb3b95db45af",
-  "email": "john@doe.com",
+  "sub": "test_sub",
+  "email": "test@example.com",
   "emailVerified": true,
-  "givenName": "John",
-  "familyName": "Doe"
+  "givenName": "Test",
+  "familyName": "User",
+  "phoneNumber": "+1234567890",
+  "phoneNumberVerified": true,
+  "address": {
+    "streetAddress": "123 Test St",
+    "locality": "Test City",
+    "region": "Test Region",
+    "postalCode": "12345",
+    "country": "Test Country"
+  }
 }

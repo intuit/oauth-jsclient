@@ -9,6 +9,197 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=shield)](https://github.com/prettier/prettier)
 [![Known Vulnerabilities](https://snyk.io/test/github/intuit/oauth-jsclient/badge.svg)](https://snyk.io/test/github/intuit/oauth-jsclient)
 
+# OAuth Client for Intuit
+
+A Node.js client for Intuit's OAuth 2.0 implementation.
+
+## Features
+
+- OAuth 2.0 authentication flow
+- Token management and refresh
+- API request handling
+- Error handling with custom error types
+- Automatic retry for transient errors
+- Structured logging
+- Response validation
+
+## Installation
+
+```bash
+npm install oauth-jsclient
+```
+
+## Usage
+
+```javascript
+const OAuthClient = require('oauth-jsclient');
+
+const oauthClient = new OAuthClient({
+  clientId: 'your_client_id',
+  clientSecret: 'your_client_secret',
+  environment: 'sandbox', // or 'production'
+  redirectUri: 'http://localhost:8000/callback',
+  logging: true // Enable logging
+});
+```
+
+## Error Handling
+
+The client provides several custom error types for better error handling:
+
+- `OAuthError`: Base error class for all OAuth related errors
+- `NetworkError`: For network related errors
+- `ValidationError`: For validation related errors
+- `TokenError`: For token related errors
+
+Example error handling:
+
+```javascript
+try {
+  await oauthClient.makeApiCall({ url: 'https://api.example.com' });
+} catch (error) {
+  if (error instanceof TokenError) {
+    // Handle token errors
+    console.error('Token error:', error.code, error.description);
+  } else if (error instanceof NetworkError) {
+    // Handle network errors
+    console.error('Network error:', error.message);
+  } else if (error instanceof ValidationError) {
+    // Handle validation errors
+    console.error('Validation error:', error.message);
+  } else {
+    // Handle other errors
+    console.error('Unexpected error:', error);
+  }
+}
+```
+
+## Retry Logic
+
+The client includes automatic retry logic for transient errors:
+
+- Maximum 3 retries
+- Exponential backoff (1s, 2s, 4s)
+- Retries on specific status codes (408, 429, 500, 502, 503, 504)
+- Retries on network errors (ECONNRESET, ETIMEDOUT, ECONNREFUSED)
+
+You can configure retry behavior:
+
+```javascript
+OAuthClient.retryConfig = {
+  maxRetries: 3,
+  retryDelay: 1000,
+  retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED']
+};
+```
+
+## Logging
+
+The client provides structured logging when enabled:
+
+```javascript
+const oauthClient = new OAuthClient({
+  // ... other config
+  logging: true
+});
+```
+
+Log entries include:
+- Timestamp
+- Log level
+- Message
+- Request context (URL, method, headers)
+- Error details (for error logs)
+- Environment information
+- Client ID
+
+Example log entry:
+```json
+{
+  "timestamp": "2024-03-14T12:00:00.000Z",
+  "level": "error",
+  "message": "API call failed",
+  "data": {
+    "error": {
+      "name": "TokenError",
+      "code": "UNAUTHORIZED",
+      "message": "Invalid or expired access token",
+      "stack": "...",
+      "intuit_tid": "1234-1234-1234-123"
+    }
+  },
+  "environment": "sandbox",
+  "clientId": "your_client_id",
+  "request": {
+    "url": "https://api.example.com",
+    "method": "GET",
+    "headers": {
+      "Authorization": "Bearer ...",
+      "Accept": "application/json"
+    }
+  }
+}
+```
+
+## Response Validation
+
+The client validates responses and throws appropriate errors for common scenarios:
+
+- 401 Unauthorized: Invalid or expired access token
+- 403 Forbidden: Insufficient permissions
+- 429 Too Many Requests: Rate limit exceeded
+- Missing or invalid response data
+- Invalid content types
+
+## API Reference
+
+### OAuthClient
+
+#### constructor(config)
+Creates a new OAuthClient instance.
+
+```javascript
+const oauthClient = new OAuthClient({
+  clientId: 'your_client_id',
+  clientSecret: 'your_client_secret',
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8000/callback',
+  logging: true
+});
+```
+
+#### makeApiCall(params)
+Makes an API call with automatic retry and error handling.
+
+```javascript
+const response = await oauthClient.makeApiCall({
+  url: 'https://api.example.com',
+  method: 'GET',
+  headers: {
+    'Custom-Header': 'value'
+  },
+  body: {
+    key: 'value'
+  }
+});
+```
+
+#### validateResponse(response)
+Validates an API response and throws appropriate errors.
+
+```javascript
+try {
+  oauthClient.validateResponse(response);
+} catch (error) {
+  // Handle validation errors
+}
+```
+
+## License
+
+Apache License 2.0
+
 # Intuit OAuth2.0 NodeJS Library
 
 The OAuth2 Nodejs Client library is meant to work with Intuit's
