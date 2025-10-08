@@ -132,7 +132,7 @@ describe('Tests for OAuthClient', () => {
         'http://localhost:8000/callback?state=testState&code=Q011535008931rqveFweqmueq0GlOHhLPAFMp3NI2KJm5gbMMx';
       return oauthClient.createToken(parseRedirect).then((authResponse) => {
         expect(authResponse.getToken().access_token).to.be.equal(
-          expectedAccessToken.access_token
+          expectedAccessToken.access_token,
         );
       });
     });
@@ -186,7 +186,7 @@ describe('Tests for OAuthClient', () => {
     it('Refresh the existing tokens', () =>
       oauthClient.refresh().then((authResponse) => {
         expect(authResponse.getToken().refresh_token).to.be.equal(
-          expectedAccessToken.refresh_token
+          expectedAccessToken.refresh_token,
         );
       }));
 
@@ -280,7 +280,7 @@ describe('Tests for OAuthClient', () => {
     it('Get User Info in Sandbox', () =>
       oauthClient.getUserInfo().then((authResponse) => {
         expect(JSON.stringify(authResponse.json)).to.be.equal(
-          JSON.stringify(expectedUserInfo)
+          JSON.stringify(expectedUserInfo),
         );
       }));
   });
@@ -305,7 +305,7 @@ describe('Tests for OAuthClient', () => {
       oauthClient.environment = 'production';
       return oauthClient.getUserInfo().then((authResponse) => {
         expect(JSON.stringify(authResponse.json)).to.be.equal(
-          JSON.stringify(expectedUserInfo)
+          JSON.stringify(expectedUserInfo),
         );
       });
     });
@@ -340,11 +340,11 @@ describe('Tests for OAuthClient', () => {
             'https://sandbox-quickbooks.api.intuit.com/v3/company/' +
             '12345' +
             '/companyinfo/' +
-            '12345'
+            '12345',
         })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.json)).to.be.equal(
-            JSON.stringify(expectedMakeAPICall)
+            JSON.stringify(expectedMakeAPICall),
           );
         });
     });
@@ -387,12 +387,12 @@ describe('Tests for OAuthClient', () => {
         .makeApiCall({
           url: `https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345`,
           headers: {
-            Accept: 'application/json'
-          }
+            Accept: 'application/json',
+          },
         })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.json)).to.be.equal(
-            JSON.stringify(expectedMakeAPICall)
+            JSON.stringify(expectedMakeAPICall),
           );
         });
     });
@@ -433,7 +433,7 @@ describe('Tests for OAuthClient', () => {
 
     it.skip('loadResponseFromJWKsURI', () => {
       const request = {
-        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345'
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
       };
       return oauthClient.loadResponseFromJWKsURI(request).then((authResponse) => {
         expect(authResponse.body).to.be.equal(JSON.stringify(expectedMakeAPICall));
@@ -461,11 +461,11 @@ describe('Tests for OAuthClient', () => {
       oauthClient.getToken().realmId = '12345';
       return oauthClient
         .makeApiCall({
-          url: 'https://quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345'
+          url: 'https://quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
         })
         .then((authResponse) => {
           expect(JSON.stringify(authResponse.json)).to.be.equal(
-            JSON.stringify(expectedMakeAPICall)
+            JSON.stringify(expectedMakeAPICall),
           );
         });
     });
@@ -529,8 +529,8 @@ describe.skip('Validate that token request can handle a failure', () => {
     oauthClient.getToken().setToken(expectedOpenIDToken);
     await expect(
       oauthClient.getTokenRequest({
-        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/6789/companyinfo/6789'
-      })
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/6789/companyinfo/6789',
+      }),
     ).to.be.rejectedWith(Error);
   });
 });
@@ -567,7 +567,7 @@ describe.skip('Validate Id Token ', () => {
   const tokenParts = expectedOpenIDToken.id_token.split('.');
   const encodedMockIdTokenPayload = tokenParts[0].concat(
     '.',
-    btoa(JSON.stringify(mockIdTokenPayload))
+    btoa(JSON.stringify(mockIdTokenPayload)),
   );
   const mockToken = Object.assign({}, expectedOpenIDToken, { id_token: encodedMockIdTokenPayload });
 
@@ -1032,7 +1032,7 @@ describe('Test OAuthClient Error Handling', () => {
     nock.enableNetConnect();
   });
 
-  it('should handle API call errors', async function() {
+  it('should handle API call errors', async () => {
     const errorResponse = {
       error: 'Internal Server Error',
       error_description: 'Something went wrong',
@@ -1059,7 +1059,7 @@ describe('Test OAuthClient Error Handling', () => {
     scope.done();
   });
 
-  it('should handle network errors', async function() {
+  it('should handle network errors', async () => {
     const scope = nock('https://sandbox-quickbooks.api.intuit.com')
       .get('/v3/company/12345/companyinfo/12345')
       .replyWithError({ code: 'ECONNRESET', message: 'Connection reset by peer' });
@@ -1079,7 +1079,7 @@ describe('Test OAuthClient Error Handling', () => {
     scope.done();
   });
 
-  it('should handle timeout errors', async function() {
+  it('should handle timeout errors', async () => {
     const scope = nock('https://sandbox-quickbooks.api.intuit.com')
       .get('/v3/company/12345/companyinfo/12345')
       .delayConnection(1000)
@@ -1101,7 +1101,7 @@ describe('Test OAuthClient Error Handling', () => {
     scope.done();
   });
 
-  it('should handle validation errors', async function() {
+  it('should handle validation errors', async () => {
     try {
       await oauthClient.makeApiCall({
         method: 'GET',
@@ -1113,7 +1113,7 @@ describe('Test OAuthClient Error Handling', () => {
     }
   });
 
-  it('should handle rate limit errors', async function() {
+  it('should handle rate limit errors', async () => {
     const scope = nock('https://sandbox-quickbooks.api.intuit.com')
       .get('/v3/company/12345/companyinfo/12345')
       .reply(429, {
@@ -1159,26 +1159,26 @@ describe('Test 400 Error Handling with Fault Object', () => {
           {
             Message: "Unsupported Operation",
             Detail: "Operation No resource method found for POST, return 405 with Allow header is not supported.",
-            code: "500"
-          }
+            code: "500",
+          },
         ],
-        type: "ValidationFault"
+        type: "ValidationFault",
       },
-      time: "2025-05-28T23:25:54.056-07:00"
+      time: "2025-05-28T23:25:54.056-07:00",
     };
 
     const scope = nock('https://sandbox-quickbooks.api.intuit.com')
       .post('/v3/company/12345/customer')
       .reply(400, faultResponse, {
         'content-type': 'application/json',
-        'intuit_tid': '1234-1234-1234-123'
+        'intuit_tid': '1234-1234-1234-123',
       });
 
     try {
       await oauthClient.makeApiCall({
         url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/customer',
         method: 'POST',
-        body: { /* test data */ }
+        body: { /* test data */ },
       });
       expect.fail('Should have thrown an error');
     } catch (error) {
@@ -1188,14 +1188,14 @@ describe('Test 400 Error Handling with Fault Object', () => {
       expect(error.description).to.equal('Operation No resource method found for POST, return 405 with Allow header is not supported.');
       expect(error.fault).to.deep.include({
         type: 'ValidationFault',
-        time: '2025-05-28T23:25:54.056-07:00'
+        time: '2025-05-28T23:25:54.056-07:00',
       });
       expect(error.fault.errors).to.deep.equal([
         {
           message: 'Unsupported Operation',
           detail: 'Operation No resource method found for POST, return 405 with Allow header is not supported.',
-          code: '500'
-        }
+          code: '500',
+        },
       ]);
     }
 
