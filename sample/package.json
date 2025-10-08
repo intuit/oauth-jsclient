@@ -12,7 +12,7 @@
   "license": "APACHE",
   "homepage": "https://github.intuit.com/abisalehalliprasan/oauth-jsclient",
   "dependencies": {
-    "body-parser": "latest",
+    "body-parser": "^1.20.3",
     "dotenv": "^5.0.1",
     "ejs": "^3.1.9",
     "express": "^4.14.0",
