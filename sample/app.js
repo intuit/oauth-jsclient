@@ -119,11 +119,70 @@ app.get('/getCompanyInfo', function (req, res) {
   oauthClient
     .makeApiCall({ url: `${url}v3/company/${companyID}/companyinfo/${companyID}` })
     .then(function (authResponse) {
-      console.log(`\n The response for API call is :${JSON.stringify(authResponse.json)}`);
-      res.send(authResponse.json);
+      const resp = authResponse.json ? authResponse.json : authResponse.data;
+      console.log(`\n The response for API call is :${JSON.stringify(resp)}`);
+      res.send(resp);
     })
     .catch(function (e) {
-      console.error(e);
+      // Detailed error analysis
+      const errorAnalysis = {
+        // Basic error properties
+        basic: {
+          name: e.name,
+          message: e.message,
+          stack: e.stack,
+          code: e.code
+        },
+        // Response analysis
+        response: e.response ? {
+          status: e.response.status,
+          statusText: e.response.statusText,
+          headers: JSON.stringify(e.response.headers),
+          // Deep analysis of response data
+          data: JSON.stringify(e.response.data),
+          // Specific Fault object analysis
+          fault: JSON.stringify(e.response.data && e.response.data.Fault ? {
+            type: e.response.data.Fault.type,
+            error: e.response.data.Fault.Error ? e.response.data.Fault.Error.map(err => ({
+              message: err.Message,
+              detail: err.Detail,
+              code: err.code,
+              element: err.element,
+              additionalInfo: err.additionalInfo
+            })) : null,
+            timestamp: e.response.data.time
+          } : null),
+          // OAuth error fields
+          oauth: {
+            error:e.response.data && e.response.data.error,
+            error_description: e.response.data && e.response.data.error_description
+          }
+        } : null,
+        // Request analysis
+        request: e.request ? {
+          method: e.request.method,
+          path: e.request.path,
+          headers: e.request.headers
+        } : null
+      };
+
+      // Log the detailed error analysis
+      console.error('Exception Analysis:', {
+        hasFaultObject: !!(e.response && e.response.data && e.response.data.Fault),
+        faultType: e.response && e.response.data && e.response.data.Fault && e.response.data.Fault.type,
+        faultErrors: e.response && e.response.data && e.response.data.Fault && e.response.data.Fault.Error,
+        fullAnalysis: errorAnalysis
+      });
+
+      // Send error response to client
+      res.status(e.response ? e.response.status : 500).json({
+        error: true,
+        message: e.message,
+        fault: e.response && e.response.data && e.response.data.Fault ? {
+          type: e.response.data.Fault.type,
+          errors: e.response.data.Fault.Error
+        } : null
+      });
     });
 });
 

@@ -1,3 +1,12 @@
 {
-  "body":"{\"keys\": [{\"kty\":\"sample_value_kty\",\"e\":\"sample_value_e\",\"use\":\"sample_value_use\",\"kid\":\"r4p5SbL2qaFehFzhj8gI\",\"alg\":\"sample_value_alg\",\"n\":\"sample_value_n\"}]}"
+  "keys": [
+    {
+      "kty": "RSA",
+      "e": "AQAB",
+      "use": "sig",
+      "kid": "test_kid",
+      "alg": "RS256",
+      "n": "test_n"
+    }
+  ]
 }

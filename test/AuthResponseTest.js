@@ -4,6 +4,7 @@
 const {
   describe,
   it,
+  xit,
   beforeEach,
   afterEach,
 } = require('mocha');
@@ -115,7 +116,7 @@ describe('Tests for AuthResponse', () => {
   });
 
   it('Process get_intuit_tid', () => {
-    const intuitTid = authResponse.get_intuit_tid();
+    const intuitTid = authResponse.getIntuitTid();
     expect(intuitTid).to.be.equal(expectedResponseMock.headers.intuit_tid);
   });
 

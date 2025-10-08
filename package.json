@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "scripts": {
@@ -68,7 +68,7 @@
   "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
     "atob": "2.1.2",
-    "axios": "^1.5.1",
+    "axios": "^1.9.0",
     "csrf": "^3.0.4",
     "jsonwebtoken": "^9.0.2",
     "query-string": "^6.12.1",
@@ -76,10 +76,11 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@snyk/protect": "^1.657.0",
     "btoa": "^1.2.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^6.8.0",
+    "eslint": "^9.37.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
@@ -87,8 +88,7 @@
     "nock": "^9.2.3",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
-    "sinon": "^9.0.2",
-    "@snyk/protect": "^1.657.0"
+    "sinon": "^9.0.2"
   },
   "snyk": true
 }

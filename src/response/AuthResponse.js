@@ -44,9 +44,82 @@ function AuthResponse(params) {
  */
 AuthResponse.prototype.processResponse = function processResponse(response) {
   this.response = response || '';
-  this.body = (response && response.body) || (response && response.data) || '';
-  this.json = this.body && this.isJson() ? this.body : null;
-  this.intuit_tid = (response && response.headers && response.headers.intuit_tid) || '';
+  
+  // Handle response data
+  if (response) {
+    // Set intuit_tid from headers if available
+    this.intuit_tid = (response.headers && response.headers.intuit_tid) || '';
+
+    if (response.data) {
+      // Handle axios response
+      this.body = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+      
+      // Handle QuickBooks API error response
+      if (response.data.Fault) {
+        this.json = {
+          Fault: response.data.Fault,
+          time: response.data.time || new Date().toISOString(),
+          intuit_tid: this.intuit_tid,
+        };
+        // Store the full response including headers and status
+        this.response = {
+          ...response,
+          data: this.json,
+          status: response.status || 400,
+          statusText: response.statusText || 'Bad Request',
+        };
+      } else {
+        // Store the raw response data
+        this.json = response.data;
+        // Store the full response for successful responses
+        this.response = {
+          ...response,
+          data: this.json,
+        };
+      }
+    } else if (response.body) {
+      // Handle other response types
+      this.body = response.body;
+      try {
+        const parsedBody = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+        
+        // Handle QuickBooks API error response
+        if (parsedBody.Fault) {
+          this.json = {
+            Fault: parsedBody.Fault,
+            time: parsedBody.time || new Date().toISOString(),
+            intuit_tid: this.intuit_tid,
+          };
+          // Store the full response including headers and status
+          this.response = {
+            ...response,
+            data: this.json,
+            status: response.status || 400,
+            statusText: response.statusText || 'Bad Request',
+          };
+        } else {
+          // Store the raw response data
+          this.json = parsedBody;
+          // Store the full response for successful responses
+          this.response = {
+            ...response,
+            data: this.json,
+          };
+        }
+      } catch (e) {
+        this.json = null;
+        this.response = response;
+      }
+    } else {
+      this.body = '';
+      this.json = null;
+      this.response = response;
+    }
+  } else {
+    this.body = '';
+    this.json = null;
+    this.response = null;
+  }
 };
 
 /**
@@ -95,16 +168,39 @@ AuthResponse.prototype.valid = function valid() {
 };
 
 /**
- * Get Json () { returns token as JSON }
+ * Get Json () { returns response as JSON }
  * *
  * @return {object} json
+ * @throws {Error} If response cannot be parsed as JSON
  */
 AuthResponse.prototype.getJson = function getJson() {
-  if (!this.isJson()) throw new Error('AuthResponse is not JSON');
-  if (!this.json) {
-    this.json = this.body ? JSON.parse(this.body) : null;
+  // If we already have parsed JSON, return it
+  if (this.json !== null) {
+    return this.json;
   }
-  return this.json;
+
+  // Try to parse the body if we have one
+  if (this.body) {
+    try {
+      this.json = typeof this.body === 'string' ? JSON.parse(this.body) : this.body;
+      
+      // Handle QuickBooks API error response
+      if (this.json.Fault) {
+        this.json = {
+          Fault: this.json.Fault,
+          time: this.json.time || new Date().toISOString(),
+          intuit_tid: this.intuit_tid,
+        };
+      }
+      
+      return this.json;
+    } catch (e) {
+      throw new Error(`Failed to parse response as JSON: ${e.message}`);
+    }
+  }
+
+  // If we have no body, return null
+  return null;
 };
 
 /**
@@ -112,7 +208,7 @@ AuthResponse.prototype.getJson = function getJson() {
  * *
  * @returns {string} intuit_tid
  */
-AuthResponse.prototype.get_intuit_tid = function get_intuit_tid() {
+AuthResponse.prototype.getIntuitTid = function getIntuitTid() {
   return this.intuit_tid;
 };
 
