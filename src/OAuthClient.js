@@ -460,10 +460,16 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
       // Make the API call
       const response = await this.axiosInstance(fullUrl, requestConfig);
       
-      // Wrap successful response in expected format
+      // Log the successful response
+      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(response.data, null, 2));
+      
+      // Return in AuthResponse-compatible format for backward compatibility
       return {
-        status: 'success',
-        data: response.data,
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+        json: response.data,
+        body: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
       };
     } catch (error) {
       attempt += 1;
