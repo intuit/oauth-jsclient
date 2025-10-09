@@ -70,6 +70,7 @@
     "atob": "2.1.2",
     "axios": "^1.9.0",
     "csrf": "^3.0.4",
+    "graphql-request": "^7.1.2",
     "jsonwebtoken": "^9.0.2",
     "query-string": "^6.12.1",
     "rsa-pem-from-mod-exp": "^0.8.4",
