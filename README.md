@@ -790,8 +790,61 @@ oauthClient.createToken(parseRedirect).catch(function (error) {
 
 ## FAQ
 
-You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if you have any
-questions.
+### Common Issues
+
+#### API calls fail after upgrading to version 4.2.1
+
+**Problem**: After upgrading from version 4.2.0 to 4.2.1, API calls started failing with malformed header errors.
+
+**Cause**: Version 4.2.1 had a bug in the `makeApiCall` method where the Authorization header was incorrectly constructed, causing HTTP requests to have invalid headers.
+
+**Solution**: Upgrade to version 4.2.2 or later, which fixes this issue. The fix ensures the Authorization header is properly set as:
+```javascript
+Authorization: `Bearer ${access_token}`
+```
+
+#### How do I enable logging?
+
+Pass `logging: true` when creating the OAuthClient instance:
+```javascript
+const oauthClient = new OAuthClient({
+  clientId: 'your_client_id',
+  clientSecret: 'your_client_secret',
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8000/callback',
+  logging: true // Enable logging
+});
+```
+Logs will be stored in `/logs/oAuthClient-log.log`
+
+#### How do I handle token expiration?
+
+Access tokens expire after 1 hour (3600 seconds). You can check token validity and refresh:
+```javascript
+if (!oauthClient.isAccessTokenValid()) {
+  await oauthClient.refresh();
+}
+```
+
+#### What's the difference between relative and absolute URLs in makeApiCall?
+
+You can use either format:
+- **Absolute URL**: `https://sandbox-quickbooks.api.intuit.com/v3/company/123/item`
+- **Relative URL**: `/v3/company/123/item` (the client will automatically prepend the correct base URL based on your environment)
+
+#### How do I customize retry behavior?
+
+Configure the retry settings:
+```javascript
+OAuthClient.retryConfig = {
+  maxRetries: 3,
+  retryDelay: 1000, // milliseconds
+  retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED']
+};
+```
+
+For more questions, refer to our [FAQ wiki](https://github.com/intuit/oauth-jsclient/wiki/FAQ).
 
 ## Contributing
 
