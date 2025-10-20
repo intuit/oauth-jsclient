@@ -445,7 +445,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
       const requestConfig = {
         method: method || 'GET',
         headers: {
-          ...this.authHeader(),
+          Authorization: `Bearer ${this.getToken().access_token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'User-Agent': OAuthClient.user_agent,
