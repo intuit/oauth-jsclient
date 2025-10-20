@@ -26,13 +26,13 @@ A Node.js client for Intuit's OAuth 2.0 implementation.
 ## Installation
 
 ```bash
-npm install oauth-jsclient
+npm install intuit-oauth
 ```
 
 ## Usage
 
 ```javascript
-const OAuthClient = require('oauth-jsclient');
+const OAuthClient = require('intuit-oauth');
 
 const oauthClient = new OAuthClient({
   clientId: 'your_client_id',
