@@ -9,8 +9,8 @@ const OAuthClient = require('../src/OAuthClient');
 
 // Create an OAuth client instance
 const oauthClient = new OAuthClient({
-  clientId: 'ABM5BJFArjiVs9YHPY7TkiePSZnksMJwudp4F1JReuTX2MeuTc', //'YOUR_CLIENT_ID',
-  clientSecret: 'V6zf3DSRCVTW0yFVVcrcF71IwvQdACiO6ip8mWNc',//'YOUR_CLIENT_SECRET',
+  clientId: 'YOUR_CLIENT_ID',
+  clientSecret: 'YOUR_CLIENT_SECRET',
   environment: 'sandbox',
   redirectUri: 'http://localhost:3000/callback'
 });
