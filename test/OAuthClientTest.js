@@ -160,6 +160,47 @@ describe('Tests for OAuthClient', () => {
       const authResponse = await oauthClient.createToken(parseRedirect);
       expect(authResponse.getToken().access_token).to.be.equal(expectedAccessToken.access_token);
     });
+
+    it('should surface error details when createToken fails with 400 invalid_grant', async () => {
+      // Clear previous nock mocks
+      nock.cleanAll();
+      
+      // Mock a 400 error response from QuickBooks
+      nock('https://oauth.platform.intuit.com')
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(400, {
+          error: 'invalid_grant',
+          error_description: 'Token invalid'
+        }, {
+          'content-type': 'application/json',
+          'intuit_tid': '1234-5678-9012-3456'
+        });
+
+      const parseRedirect = 'http://localhost:8000/callback?state=testState&code=invalid_code';
+      
+      try {
+        await oauthClient.createToken(parseRedirect);
+        // If we get here, the test should fail
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        // Verify that error details are properly surfaced
+        expect(error).to.have.property('error');
+        expect(error.error).to.equal('invalid_grant');
+        expect(error).to.have.property('error_description');
+        expect(error.error_description).to.equal('Token invalid');
+        
+        // Verify authResponse contains the error details
+        expect(error).to.have.property('authResponse');
+        expect(error.authResponse).to.not.be.empty;
+        expect(error.authResponse.body).to.not.be.empty;
+        expect(error.authResponse.json).to.not.be.null;
+        expect(error.authResponse.json).to.have.property('error', 'invalid_grant');
+        expect(error.authResponse.json).to.have.property('error_description', 'Token invalid');
+        
+        // Verify intuit_tid is captured
+        expect(error.intuit_tid).to.equal('1234-5678-9012-3456');
+      }
+    });
   });
 
   // Refresh bearer tokens
@@ -213,6 +254,45 @@ describe('Tests for OAuthClient', () => {
 
     it('Handle refresh using token with empty token', async () => {
       await expect(oauthClient.refreshUsingToken(null)).to.be.rejectedWith(Error);
+    });
+
+    it('should surface error details when refresh fails with 400 invalid_grant', async () => {
+      // Clear previous nock mocks
+      nock.cleanAll();
+      
+      // Mock a 400 error response from QuickBooks
+      nock('https://oauth.platform.intuit.com')
+        .post('/oauth2/v1/tokens/bearer')
+        .reply(400, {
+          error: 'invalid_grant',
+          error_description: 'Refresh token is invalid or expired'
+        }, {
+          'content-type': 'application/json',
+          'intuit_tid': '9876-5432-1098-7654'
+        });
+
+      try {
+        await oauthClient.refresh();
+        // If we get here, the test should fail
+        expect.fail('Should have thrown an error');
+      } catch (error) {
+        // Verify that error details are properly surfaced
+        expect(error).to.have.property('error');
+        expect(error.error).to.equal('invalid_grant');
+        expect(error).to.have.property('error_description');
+        expect(error.error_description).to.equal('Refresh token is invalid or expired');
+        
+        // Verify authResponse contains the error details
+        expect(error).to.have.property('authResponse');
+        expect(error.authResponse).to.not.be.empty;
+        expect(error.authResponse.body).to.not.be.empty;
+        expect(error.authResponse.json).to.not.be.null;
+        expect(error.authResponse.json).to.have.property('error', 'invalid_grant');
+        expect(error.authResponse.json).to.have.property('error_description', 'Refresh token is invalid or expired');
+        
+        // Verify intuit_tid is captured
+        expect(error.intuit_tid).to.equal('9876-5432-1098-7654');
+      }
     });
   });
 
