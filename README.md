@@ -52,6 +52,43 @@ The client provides several custom error types for better error handling:
 - `ValidationError`: For validation related errors
 - `TokenError`: For token related errors
 
+### OAuth2 Error Response Handling
+
+When OAuth operations fail (e.g., `createToken()`, `refresh()`), the library now properly surfaces the full error response from QuickBooks:
+
+```javascript
+try {
+  const authResponse = await oauthClient.createToken(code);
+  const token = authResponse.getToken();
+} catch (error) {
+  // Access detailed OAuth2 error information
+  console.error('OAuth Error:', error.error); // e.g., "invalid_grant"
+  console.error('Description:', error.error_description); // e.g., "Token invalid"
+  console.error('Transaction ID:', error.intuit_tid); // For debugging with QuickBooks support
+  console.error('Full response:', error.authResponse.json); // Complete error payload
+  
+  // Handle specific OAuth2 errors
+  if (error.error === 'invalid_grant') {
+    // Authorization code expired or invalid - redirect user to re-authorize
+  } else if (error.error === 'invalid_client') {
+    // Client credentials are invalid - check configuration
+  }
+}
+```
+
+### Error Handling Demo
+
+Try the interactive error handling demo to see how OAuth2 errors are surfaced:
+
+```bash
+node test/error-handling-demo.js
+```
+
+This demo script demonstrates:
+- How OAuth2 error responses are captured and surfaced
+- Full error details including error codes, descriptions, and transaction IDs
+- Programmatic error handling based on error types
+
 Example error handling:
 
 ```javascript
@@ -73,6 +110,38 @@ try {
   }
 }
 ```
+
+### Common OAuth2 Errors
+
+The library properly handles and surfaces these QuickBooks OAuth2 errors:
+
+| Error Code | Description | Typical Cause | Recommended Action |
+|------------|-------------|---------------|-------------------|
+| `invalid_grant` | Authorization grant is invalid, expired, or revoked | User needs to re-authorize | Redirect user to authorization URL |
+| `invalid_client` | Client authentication failed | Invalid clientId/clientSecret | Verify OAuth credentials in config |
+| `invalid_request` | Request is malformed or invalid | Incorrect request parameters | Check authorization code and redirect URI |
+| `unauthorized_client` | Client is not authorized | Missing required permissions | Check app configuration and scopes |
+| `unsupported_grant_type` | Grant type not supported | Wrong grant_type parameter | Use 'authorization_code' or 'refresh_token' |
+
+### Debugging OAuth Errors
+
+When an OAuth error occurs, use these debugging strategies:
+
+1. **Log full error details**:
+   ```javascript
+   console.log('Error Code:', error.error);
+   console.log('Description:', error.error_description);
+   console.log('Transaction ID:', error.intuit_tid);
+   console.log('Full Response:', JSON.stringify(error.authResponse.json, null, 2));
+   ```
+
+2. **Use the Transaction ID**: Contact QuickBooks support with the `intuit_tid` from the error for detailed troubleshooting
+
+3. **Check error code**: Different error codes require different handling strategies (see table above)
+
+4. **Examine response body**: `error.authResponse.body` contains the raw response string for detailed debugging
+
+5. **Enable logging**: Set `logging: true` in OAuthClient config to capture detailed logs in `logs/oAuthClient-log.log`
 
 ## Retry Logic
 
@@ -790,8 +859,87 @@ oauthClient.createToken(parseRedirect).catch(function (error) {
 
 ## FAQ
 
-You can refer to our [FAQ](https://github.com/intuit/oauth-jsclient/wiki/FAQ) if you have any
-questions.
+### Common Issues
+
+#### API calls fail after upgrading to version 4.2.1
+
+**Problem**: After upgrading from version 4.2.0 to 4.2.1, API calls started failing with malformed header errors.
+
+**Cause**: Version 4.2.1 had a bug in the `makeApiCall` method where the Authorization header was incorrectly constructed, causing HTTP requests to have invalid headers.
+
+**Solution**: Upgrade to version 4.2.2 or later, which fixes this issue. The fix ensures the Authorization header is properly set as:
+```javascript
+Authorization: `Bearer ${access_token}`
+```
+
+#### How do I enable logging?
+
+Pass `logging: true` when creating the OAuthClient instance:
+```javascript
+const oauthClient = new OAuthClient({
+  clientId: 'your_client_id',
+  clientSecret: 'your_client_secret',
+  environment: 'sandbox',
+  redirectUri: 'http://localhost:8000/callback',
+  logging: true // Enable logging
+});
+```
+Logs will be stored in `/logs/oAuthClient-log.log`
+
+#### How do I handle token expiration?
+
+Access tokens expire after 1 hour (3600 seconds). You can check token validity and refresh:
+```javascript
+if (!oauthClient.isAccessTokenValid()) {
+  await oauthClient.refresh();
+}
+```
+
+#### What's the difference between relative and absolute URLs in makeApiCall?
+
+You can use either format:
+- **Absolute URL**: `https://sandbox-quickbooks.api.intuit.com/v3/company/123/item`
+- **Relative URL**: `/v3/company/123/item` (the client will automatically prepend the correct base URL based on your environment)
+
+#### How do I customize retry behavior?
+
+Configure the retry settings:
+```javascript
+OAuthClient.retryConfig = {
+  maxRetries: 3,
+  retryDelay: 1000, // milliseconds
+  retryableStatusCodes: [408, 429, 500, 502, 503, 504],
+  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED']
+};
+```
+
+#### How do I handle OAuth errors like invalid_grant?
+
+As of version 4.2.2, the library properly surfaces OAuth2 error details. When an OAuth operation fails, you can access:
+
+```javascript
+try {
+  const authResponse = await oauthClient.createToken(code);
+} catch (error) {
+  console.log('Error:', error.error); // e.g., "invalid_grant"
+  console.log('Description:', error.error_description); // e.g., "Token invalid"
+  console.log('Transaction ID:', error.intuit_tid); // For support
+  
+  // Handle specific errors
+  if (error.error === 'invalid_grant') {
+    // Redirect user to re-authorize
+  }
+}
+```
+
+Run the demo to see error handling in action:
+```bash
+node test/error-handling-demo.js
+```
+
+See the [Error Handling](#error-handling) section for complete details.
+
+For more questions, refer to our [FAQ wiki](https://github.com/intuit/oauth-jsclient/wiki/FAQ).
 
 ## Contributing
 
