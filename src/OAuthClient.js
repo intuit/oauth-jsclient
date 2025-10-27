@@ -784,6 +784,11 @@ OAuthClient.prototype.getTokenRequest = function getTokenRequest(request) {
       return authResponse;
     })
     .catch((e) => {
+      // If axios error has response data, populate authResponse with it
+      if (e.response && e.response.data) {
+        authResponse.processResponse(e.response);
+      }
+      
       if (!e.authResponse) {
         e = this.createError(e, authResponse);
       }
