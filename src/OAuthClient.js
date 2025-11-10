@@ -202,9 +202,14 @@ function safeStringify(obj) {
 OAuthClient.prototype.createToken = function createToken(uri) {
   return new Promise((resolve) => {
     if (!uri) throw new Error('Provide the Uri');
-    const params = queryString.parse(uri.split('?').reverse()[0]);
-    this.getToken().realmId = params.realmId ? params.realmId : '';
-    if ('state' in params) this.getToken().state = params.state;
+    // Safely parse query string from URI
+    const queryIndex = uri.indexOf('?');
+    const queryPart = queryIndex !== -1 ? uri.substring(queryIndex + 1) : uri;
+    const params = queryString.parse(queryPart);
+    
+    // Fix: Directly access token object instead of getToken() which returns a copy
+    this.token.realmId = params.realmId || '';
+    if ('state' in params) this.token.state = params.state;
 
     const body = {};
     if (params.code) {
@@ -212,6 +217,16 @@ OAuthClient.prototype.createToken = function createToken(uri) {
       body.code = params.code;
       body.redirect_uri = params.redirectUri || this.redirectUri;
     }
+    
+    // Log request details for debugging (without sensitive data)
+    this.log('info', 'Token exchange request:', {
+      grant_type: body.grant_type,
+      code_length: body.code ? body.code.length : 0,
+      redirect_uri: body.redirect_uri,
+      has_code: !!body.code,
+      realmId: this.token.realmId,
+      state: this.token.state,
+    });
 
     const request = {
       url: OAuthClient.tokenEndpoint,
@@ -680,13 +695,19 @@ OAuthClient.prototype.validateIdToken = function validateIdToken(params = {}) {
     const id_token_payload = JSON.parse(atob(token_parts[1]));
 
     // Step 1 : First check if the issuer is as mentioned in "issuer"
-    if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') return false;
+    if (id_token_payload.iss !== 'https://oauth.platform.intuit.com/op/v1') {
+      throw new Error('Invalid issuer in ID token');
+    }
 
     // Step 2 : check if the aud field in idToken contains application's clientId
-    if (!id_token_payload.aud.find((audience) => audience === this.clientId)) return false;
+    if (!id_token_payload.aud.find((audience) => audience === this.clientId)) {
+      throw new Error('Invalid audience in ID token');
+    }
 
     // Step 3 : ensure the timestamp has not elapsed
-    if (id_token_payload.exp < Date.now() / 1000) return false;
+    if (id_token_payload.exp < Date.now() / 1000) {
+      throw new Error('ID token has expired');
+    }
 
     const request = {
       url: OAuthClient.jwks_uri,
@@ -726,6 +747,9 @@ OAuthClient.prototype.getKeyFromJWKsURI = function getKeyFromJWKsURI(id_token, k
       if (Number(response.status) !== 200) throw new Error('Could not reach JWK endpoint');
       // Find the key by KID
       const key = response.data.keys.find((el) => el.kid === kid);
+      if (!key) {
+        throw new Error(`Key with kid "${kid}" not found in JWKS`);
+      }
       const cert = this.getPublicKey(key.n, key.e);
 
       return jwt.verify(id_token, cert);
