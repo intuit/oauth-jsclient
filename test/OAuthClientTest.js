@@ -522,9 +522,8 @@ describe('Tests for OAuthClient', () => {
   });
 
   describe('Make API call in Production', () => {
-    before(() => {
+    beforeEach(() => {
       nock('https://quickbooks.api.intuit.com')
-        .persist()
         .get('/v3/company/12345/companyinfo/12345')
         .reply(200, expectedMakeAPICall, {
           'content-type': 'application/json',
@@ -1335,5 +1334,517 @@ describe('Ensure 400 does not throw AxiosError', () => {
       expect(error.code).to.equal('400');
       expect(error.fault.type).to.equal('ValidationFault');
     }
+  });
+});
+
+describe('Test Additional HTTP Status Codes', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle 401 Unauthorized errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(401, {
+        error: 'unauthorized',
+        error_description: 'Invalid access token',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '401-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('401');
+      expect(error.intuitTid).to.equal('401-test-tid');
+    }
+  });
+
+  it('should handle 403 Forbidden errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(403, {
+        error: 'forbidden',
+        error_description: 'Access denied',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '403-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('403');
+      expect(error.intuitTid).to.equal('403-test-tid');
+    }
+  });
+
+  it('should handle 404 Not Found errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(404, {
+        error: 'not_found',
+        error_description: 'Resource not found',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '404-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('404');
+      expect(error.intuitTid).to.equal('404-test-tid');
+    }
+  });
+
+  it('should handle 500 Internal Server errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(500, {
+        error: 'internal_server_error',
+        error_description: 'Server error',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '500-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('INTERNAL_SERVER_ERROR');
+      expect(error.intuitTid).to.equal('500-test-tid');
+    }
+  });
+
+  it('should handle 502 Bad Gateway errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(502, {
+        error: 'bad_gateway',
+        error_description: 'Bad gateway',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '502-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('502');
+      expect(error.intuitTid).to.equal('502-test-tid');
+    }
+  });
+
+  it('should handle 503 Service Unavailable errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(503, {
+        error: 'service_unavailable',
+        error_description: 'Service temporarily unavailable',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '503-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('503');
+      expect(error.intuitTid).to.equal('503-test-tid');
+    }
+  });
+
+  it('should handle 504 Gateway Timeout errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(504, {
+        error: 'gateway_timeout',
+        error_description: 'Gateway timeout',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '504-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('504');
+      expect(error.intuitTid).to.equal('504-test-tid');
+    }
+  });
+});
+
+describe('Test Fault Object Variations', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle Fault with multiple errors', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: 'First error',
+            Detail: 'First error detail',
+            code: '100',
+          },
+          {
+            Message: 'Second error',
+            Detail: 'Second error detail',
+            code: '200',
+          },
+        ],
+        type: 'ValidationFault',
+      },
+      time: '2025-12-15T12:00:00.000Z',
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/invoice')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'multi-error-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/invoice',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('First error');
+      expect(error.fault.errors).to.have.length(2);
+      expect(error.fault.errors[0].message).to.equal('First error');
+      expect(error.fault.errors[1].message).to.equal('Second error');
+    }
+  });
+
+  it('should handle Fault without time field', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: 'Error without time',
+            Detail: 'Detail without time',
+            code: '300',
+          },
+        ],
+        type: 'SystemFault',
+      },
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/customer')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'no-time-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/customer',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Error without time');
+      expect(error.fault.type).to.equal('SystemFault');
+      expect(error.fault.time).to.be.undefined;
+    }
+  });
+
+  it('should handle Fault with empty Error array', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [],
+        type: 'UnknownFault',
+      },
+      time: '2025-12-15T12:00:00.000Z',
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/payment')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'empty-error-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/payment',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Bad Request');
+      expect(error.fault.errors).to.have.length(0);
+    }
+  });
+});
+
+describe('Test Error Object Creation Edge Cases', () => {
+  it('should create OAuthError with string status code', () => {
+    const error = new OAuthError('Test error', '400', 'Test description', 'test-tid');
+    expect(error.code).to.equal('400');
+    expect(error.message).to.equal('Test error');
+    expect(error.description).to.equal('Test description');
+    expect(error.intuitTid).to.equal('test-tid');
+  });
+
+  it('should create OAuthError with numeric status code', () => {
+    const error = new OAuthError('Test error', 401, 'Unauthorized', 'test-tid');
+    expect(error.code).to.equal('401');
+  });
+
+  it('should create OAuthError with non-standard code', () => {
+    const error = new OAuthError('Test error', 'CUSTOM_ERROR', 'Custom description');
+    expect(error.code).to.equal('CUSTOM_ERROR');
+  });
+
+  it('should create OAuthError without description', () => {
+    const error = new OAuthError('Test error', 'ERROR_CODE');
+    expect(error.message).to.equal('Test error');
+    expect(error.description).to.equal('Test error');
+    expect(error.code).to.equal('ERROR_CODE');
+  });
+
+  it('should create OAuthError without intuitTid', () => {
+    const error = new OAuthError('Test error', 'ERROR_CODE', 'Description');
+    expect(error.intuitTid).to.equal('');
+  });
+
+  it('should handle toString correctly', () => {
+    const error = new OAuthError('Test error', '500', 'Server error', 'tid-123');
+    const errorString = error.toString();
+    expect(errorString).to.include('OAuthError');
+    expect(errorString).to.include('Test error');
+    expect(errorString).to.include('500');
+    expect(errorString).to.include('Server error');
+    expect(errorString).to.include('tid-123');
+  });
+
+  it('should handle toJSON correctly', () => {
+    const error = new OAuthError('Test error', '400', 'Bad request', 'tid-456');
+    const json = error.toJSON();
+    expect(json.name).to.equal('OAuthError');
+    expect(json.message).to.equal('Test error');
+    expect(json.code).to.equal('400');
+    expect(json.description).to.equal('Bad request');
+    expect(json.intuitTid).to.equal('tid-456');
+    expect(json.stack).to.exist;
+  });
+});
+
+describe('Verify createToken does not return error objects', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    
+    // Reset OAuth endpoints to defaults (in case previous tests changed them)
+    OAuthClient.authorizeEndpoint = 'https://appcenter.intuit.com/connect/oauth2';
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+    OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should return AuthResponse on success, not an error object', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(200, {
+        access_token: 'test_access_token',
+        refresh_token: 'test_refresh_token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        x_refresh_token_expires_in: 8726400,
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'success-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=valid_code_12345';
+    const result = await oauthClient.createToken(parseRedirect);
+
+    // Verify result is an AuthResponse, not an error
+    expect(result).to.exist;
+    expect(result).to.not.be.instanceof(Error);
+    expect(result).to.have.property('token');
+    expect(result).to.have.property('getToken');
+    expect(typeof result.getToken).to.equal('function');
+    
+    // Verify it has the expected AuthResponse methods
+    expect(result).to.have.property('status');
+    expect(result).to.have.property('text');
+    expect(result).to.have.property('getIntuitTid');
+    
+    // Verify the token data is accessible
+    const token = result.getToken();
+    expect(token).to.have.property('access_token', 'test_access_token');
+    expect(token).to.have.property('refresh_token', 'test_refresh_token');
+    
+    // Verify it does NOT have error properties
+    expect(result).to.not.have.property('error');
+    expect(result).to.not.have.property('error_description');
+  });
+
+  it('should throw an error on failure, not return it', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(400, {
+        error: 'invalid_grant',
+        error_description: 'Authorization code expired',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'error-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=expired_code';
+    
+    let caughtError = null;
+    let result = null;
+    
+    try {
+      result = await oauthClient.createToken(parseRedirect);
+    } catch (error) {
+      caughtError = error;
+    }
+
+    // Verify an error was thrown, not returned
+    expect(result).to.be.null;
+    expect(caughtError).to.exist;
+    expect(caughtError).to.be.instanceof(Error);
+    
+    // Verify error has the expected properties
+    expect(caughtError).to.have.property('error', 'invalid_grant');
+    expect(caughtError).to.have.property('error_description', 'Authorization code expired');
+    expect(caughtError).to.have.property('intuit_tid', 'error-tid');
+    
+    // Verify authResponse is attached to the error
+    expect(caughtError).to.have.property('authResponse');
+    expect(caughtError.authResponse).to.not.be.empty;
+  });
+
+  it('should handle network errors by throwing, not returning', async () => {
+    // Simulate network error
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .replyWithError({
+        message: 'Network connection failed',
+        code: 'ECONNREFUSED',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=test_code';
+    
+    let caughtError = null;
+    let result = null;
+    
+    try {
+      result = await oauthClient.createToken(parseRedirect);
+    } catch (error) {
+      caughtError = error;
+    }
+
+    // Verify an error was thrown, not returned
+    expect(result).to.be.null;
+    expect(caughtError).to.exist;
+    expect(caughtError).to.be.instanceof(Error);
+    
+    // Verify error message contains network error details
+    expect(caughtError.message).to.exist;
+  });
+
+  it('should never return a createError-wrapped object as success', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(200, {
+        access_token: 'valid_token',
+        refresh_token: 'valid_refresh',
+        token_type: 'bearer',
+        expires_in: 3600,
+        x_refresh_token_expires_in: 8726400,
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'test-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=valid_code';
+    const result = await oauthClient.createToken(parseRedirect);
+
+    // Verify result is NOT a createError-wrapped object
+    expect(result).to.not.have.property('originalMessage');
+    expect(result).to.not.have.property('error');
+    expect(result).to.not.have.property('error_description');
+    
+    // Verify result IS an AuthResponse
+    expect(result).to.have.property('token');
+    expect(result).to.have.property('response');
+    expect(result).to.have.property('body');
+    expect(result).to.have.property('json');
+    expect(result).to.have.property('intuit_tid');
   });
 });

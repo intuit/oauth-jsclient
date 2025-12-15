@@ -61,21 +61,9 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
           time: response.data.time || new Date().toISOString(),
           intuit_tid: this.intuit_tid,
         };
-        // Store the full response including headers and status
-        this.response = {
-          ...response,
-          data: this.json,
-          status: response.status || 400,
-          statusText: response.statusText || 'Bad Request',
-        };
       } else {
         // Store the raw response data
         this.json = response.data;
-        // Store the full response for successful responses
-        this.response = {
-          ...response,
-          data: this.json,
-        };
       }
     } else if (response.body) {
       // Handle other response types
@@ -90,30 +78,16 @@ AuthResponse.prototype.processResponse = function processResponse(response) {
             time: parsedBody.time || new Date().toISOString(),
             intuit_tid: this.intuit_tid,
           };
-          // Store the full response including headers and status
-          this.response = {
-            ...response,
-            data: this.json,
-            status: response.status || 400,
-            statusText: response.statusText || 'Bad Request',
-          };
         } else {
           // Store the raw response data
           this.json = parsedBody;
-          // Store the full response for successful responses
-          this.response = {
-            ...response,
-            data: this.json,
-          };
         }
       } catch (e) {
         this.json = null;
-        this.response = response;
       }
     } else {
       this.body = '';
       this.json = null;
-      this.response = response;
     }
   } else {
     this.body = '';
