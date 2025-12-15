@@ -475,6 +475,74 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
       // Make the API call
       const response = await this.axiosInstance(fullUrl, requestConfig);
       
+      // Check for error status codes (since validateStatus accepts 200-499)
+      if (response.status >= 400) {
+        const { status, data, headers: responseHeaders } = response;
+        const intuitTid = responseHeaders && responseHeaders.intuit_tid;
+
+        // Handle 400 errors with Fault object
+        if (status === 400) {
+          if (data && data.Fault) {
+            const fault = data.Fault;
+            const faultError = fault.Error && fault.Error[0];
+            
+            // Extract detailed error information from Fault object
+            const errorMessage = (faultError && faultError.Message) || 'Bad Request';
+            const errorCode = (faultError && faultError.code) || '400';
+            const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
+            const faultType = (fault && fault.type) || 'ValidationFault';
+            
+            // Create error with fault details
+            const error = new OAuthError(
+              errorMessage,
+              errorCode,
+              errorDetail,
+              intuitTid,
+            );
+            
+            // Add fault details as properties
+            error.faultType = faultType;
+            error.fault = {
+              type: faultType,
+              errors: fault.Error ? fault.Error.map(err => ({
+                message: err.Message,
+                detail: err.Detail,
+                code: err.code,
+              })) : [],
+              time: data.time,
+            };
+            
+            throw error;
+          }
+          
+          // Handle other 400 errors
+          throw new OAuthError(
+            (data && data.error) || 'Bad Request',
+            '400',
+            (data && data.error_description) || 'Request validation failed',
+            intuitTid,
+          );
+        }
+
+        // Handle rate limit errors
+        if (status === 429) {
+          throw new OAuthError(
+            'Rate limit exceeded',
+            'RATE_LIMIT_EXCEEDED',
+            'Too many requests, please try again later',
+            intuitTid,
+          );
+        }
+
+        // Handle other HTTP errors
+        throw new OAuthError(
+          (data && data.error) || 'HTTP Error',
+          status.toString(),
+          (data && data.error_description) || `HTTP ${status} error`,
+          intuitTid,
+        );
+      }
+      
       // Log the successful response
       this.log('info', 'The makeAPICall () response is : ', JSON.stringify(response.data, null, 2));
       
@@ -487,6 +555,11 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
         body: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
       };
     } catch (error) {
+      // If this is already an OAuthError from our status code checks, re-throw it
+      if (error instanceof OAuthError) {
+        throw error;
+      }
+
       attempt += 1;
       lastError = error;
 

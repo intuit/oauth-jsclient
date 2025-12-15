@@ -17,11 +17,13 @@ A Node.js client for Intuit's OAuth 2.0 implementation.
 
 - OAuth 2.0 authentication flow
 - Token management and refresh
-- API request handling
-- Error handling with custom error types
-- Automatic retry for transient errors
-- Structured logging
-- Response validation
+- API request handling with automatic base URL resolution
+- **Comprehensive error handling** with custom error types (OAuthError, ValidationError, TokenError)
+- **Full HTTP status code support** (400, 401, 403, 404, 429, 500, 502, 503, 504)
+- **QuickBooks Fault object parsing** for detailed validation errors
+- Automatic retry for transient errors with exponential backoff
+- Structured logging with Winston
+- Response validation and transformation
 
 ## Installation
 
@@ -45,12 +47,19 @@ const oauthClient = new OAuthClient({
 
 ## Error Handling
 
-The client provides several custom error types for better error handling:
+The client provides comprehensive error handling with custom error types and full HTTP status code support:
 
-- `OAuthError`: Base error class for all OAuth related errors
-- `NetworkError`: For network related errors
-- `ValidationError`: For validation related errors
-- `TokenError`: For token related errors
+### Error Types
+
+- **`OAuthError`**: Base error class for all OAuth and API errors
+  - Includes error code, description, and Intuit transaction ID
+  - Supports QuickBooks Fault object details
+  - Available for all HTTP status codes (400, 401, 403, 404, 429, 500, 502, 503, 504)
+- **`ValidationError`**: For input validation errors
+- **`TokenError`**: For token-related errors (expired, invalid, etc.)
+- **`NetworkError`**: For network connectivity issues
+
+All errors include detailed debugging information and are properly thrown (never returned as successful responses).
 
 ### OAuth2 Error Response Handling
 
@@ -122,6 +131,53 @@ The library properly handles and surfaces these QuickBooks OAuth2 errors:
 | `invalid_request` | Request is malformed or invalid | Incorrect request parameters | Check authorization code and redirect URI |
 | `unauthorized_client` | Client is not authorized | Missing required permissions | Check app configuration and scopes |
 | `unsupported_grant_type` | Grant type not supported | Wrong grant_type parameter | Use 'authorization_code' or 'refresh_token' |
+
+### HTTP Status Code Handling
+
+The library includes comprehensive error handling for all HTTP status codes:
+
+| Status Code | Error Type | Description |
+|-------------|------------|-------------|
+| `400` | Bad Request | Validation errors, includes QuickBooks Fault object details |
+| `401` | Unauthorized | Invalid or expired access token |
+| `403` | Forbidden | Insufficient permissions |
+| `404` | Not Found | Resource not found |
+| `429` | Rate Limited | Too many requests |
+| `500` | Internal Server Error | Server-side error |
+| `502` | Bad Gateway | Gateway error |
+| `503` | Service Unavailable | Service temporarily unavailable |
+| `504` | Gateway Timeout | Gateway timeout |
+
+All errors include:
+- Detailed error messages
+- HTTP status codes
+- Transaction IDs (`intuit_tid`) for support
+- Full response data for debugging
+
+### QuickBooks Fault Object Handling
+
+When QuickBooks API returns validation errors, the library properly parses and surfaces Fault objects:
+
+```javascript
+try {
+  await oauthClient.makeApiCall({ 
+    url: '/v3/company/123/customer',
+    method: 'POST',
+    body: invalidData 
+  });
+} catch (error) {
+  // Access Fault object details
+  if (error.fault) {
+    console.log('Fault Type:', error.fault.type);  // e.g., "ValidationFault"
+    console.log('Errors:', error.fault.errors);    // Array of error details
+    error.fault.errors.forEach(err => {
+      console.log('Message:', err.message);
+      console.log('Detail:', err.detail);
+      console.log('Code:', err.code);
+    });
+  }
+}
+```
 
 ### Debugging OAuth Errors
 
@@ -939,6 +995,29 @@ node test/error-handling-demo.js
 
 See the [Error Handling](#error-handling) section for complete details.
 
+#### Does createToken return errors or throw them?
+
+`createToken()` **always throws errors** and never returns them as successful results:
+
+✅ **On Success**: Returns an `AuthResponse` object with token data
+```javascript
+const authResponse = await oauthClient.createToken(callbackUrl);
+const token = authResponse.getToken(); // Access token data
+```
+
+❌ **On Error**: Throws an exception (never returns it)
+```javascript
+try {
+  const authResponse = await oauthClient.createToken(callbackUrl);
+  // Success - use authResponse
+} catch (error) {
+  // Error thrown - handle it
+  console.error(error.error, error.error_description);
+}
+```
+
+The library has comprehensive tests (131+ test cases) that verify this behavior is always correct.
+
 For more questions, refer to our [FAQ wiki](https://github.com/intuit/oauth-jsclient/wiki/FAQ).
 
 ## Contributing
@@ -952,6 +1031,29 @@ For more questions, refer to our [FAQ wiki](https://github.com/intuit/oauth-jscl
 - Fork and clone the repository (`develop` branch).
 - Run `npm install` for dependencies.
 - Run `npm test` to execute all specs.
+
+### Test Coverage
+
+The library maintains comprehensive test coverage.
+
+#### Test Categories
+
+1. **OAuth Flow Tests**: Authorization, token creation, refresh, and revocation
+2. **Error Handling Tests**: HTTP status codes (400, 401, 403, 404, 429, 500, 502, 503, 504)
+3. **Fault Object Tests**: QuickBooks Fault response handling
+4. **Token Management Tests**: Token validation, expiration, and lifecycle
+5. **API Call Tests**: Request handling, retries, and response processing
+6. **Response Processing Tests**: AuthResponse object creation and data transformation
+
+Run tests with coverage report:
+```bash
+npm test
+```
+
+View detailed HTML coverage report:
+```bash
+npm test && open coverage/index.html
+```
 
 ## Changelog
 
