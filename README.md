@@ -308,7 +308,21 @@ const response = await oauthClient.makeApiCall({
     key: 'value'
   }
 });
+
+// Access response data - both formats supported for backward compatibility
+console.log(response.data);   // Recommended (works in all versions)
+console.log(response.json);   // Also supported (4.2.1+)
+
+// Response includes:
+// - response.data: Response data (all versions)
+// - response.json: Response data (4.2.1+, same as response.data)
+// - response.body: Response as string
+// - response.status: HTTP status code
+// - response.statusText: HTTP status text
+// - response.headers: Response headers
 ```
+
+**Response Format Note**: Version 4.2.1 introduced a breaking change that removed `response.data` in favor of `response.json`. Version 4.2.3 restored `response.data` for backward compatibility. Both `response.data` and `response.json` now return the same value, so you can use either.
 
 #### validateResponse(response)
 Validates an API response and throws appropriate errors.
@@ -917,9 +931,20 @@ oauthClient.createToken(parseRedirect).catch(function (error) {
 
 ### Common Issues
 
-#### API calls fail after upgrading to version 4.2.1
+#### API calls fail after upgrading to version 4.2.1 or 4.2.2
 
-**Problem**: After upgrading from version 4.2.0 to 4.2.1, API calls started failing with malformed header errors.
+**Problem 1**: After upgrading from version 4.2.0 to 4.2.1, API calls started failing with `response.data is undefined`.
+
+**Cause**: Version 4.2.1 introduced an undocumented breaking change that removed `response.data` and replaced it with `response.json`.
+
+**Solution**: Upgrade to version 4.2.3 or later, which restores `response.data` for backward compatibility. Both `response.data` and `response.json` are now available:
+```javascript
+const response = await oauthClient.makeApiCall({ url: '/v3/company/123/item' });
+console.log(response.data);  // ✅ Works in 4.2.0, 4.2.3+
+console.log(response.json);  // ✅ Works in 4.2.1+
+```
+
+**Problem 2**: After upgrading from version 4.2.0 to 4.2.1, API calls started failing with malformed header errors.
 
 **Cause**: Version 4.2.1 had a bug in the `makeApiCall` method where the Authorization header was incorrectly constructed, causing HTTP requests to have invalid headers.
 

@@ -553,6 +553,7 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
         headers: response.headers,
         json: response.data,
         body: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
+        data: response.data, // Added for backward compatibility with 4.2.0 and earlier
       };
     } catch (error) {
       // If this is already an OAuthError from our status code checks, re-throw it

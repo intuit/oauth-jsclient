@@ -429,6 +429,34 @@ describe('Tests for OAuthClient', () => {
         });
     });
 
+    it('Make API Call returns response.data for backward compatibility', () => {
+      oauthClient.getToken().realmId = '12345';
+      return oauthClient
+        .makeApiCall({
+          url:
+            'https://sandbox-quickbooks.api.intuit.com/v3/company/' +
+            '12345' +
+            '/companyinfo/' +
+            '12345',
+        })
+        .then((authResponse) => {
+          // Verify response.data exists for backward compatibility (4.2.0 and earlier)
+          expect(authResponse.data).to.exist;
+          expect(JSON.stringify(authResponse.data)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+          // Verify response.json also exists (4.2.1+)
+          expect(authResponse.json).to.exist;
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+          // Verify they are the same
+          expect(JSON.stringify(authResponse.data)).to.be.equal(
+            JSON.stringify(authResponse.json),
+          );
+        });
+    });
+
     it('Make API Call in Sandbox Environment using relative endpoint - starting slash', () => {
       oauthClient.environment = 'sandbox';
       oauthClient.getToken().realmId = '12345';
