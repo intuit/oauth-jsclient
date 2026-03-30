@@ -10,17 +10,17 @@
 /**
  * Environment type for OAuth client
  */
-export type Environment = 'sandbox' | 'production';
+type Environment = 'sandbox' | 'production';
 
 /**
  * HTTP methods supported by makeApiCall
  */
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 /**
  * Response types supported by makeApiCall
  */
-export type ResponseType = 'json' | 'text' | 'stream' | 'arraybuffer';
+type ResponseType = 'json' | 'text' | 'stream' | 'arraybuffer';
 
 // =============================================================================
 // Token Interfaces
@@ -29,7 +29,7 @@ export type ResponseType = 'json' | 'text' | 'stream' | 'arraybuffer';
 /**
  * Token data structure
  */
-export interface TokenData {
+interface TokenData {
   realmId?: string;
   token_type?: string;
   access_token?: string;
@@ -45,7 +45,7 @@ export interface TokenData {
 /**
  * Token class for managing OAuth tokens
  */
-export declare class Token {
+declare class Token {
   realmId: string;
   token_type: string;
   access_token: string;
@@ -108,7 +108,7 @@ export declare class Token {
 /**
  * Parameters for AuthResponse constructor
  */
-export interface AuthResponseParams {
+interface AuthResponseParams {
   token?: Token;
   response?: any;
   responseText?: string;
@@ -118,7 +118,7 @@ export interface AuthResponseParams {
 /**
  * AuthResponse class for handling OAuth responses
  */
-export declare class AuthResponse {
+declare class AuthResponse {
   token: Token | string;
   response: any;
   body: string;
@@ -194,7 +194,7 @@ export declare class AuthResponse {
 /**
  * Fault error detail from QuickBooks API
  */
-export interface FaultError {
+interface FaultError {
   message: string;
   detail: string;
   code: string;
@@ -203,7 +203,7 @@ export interface FaultError {
 /**
  * Fault object from QuickBooks API error responses
  */
-export interface Fault {
+interface Fault {
   type: string;
   errors: FaultError[];
   time?: string;
@@ -212,7 +212,7 @@ export interface Fault {
 /**
  * Base OAuth error class
  */
-export declare class OAuthError extends Error {
+declare class OAuthError extends Error {
   name: string;
   message: string;
   code: string;
@@ -258,7 +258,7 @@ export declare class OAuthError extends Error {
 /**
  * Validation error class
  */
-export declare class ValidationError extends OAuthError {
+declare class ValidationError extends OAuthError {
   constructor(
     message: string,
     code?: string,
@@ -270,7 +270,7 @@ export declare class ValidationError extends OAuthError {
 /**
  * Token error class
  */
-export declare class TokenError extends OAuthError {
+declare class TokenError extends OAuthError {
   constructor(
     message: string,
     code?: string,
@@ -282,7 +282,7 @@ export declare class TokenError extends OAuthError {
 /**
  * Network error class
  */
-export declare class NetworkError extends OAuthError {
+declare class NetworkError extends OAuthError {
   constructor(message: string, intuitTid?: string);
 }
 
@@ -293,7 +293,7 @@ export declare class NetworkError extends OAuthError {
 /**
  * Configuration for OAuthClient constructor
  */
-export interface OAuthClientConfig {
+interface OAuthClientConfig {
   /**
    * Environment: 'sandbox' or 'production'
    */
@@ -328,7 +328,7 @@ export interface OAuthClientConfig {
 /**
  * Parameters for authorizeUri method
  */
-export interface AuthorizeUriParams {
+interface AuthorizeUriParams {
   /**
    * OAuth scopes - can be a single scope string or array of scopes
    */
@@ -343,7 +343,7 @@ export interface AuthorizeUriParams {
 /**
  * Parameters for revoke method
  */
-export interface RevokeParams {
+interface RevokeParams {
   /**
    * Access token to revoke (optional)
    */
@@ -358,7 +358,7 @@ export interface RevokeParams {
 /**
  * Parameters for validateIdToken method
  */
-export interface ValidateIdTokenParams {
+interface ValidateIdTokenParams {
   /**
    * ID token to validate (optional, uses stored token if not provided)
    */
@@ -368,7 +368,7 @@ export interface ValidateIdTokenParams {
 /**
  * Parameters for setAuthorizeURLs method
  */
-export interface SetAuthorizeUrlsParams {
+interface SetAuthorizeUrlsParams {
   /**
    * Custom authorize endpoint URL
    */
@@ -393,7 +393,7 @@ export interface SetAuthorizeUrlsParams {
 /**
  * Parameters for makeApiCall method
  */
-export interface MakeApiCallParams {
+interface MakeApiCallParams {
   /**
    * URL for the API call (can be full URL or relative endpoint)
    */
@@ -438,7 +438,7 @@ export interface MakeApiCallParams {
 /**
  * Response from makeApiCall
  */
-export interface ApiResponse {
+interface ApiResponse {
   /**
    * HTTP status code
    */
@@ -468,7 +468,7 @@ export interface ApiResponse {
 /**
  * OAuth scopes available
  */
-export interface OAuthScopes {
+interface OAuthScopes {
   Accounting: string;
   Payment: string;
   Payroll: string;
@@ -485,7 +485,7 @@ export interface OAuthScopes {
 /**
  * Environment URLs
  */
-export interface EnvironmentUrls {
+interface EnvironmentUrls {
   sandbox: string;
   production: string;
 }
@@ -493,7 +493,7 @@ export interface EnvironmentUrls {
 /**
  * Retry configuration
  */
-export interface RetryConfig {
+interface RetryConfig {
   maxRetries: number;
   retryDelay: number;
   retryableStatusCodes: number[];
@@ -507,7 +507,7 @@ export interface RetryConfig {
 /**
  * Wrapped error structure from createError method
  */
-export interface WrappedError extends Error {
+interface WrappedError extends Error {
   error: string;
   error_description: string;
   authResponse: AuthResponse | string;
@@ -707,4 +707,4 @@ declare class OAuthClient {
   validateResponse(response: any): boolean;
 }
 
-export default OAuthClient;
+export = OAuthClient;
