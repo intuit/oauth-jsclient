@@ -965,7 +965,10 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
     it('throws an error when no params provided', () => {
       expect(() => { oauthClient.setAuthorizeURLs(null) }).to.throw("Provide the custom authorize URL's");
     });
-    it('sets the Authorise urls to custom ones - sandbox', async (done) => {
+    it('sets the Authorise urls to custom ones - sandbox', () => {
+      OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+      OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
+
       const customURLs = {
         authorizeEndpoint: "https://custom.Authorize.Endpoint",
         tokenEndpoint: "https://custom.Token.Endpoint",
@@ -975,15 +978,16 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
 
       oauthClient.environment = 'sandbox';
       oauthClient.setAuthorizeURLs(customURLs);
-      done();
       expect(OAuthClient.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
       expect(OAuthClient.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
       expect(OAuthClient.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
       expect(OAuthClient.userinfo_endpoint_sandbox).to.be.equal('https://custom.User.Info.Endpoint');
       expect(OAuthClient.userinfo_endpoint_production).to.be.equal('https://accounts.platform.intuit.com/v1/openid_connect/userinfo');
-
     });
-    it('sets the Authorise urls to custom ones - production', async (done) => {
+    it('sets the Authorise urls to custom ones - production', () => {
+      OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+      OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
+
       const customURLs = {
         authorizeEndpoint: "https://custom.Authorize.Endpoint",
         tokenEndpoint: "https://custom.Token.Endpoint",
@@ -993,13 +997,11 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
 
       oauthClient.environment = 'production';
       oauthClient.setAuthorizeURLs(customURLs);
-      done();
       expect(OAuthClient.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
       expect(OAuthClient.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
       expect(OAuthClient.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
       expect(OAuthClient.userinfo_endpoint_sandbox).to.be.equal('https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo');
       expect(OAuthClient.userinfo_endpoint_production).to.be.equal('https://custom.User.Info.Endpoint');
-
     });
   });
 });
@@ -1720,6 +1722,513 @@ describe('Test Error Object Creation Edge Cases', () => {
     expect(json.description).to.equal('Bad request');
     expect(json.intuitTid).to.equal('tid-456');
     expect(json.stack).to.exist;
+  });
+});
+
+describe('Test validateResponse', () => {
+  it('should throw ValidationError for empty response', () => {
+    expect(() => oauthClient.validateResponse(null)).to.throw('Empty response received');
+  });
+
+  it('should throw ValidationError for response missing status', () => {
+    expect(() => oauthClient.validateResponse({ headers: {} })).to.throw('Response missing status code');
+  });
+
+  it('should throw OAuthError for 429 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 429, headers: { intuit_tid: 'tid-429' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('RATE_LIMIT_EXCEEDED');
+      expect(error.intuitTid).to.equal('tid-429');
+    }
+  });
+
+  it('should throw TokenError for 401 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 401, headers: { intuit_tid: 'tid-401' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(TokenError);
+      expect(error.code).to.equal('UNAUTHORIZED');
+      expect(error.intuitTid).to.equal('tid-401');
+    }
+  });
+
+  it('should throw OAuthError for 403 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 403, headers: { intuit_tid: 'tid-403' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('FORBIDDEN');
+      expect(error.intuitTid).to.equal('tid-403');
+    }
+  });
+
+  it('should return true for valid response', () => {
+    expect(oauthClient.validateResponse({ status: 200, headers: {} })).to.be.true;
+  });
+});
+
+describe('Test shouldRetry', () => {
+  it('should return false when max retries exceeded', () => {
+    const error = { response: { status: 500 } };
+    expect(oauthClient.shouldRetry(error, 3)).to.be.false;
+    expect(oauthClient.shouldRetry(error, 5)).to.be.false;
+  });
+
+  it('should return true for retryable status codes', () => {
+    [408, 429, 500, 502, 503, 504].forEach((status) => {
+      const error = { response: { status } };
+      expect(oauthClient.shouldRetry(error, 0)).to.be.true;
+    });
+  });
+
+  it('should return true for retryable error codes', () => {
+    ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED'].forEach((code) => {
+      const error = { code };
+      expect(oauthClient.shouldRetry(error, 0)).to.be.true;
+    });
+  });
+
+  it('should return false for non-retryable errors', () => {
+    expect(oauthClient.shouldRetry({ response: { status: 404 } }, 0)).to.be.false;
+    expect(oauthClient.shouldRetry({ code: 'ENOENT' }, 0)).to.be.false;
+    expect(oauthClient.shouldRetry({}, 0)).to.be.false;
+  });
+});
+
+describe('Test OAuthClient constructor with logging', () => {
+  it('should initialize logger when logging is enabled', () => {
+    const client = new OAuthClient({
+      clientId: 'testId',
+      clientSecret: 'testSecret',
+      environment: 'sandbox',
+      redirectUri: 'http://localhost:8000/callback',
+      logging: true,
+    });
+    expect(client.logging).to.be.true;
+    expect(client.logger).to.not.be.null;
+  });
+});
+
+describe('Test log function with object data', () => {
+  it('should log with object data', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    oauthClient.log('info', 'Test message', { key: 'value' });
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    oauthClient.logger = null;
+  });
+
+  it('should log with currentRequest context', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    oauthClient.currentRequest = { url: 'http://test.com', method: 'GET', headers: { Accept: 'json' } };
+    oauthClient.log('info', 'Test message', { key: 'value' });
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    const loggedStr = oauthClient.logger.log.firstCall.args[1];
+    expect(loggedStr).to.include('http://test.com');
+    oauthClient.currentRequest = null;
+    oauthClient.logger = null;
+  });
+
+  it('should handle data that fails JSON.parse after safeStringify', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    const badData = { toJSON() { return undefined; } };
+    oauthClient.log('info', 'Test message', badData);
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    oauthClient.logger = null;
+  });
+});
+
+describe('Test makeApiCall 400 non-Fault response', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle 400 without Fault object', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/query')
+      .reply(400, {
+        error: 'invalid_request',
+        error_description: 'Missing required field',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '400-no-fault-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/query',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('400');
+      expect(error.message).to.equal('invalid_request');
+      expect(error.intuitTid).to.equal('400-no-fault-tid');
+    }
+  });
+});
+
+describe('Test revoke and getUserInfo error paths', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+    OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
+    OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle revoke network failure', async () => {
+    nock('https://developer.api.intuit.com')
+      .post('/v2/oauth2/tokens/revoke')
+      .replyWithError({ message: 'Network failure', code: 'ECONNREFUSED' });
+
+    oauthClient.getToken().x_refresh_token_expires_in = '4535995551112';
+    try {
+      await oauthClient.revoke();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+
+  it('should handle getUserInfo network failure', async () => {
+    nock('https://sandbox-accounts.platform.intuit.com')
+      .get('/v1/openid_connect/userinfo')
+      .replyWithError({ message: 'Network failure', code: 'ECONNREFUSED' });
+
+    try {
+      await oauthClient.getUserInfo();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+});
+
+describe('Test getTokenRequest with invalid response', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw OAuthError when response is not valid (status >= 300)', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(301, { error: 'moved' }, {
+        'content-type': 'application/json',
+        intuit_tid: '301-tid',
+      });
+
+    try {
+      await oauthClient.getTokenRequest({
+        url: 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer',
+        method: 'POST',
+        data: {},
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+});
+
+describe('Test createError edge cases', () => {
+  it('should handle authResponse with unparseable string body', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.body = 'not-valid-json{{{';
+    authResponse.response = { headers: { intuit_tid: 'parse-fail-tid' } };
+    const wrappedE = oauthClient.createError(new Error('test'), authResponse);
+    expect(wrappedE.error).to.equal('not-valid-json{{{');
+    expect(wrappedE.error_description).to.equal('not-valid-json{{{');
+  });
+
+  it('should handle string error argument', () => {
+    const wrappedE = oauthClient.createError('string error message', null);
+    expect(wrappedE.error).to.equal('string error message');
+    expect(wrappedE.message).to.equal('string error message');
+  });
+
+  it('should handle non-Error, non-string error argument', () => {
+    const wrappedE = oauthClient.createError(42, null);
+    expect(wrappedE.error).to.equal('42');
+    expect(wrappedE.message).to.equal('42');
+  });
+});
+
+describe('Test loadResponseFromJWKsURI', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should load response from JWK URI', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [] });
+
+    const response = await oauthClient.loadResponseFromJWKsURI('https://oauth.platform.intuit.com/op/v1/jwks');
+    expect(response.data).to.deep.equal({ keys: [] });
+  });
+});
+
+describe('Test validateIdToken', () => {
+  let jwtVerifyStub;
+
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    jwtVerifyStub = sinon.stub(jwt, 'verify').returns(true);
+  });
+
+  afterEach(() => {
+    jwtVerifyStub.restore();
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw if id_token is missing', async () => {
+    oauthClient.token.id_token = '';
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.equal('The bearer token does not have id_token');
+    }
+  });
+
+  it('should validate a properly formatted id_token', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid-123' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: (Date.now() / 1000) + 3600,
+      iat: Date.now() / 1000,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.signature';
+    oauthClient.token.id_token = mockIdToken;
+
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, {
+        keys: [{ kid: 'test-kid-123', n: 'test-modulus', e: 'AQAB' }],
+      });
+
+    const result = await oauthClient.validateIdToken();
+    expect(result).to.be.true;
+  });
+
+  it('should throw for invalid issuer', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://wrong-issuer.com',
+      exp: (Date.now() / 1000) + 3600,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('Invalid issuer');
+    }
+  });
+
+  it('should throw for invalid audience', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['wrong-client-id'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: (Date.now() / 1000) + 3600,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('Invalid audience');
+    }
+  });
+
+  it('should throw for expired token', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: 1000,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('expired');
+    }
+  });
+});
+
+describe('Test getKeyFromJWKsURI', () => {
+  let jwtVerifyStub;
+
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    jwtVerifyStub = sinon.stub(jwt, 'verify').returns(true);
+  });
+
+  afterEach(() => {
+    jwtVerifyStub.restore();
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw if JWK endpoint returns non-200', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(500, 'Server Error');
+
+    try {
+      await oauthClient.getKeyFromJWKsURI('fake-token', 'kid-1', {
+        url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+
+  it('should throw if key with kid is not found', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [{ kid: 'other-kid', n: 'mod', e: 'exp' }] });
+
+    try {
+      await oauthClient.getKeyFromJWKsURI('fake-token', 'missing-kid', {
+        url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('missing-kid');
+    }
+  });
+
+  it('should verify token when key is found', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [{ kid: 'my-kid', n: 'modulus', e: 'AQAB' }] });
+
+    const result = await oauthClient.getKeyFromJWKsURI('fake-token', 'my-kid', {
+      url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+      method: 'GET',
+    });
+    expect(result).to.be.true;
+    expect(jwtVerifyStub.calledOnce).to.be.true;
+  });
+});
+
+describe('Test OAuthError switch cases for status codes', () => {
+  it('should handle 502 status code', () => {
+    const error = new OAuthError('Bad Gateway', 502, 'Bad Gateway');
+    expect(error.code).to.equal('502');
+  });
+
+  it('should handle 503 status code', () => {
+    const error = new OAuthError('Service Unavailable', 503, 'Service Unavailable');
+    expect(error.code).to.equal('503');
+  });
+
+  it('should handle 504 status code', () => {
+    const error = new OAuthError('Gateway Timeout', 504, 'Gateway Timeout');
+    expect(error.code).to.equal('504');
+  });
+
+  it('should handle default numeric code', () => {
+    const error = new OAuthError('Custom Error', 418, 'I am a teapot');
+    expect(error.code).to.equal(418);
+  });
+});
+
+describe('Test AuthResponse isContentType and isJson', () => {
+  it('should check isContentType correctly', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    const getStub = sinon.stub().returns('application/json;charset=UTF-8');
+    authResponse.processResponse({
+      data: { test: true },
+      headers: { 'content-type': 'application/json;charset=UTF-8', intuit_tid: 'test' },
+      status: 200,
+      get: getStub,
+    });
+    expect(authResponse.isContentType('application/json')).to.be.true;
+    expect(authResponse.isContentType('text/html')).to.be.false;
+  });
+
+  it('should check isJson correctly', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.processResponse({
+      data: { test: true },
+      headers: { 'content-type': 'application/json', intuit_tid: 'test' },
+      status: 200,
+    });
+    expect(authResponse.isJson()).to.be.true;
+  });
+});
+
+describe('Test AuthResponse getJson with Fault in body', () => {
+  it('should handle getJson parsing body with Fault', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.json = null;
+    authResponse.body = JSON.stringify({
+      Fault: { Error: [{ Message: 'Test' }], type: 'TestFault' },
+      time: '2025-01-01',
+    });
+    authResponse.intuit_tid = 'test-tid';
+    const json = authResponse.getJson();
+    expect(json).to.have.property('Fault');
+    expect(json.Fault.type).to.equal('TestFault');
   });
 });
 
