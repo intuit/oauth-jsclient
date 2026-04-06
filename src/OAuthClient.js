@@ -112,15 +112,16 @@ OAuthClient.jwks_uri = 'https://oauth.platform.intuit.com/op/v1/jwks';
 OAuthClient.scopes = {
   Accounting: 'com.intuit.quickbooks.accounting',
   Payment: 'com.intuit.quickbooks.payment',
-  Payroll: 'com.intuit.quickbooks.payroll',
-  TimeTracking: 'com.intuit.quickbooks.payroll.timetracking',
-  Benefits: 'com.intuit.quickbooks.payroll.benefits',
+  Payroll: 'payroll.compensation.read',
+  ProjectManagement: 'project-management.project',
+  Dimensions: 'app-foundations.custom-dimensions.read',
+  CustomFields: 'app-foundations.custom-field-definitions',
+  TimeTracking: 'time-tracking.time-entry',
   Profile: 'profile',
   Email: 'email',
   Phone: 'phone',
   Address: 'address',
   OpenId: 'openid',
-  Intuit_name: 'intuit_name',
 };
 OAuthClient.user_agent = `Intuit-OAuthClient-JS_${
   version.version
@@ -434,7 +435,7 @@ OAuthClient.prototype.getUserInfo = function getUserInfo() {
  * @param {string} params.responseType (optional) default is json - options are json, text, stream, arraybuffer
  * @returns {Promise}
  */
-OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, headers: customHeaders, body, params, timeout, responseType, maxRetries = 3 }) {
+OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, headers: customHeaders, body, params, timeout, responseType }) {
   if (!url) {
     throw new ValidationError('URL is required for API call');
   }
@@ -442,313 +443,139 @@ OAuthClient.prototype.makeApiCall = async function makeApiCall({ url, method, he
   // Determine the full URL - backward compatibility for relative endpoints
   let fullUrl = url;
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    // User provided a relative endpoint
     const baseURL = (this.environment && this.environment === 'production') 
       ? OAuthClient.environment.production 
       : OAuthClient.environment.sandbox;
-    
-    // Remove leading slash if present to avoid double slashes
     const endpoint = url.startsWith('/') ? url.slice(1) : url;
     fullUrl = baseURL + endpoint;
   }
 
-  let attempt = 0;
-  let lastError = null;
+  try {
+    const requestConfig = {
+      method: method || 'GET',
+      headers: {
+        Authorization: `Bearer ${this.getToken().access_token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': OAuthClient.user_agent,
+        ...customHeaders,
+      },
+      timeout: timeout || 30000,
+      responseType: responseType || 'json',
+      data: body,
+      params,
+    };
 
-  while (attempt < maxRetries) {
-    try {
-      const requestConfig = {
-        method: method || 'GET',
-        headers: {
-          Authorization: `Bearer ${this.getToken().access_token}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': OAuthClient.user_agent,
-          ...customHeaders,
-        },
-        timeout: timeout || 30000,
-        responseType: responseType || 'json',
-        data: body,
-        params,
-      };
+    const response = await this.axiosInstance(fullUrl, requestConfig);
+    
+    // Handle error status codes (resolved by validateStatus for 200-499)
+    if (response.status >= 400) {
+      const { status, data, headers: responseHeaders } = response;
+      const intuitTid = responseHeaders && responseHeaders.intuit_tid;
 
-      // Make the API call
-      const response = await this.axiosInstance(fullUrl, requestConfig);
-      
-      // Check for error status codes (since validateStatus accepts 200-499)
-      if (response.status >= 400) {
-        const { status, data, headers: responseHeaders } = response;
-        const intuitTid = responseHeaders && responseHeaders.intuit_tid;
-
-        // Handle 400 errors with Fault object
-        if (status === 400) {
-          if (data && data.Fault) {
-            const fault = data.Fault;
-            const faultError = fault.Error && fault.Error[0];
-            
-            // Extract detailed error information from Fault object
-            const errorMessage = (faultError && faultError.Message) || 'Bad Request';
-            const errorCode = (faultError && faultError.code) || '400';
-            const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
-            const faultType = (fault && fault.type) || 'ValidationFault';
-            
-            // Create error with fault details
-            const error = new OAuthError(
-              errorMessage,
-              errorCode,
-              errorDetail,
-              intuitTid,
-            );
-            
-            // Add fault details as properties
-            error.faultType = faultType;
-            error.fault = {
-              type: faultType,
-              errors: fault.Error ? fault.Error.map(err => ({
-                message: err.Message,
-                detail: err.Detail,
-                code: err.code,
-              })) : [],
-              time: data.time,
-            };
-            
-            throw error;
-          }
-          
-          // Handle other 400 errors
-          throw new OAuthError(
-            (data && data.error) || 'Bad Request',
-            '400',
-            (data && data.error_description) || 'Request validation failed',
-            intuitTid,
-          );
-        }
-
-        // Handle rate limit errors
-        if (status === 429) {
-          throw new OAuthError(
-            'Rate limit exceeded',
-            'RATE_LIMIT_EXCEEDED',
-            'Too many requests, please try again later',
-            intuitTid,
-          );
-        }
-
-        // Handle other HTTP errors
-        throw new OAuthError(
-          (data && data.error) || 'HTTP Error',
-          status.toString(),
-          (data && data.error_description) || `HTTP ${status} error`,
-          intuitTid,
-        );
-      }
-      
-      // Log the successful response
-      this.log('info', 'The makeAPICall () response is : ', JSON.stringify(response.data, null, 2));
-      
-      // Return in AuthResponse-compatible format for backward compatibility
-      return {
-        status: response.status,
-        statusText: response.statusText,
-        headers: response.headers,
-        json: response.data,
-        body: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
-        data: response.data, // Added for backward compatibility with 4.2.0 and earlier
-      };
-    } catch (error) {
-      // If this is already an OAuthError from our status code checks, re-throw it
-      if (error instanceof OAuthError) {
+      if (status === 400 && data && data.Fault) {
+        const fault = data.Fault;
+        const faultError = fault.Error && fault.Error[0];
+        const errorMessage = (faultError && faultError.Message) || 'Bad Request';
+        const errorCode = (faultError && faultError.code) || '400';
+        const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
+        const faultType = (fault && fault.type) || 'ValidationFault';
+        
+        const error = new OAuthError(errorMessage, errorCode, errorDetail, intuitTid);
+        error.faultType = faultType;
+        error.fault = {
+          type: faultType,
+          errors: fault.Error ? fault.Error.map(err => ({
+            message: err.Message,
+            detail: err.Detail,
+            code: err.code,
+          })) : [],
+          time: data.time,
+        };
         throw error;
       }
-
-      attempt += 1;
-      lastError = error;
-
-      // Detailed error analysis and logging
-      const errorAnalysis = {
-        // Basic error properties
-        basic: {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-          code: error.code,
-        },
-        // Response analysis
-        response: error.response ? {
-          status: error.response.status,
-          statusText: error.response.statusText,
-          headers: error.response.headers,
-          // Deep analysis of response data
-          data: error.response.data,
-          // Specific Fault object analysis
-          fault: error.response.data && error.response.data.Fault ? {
-            type: error.response.data.Fault.type,
-            error: error.response.data.Fault.Error ? error.response.data.Fault.Error.map(err => ({
-              message: err.Message,
-              detail: err.Detail,
-              code: err.code,
-              element: err.element,
-              additionalInfo: err.additionalInfo,
-            })) : null,
-            timestamp: error.response.data.time,
-          } : null,
-          // OAuth error fields
-          oauth: {
-            error: error.response.data && error.response.data.error,
-            error_description: error.response.data && error.response.data.error_description,
-          },
-        } : null,
-        // Request analysis
-        request: error.request ? {
-          method: error.request.method,
-          path: error.request.path,
-          headers: error.request.headers,
-        } : null,
-        // Context
-        context: {
-          attempt,
-          url: fullUrl,
-          timestamp: new Date().toISOString(),
-        },
-      };
-
-      // Log the detailed error analysis
-      this.log('error', 'Exception Analysis:', {
-        hasFaultObject: !!(error.response && error.response.data && error.response.data.Fault),
-        faultType: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.type,
-        faultErrors: error.response && error.response.data && error.response.data.Fault && error.response.data.Fault.Error,
-        fullAnalysis: errorAnalysis,
-      });
-
-      // Log the error for debugging
-      this.log('error', 'API call failed:', {
-        error: (error.response && error.response.data) || error.message,
-        status: error.response && error.response.status,
-        attempt,
-        url: fullUrl,
-      });
-
-      // Handle Axios errors
-      if (error.response) {
-        const { status, data, headers: responseHeaders } = error.response;
-        const intuitTid = responseHeaders && responseHeaders.intuit_tid;
-
-        // Handle 400 errors with Fault object
-        if (status === 400) {
-          if (data && data.Fault) {
-            const fault = data.Fault;
-            const faultError = fault.Error && fault.Error[0];
-            
-            // Extract detailed error information from Fault object
-            const errorMessage = (faultError && faultError.Message) || 'Bad Request';
-            const errorCode = (faultError && faultError.code) || '400';
-            const errorDetail = (faultError && faultError.Detail) || 'Request validation failed';
-            const faultType = (fault && fault.type) || 'ValidationFault';
-            
-            // Create a more descriptive error message
-            const detailedMessage = `${errorMessage}`;
-            
-            throw new OAuthError(
-              detailedMessage,
-              errorCode,
-              errorDetail,
-              intuitTid,
-              {
-                faultType,
-                fault: {
-                  type: faultType,
-                  errors: fault.Error ? fault.Error.map(err => ({
-                    message: err.Message,
-                    detail: err.Detail,
-                    code: err.code,
-                  })) : [],
-                  time: data.time,
-                },
-                timestamp: data.time,
-              },
-            );
-          }
-          
-          // Handle other 400 errors
-          throw new OAuthError(
-            (data && data.error) || 'Bad Request',
-            '400',
-            (data && data.error_description) || 'Request validation failed',
-            intuitTid,
-          );
-        }
-
-        // Handle rate limit errors
-        if (status === 429) {
-          throw new OAuthError(
-            'Rate limit exceeded',
-            'RATE_LIMIT_EXCEEDED',
-            'Too many requests, please try again later',
-            intuitTid,
-          );
-        }
-
-        // Handle other HTTP errors
+      
+      if (status === 400) {
         throw new OAuthError(
-          (data && data.error) || error.message || 'Unknown error',
-          status === 500 ? 'INTERNAL_SERVER_ERROR' : status.toString(),
-          (data && data.error_description) || 'An error occurred during the API call',
+          (data && data.error) || 'Bad Request',
+          '400',
+          (data && data.error_description) || 'Request validation failed',
           intuitTid,
         );
       }
 
-      // Handle network errors
-      if (error.code === 'ECONNABORTED') {
+      if (status === 429) {
         throw new OAuthError(
-          `Request timeout of ${timeout || 30000}ms exceeded`,
-          'TIMEOUT_ERROR',
-          'The request took too long to complete',
+          'Rate limit exceeded',
+          'RATE_LIMIT_EXCEEDED',
+          'Too many requests, please try again later',
+          intuitTid,
         );
       }
 
-      // Handle other errors (no response received)
-      if (error.request) {
-        throw new OAuthError(
-          'Connection reset by peer',
-          'NETWORK_ERROR',
-          'A network error occurred while making the request',
-        );
-      }
-
-      // Handle any other errors
       throw new OAuthError(
-        error.message || 'Unknown error',
-        'OAUTH_ERROR',
-        'An unexpected error occurred',
+        (data && data.error) || 'HTTP Error',
+        status.toString(),
+        (data && data.error_description) || `HTTP ${status} error`,
+        intuitTid,
+      );
+    }
+    
+    this.log('info', 'The makeAPICall () response is : ', JSON.stringify(response.data, null, 2));
+    
+    return {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      json: response.data,
+      body: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
+      data: response.data,
+    };
+  } catch (error) {
+    if (error instanceof OAuthError) {
+      throw error;
+    }
+
+    this.log('error', 'API call failed:', {
+      error: (error.response && error.response.data) || error.message,
+      status: error.response && error.response.status,
+      url: fullUrl,
+    });
+
+    // Handle Axios errors with response (status >= 500)
+    if (error.response) {
+      const { status, data, headers: responseHeaders } = error.response;
+      const intuitTid = responseHeaders && responseHeaders.intuit_tid;
+      throw new OAuthError(
+        (data && data.error) || error.message || 'Unknown error',
+        status === 500 ? 'INTERNAL_SERVER_ERROR' : status.toString(),
+        (data && data.error_description) || 'An error occurred during the API call',
+        intuitTid,
       );
     }
 
-    // Add delay between retries
-    if (attempt < maxRetries) {
-      const delay = 2 ** attempt * 1000;
-      // eslint-disable-next-line no-await-in-loop
-      await new Promise(resolve => setTimeout(resolve, delay));
+    if (error.code === 'ECONNABORTED') {
+      throw new OAuthError(
+        `Request timeout of ${timeout || 30000}ms exceeded`,
+        'TIMEOUT_ERROR',
+        'The request took too long to complete',
+      );
     }
-  }
 
-  // If we've exhausted all retries, throw the last error
-  if (lastError) {
-    if (lastError instanceof OAuthError) {
-      throw lastError;
+    if (error.request) {
+      throw new OAuthError(
+        'Connection reset by peer',
+        'NETWORK_ERROR',
+        'A network error occurred while making the request',
+      );
     }
+
     throw new OAuthError(
-      lastError.message || 'Maximum retry attempts reached',
-      'MAX_RETRIES_EXCEEDED',
-      'The request failed after multiple retry attempts',
+      error.message || 'Unknown error',
+      'OAUTH_ERROR',
+      'An unexpected error occurred',
     );
   }
-
-  // This should never be reached, but TypeScript needs it
-  throw new OAuthError(
-    'Unexpected error in makeApiCall',
-    'UNKNOWN_ERROR',
-    'An unexpected error occurred in the API call',
-  );
 };
 
 /**

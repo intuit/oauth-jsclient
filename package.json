@@ -36,7 +36,8 @@
       "coverage",
       ".nyc_output",
       "sample",
-      "sample/node_modules"
+      "sample/node_modules",
+      "test"
     ],
     "check-coverage": true,
     "lines": 95,
@@ -85,11 +86,17 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "^2.29.1",
-    "mocha": "^10.2.0",
+    "mocha": "^11.7.5",
     "nock": "^9.2.3",
     "nyc": "^15.0.1",
     "prettier": "^2.0.5",
     "sinon": "^9.0.2"
   },
-  "snyk": true
+  "snyk": true,
+  "overrides": {
+    "mocha": {
+      "diff": "^8.0.3",
+      "serialize-javascript": "^7.0.5"
+    }
+  }
 }
