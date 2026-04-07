@@ -117,6 +117,7 @@ OAuthClient.scopes = {
   Dimensions: 'app-foundations.custom-dimensions.read',
   CustomFields: 'app-foundations.custom-field-definitions',
   TimeTracking: 'time-tracking.time-entry',
+  SalesTax: 'indirect-tax.tax-calculation.quickbooks',
   Profile: 'profile',
   Email: 'email',
   Phone: 'phone',
@@ -238,6 +239,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
         'Content-Type': AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
+        'x-include-refresh-token-hard-expires-in': 'true',
       },
     };
 
@@ -279,6 +281,7 @@ OAuthClient.prototype.refresh = function refresh() {
         'Content-Type': AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
+        'x-include-refresh-token-hard-expires-in': 'true',
       },
     };
 
@@ -321,6 +324,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
         'Content-Type': AuthResponse._urlencodedContentType,
         Accept: AuthResponse._jsonContentType,
         'User-Agent': OAuthClient.user_agent,
+        'x-include-refresh-token-hard-expires-in': 'true',
       },
     };
 
