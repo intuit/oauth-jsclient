@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.4](https://github.com/intuit/oauth-jsclient/tree/4.2.4)
+#### Features
+- Added `x_refresh_token_lifetime_expires_in` field to Token model to expose the five-year absolute refresh token lifetime
+  - Updated Token constructor, `getToken()`, `setToken()`, and `clearToken()` to support the new field
+  - Added `x-include-refresh-token-hard-expires-in: true` header to `createToken()`, `refresh()`, and `refreshUsingToken()` requests
+- Added `SalesTax` scope (`indirect-tax.tax-calculation.quickbooks`) to `OAuthClient.scopes`
+
 ## [4.2.3](https://github.com/intuit/oauth-jsclient/tree/4.2.3)
 #### Issues Fixed
 - **BREAKING CHANGE FIX**: Restored `response.data` property in `makeApiCall()` method for backward compatibility
