@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.2.4](https://github.com/intuit/oauth-jsclient/tree/4.2.4)
+#### Features
+- Added `x_refresh_token_lifetime_expires_in` field to Token model to expose the five-year absolute refresh token lifetime
+  - Updated Token constructor, `getToken()`, `setToken()`, and `clearToken()` to support the new field
+  - Added `x-include-refresh-token-hard-expires-in: true` header to `createToken()`, `refresh()`, and `refreshUsingToken()` requests
+- Added `SalesTax` scope (`indirect-tax.tax-calculation.quickbooks`) to `OAuthClient.scopes`
+
+## [4.2.3](https://github.com/intuit/oauth-jsclient/tree/4.2.3)
+#### Issues Fixed
+- **BREAKING CHANGE FIX**: Restored `response.data` property in `makeApiCall()` method for backward compatibility
+  - Version 4.2.1 introduced a breaking change (commit 7d566fb) that removed `response.data` and replaced it with `response.json`
+  - This caused existing code that accessed `response.data` to break
+  - Now `makeApiCall()` returns both `response.data` AND `response.json` for backward compatibility
+  - **If you're upgrading from 4.2.0 to 4.2.3**, your existing code using `response.data` will continue to work
+  - **If you're on 4.2.1 or 4.2.2** and updated your code to use `response.json`, that will also continue to work
+  
+## [4.2.2](https://github.com/intuit/oauth-jsclient/tree/4.2.2)
+#### Features
+- Improved error handling for OAuth2 and API calls
+- Enhanced logging and debugging capabilities
+#### Issues Fixed  
+- Fixed Authorization header formatting in makeApiCall method
+- Improved Fault object parsing for QuickBooks validation errors
+- Enhanced error messages with transaction IDs
+
+## [4.2.1](https://github.com/intuit/oauth-jsclient/tree/4.2.1)
+#### Breaking Changes
+- **BREAKING**: `makeApiCall()` response format changed (commit 7d566fb)
+  - **Removed**: `response.data` property
+  - **Added**: `response.json`, `response.body`, `response.status`, `response.statusText`, `response.headers`
+  - This breaking change was not documented in the original 4.2.1 release notes
+  - **Fixed in 4.2.3**: `response.data` has been restored for backward compatibility
+#### Features
+- Enhanced response format with more metadata (status, headers, etc.)
+#### Migration Guide for 4.2.1
+- If upgrading from 4.2.0 to 4.2.1, change `response.data` to `response.json`
+- **Recommended**: Upgrade directly to 4.2.3 to avoid breaking changes
+
 ## [4.2.0](https://github.com/intuit/oauth-jsclient/tree/4.2.0)
 #### Features 
 - None (includes all minor releases and fixes since 4.1.0)

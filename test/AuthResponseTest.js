@@ -189,3 +189,174 @@ describe('Tests for AuthResponse with not json content', () => {
 	  expect(contentType).to.be.equal('application/pdf');
   });
 });
+
+describe('Tests for AuthResponse with Fault Objects', () => {
+  let authResponse;
+  let getStub;
+
+  beforeEach(() => {
+    getStub = sinon.stub().returns('application/json;charset=UTF-8');
+    authResponse = new AuthResponse({ token: oauthClient.getToken() });
+  });
+
+  afterEach(() => {
+    getStub.reset();
+  });
+
+  it('should handle response with Fault object and data field', () => {
+    const faultResponse = {
+      data: {
+        Fault: {
+          Error: [
+            {
+              Message: 'Test Fault Error',
+              Detail: 'Test fault detail',
+              code: '500',
+            },
+          ],
+          type: 'ValidationFault',
+        },
+        time: '2025-12-15T12:00:00.000Z',
+      },
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'fault-tid-123',
+      },
+      status: 400,
+      statusText: 'Bad Request',
+      get: getStub,
+    };
+
+    authResponse.processResponse(faultResponse);
+
+    expect(authResponse.json).to.have.property('Fault');
+    expect(authResponse.json.Fault.type).to.equal('ValidationFault');
+    expect(authResponse.json.time).to.equal('2025-12-15T12:00:00.000Z');
+    expect(authResponse.intuit_tid).to.equal('fault-tid-123');
+  });
+
+  it('should handle response with Fault object without time', () => {
+    const faultResponse = {
+      data: {
+        Fault: {
+          Error: [
+            {
+              Message: 'Test Error',
+              Detail: 'Test detail',
+              code: '400',
+            },
+          ],
+          type: 'SystemFault',
+        },
+      },
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'fault-tid-456',
+      },
+      status: 400,
+      statusText: 'Bad Request',
+      get: getStub,
+    };
+
+    authResponse.processResponse(faultResponse);
+
+    expect(authResponse.json).to.have.property('Fault');
+    expect(authResponse.json.Fault.type).to.equal('SystemFault');
+    expect(authResponse.json.time).to.be.a('string'); // Should have generated timestamp
+    expect(authResponse.intuit_tid).to.equal('fault-tid-456');
+  });
+
+  it('should handle response with Fault in body field', () => {
+    const faultResponse = {
+      body: JSON.stringify({
+        Fault: {
+          Error: [
+            {
+              Message: 'Body Fault Error',
+              Detail: 'Body fault detail',
+              code: '300',
+            },
+          ],
+          type: 'AuthenticationFault',
+        },
+        time: '2025-12-15T13:00:00.000Z',
+      }),
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'body-fault-tid',
+      },
+      status: 401,
+      statusText: 'Unauthorized',
+      get: getStub,
+    };
+
+    authResponse.processResponse(faultResponse);
+
+    expect(authResponse.json).to.have.property('Fault');
+    expect(authResponse.json.Fault.type).to.equal('AuthenticationFault');
+    expect(authResponse.json.time).to.equal('2025-12-15T13:00:00.000Z');
+    expect(authResponse.intuit_tid).to.equal('body-fault-tid');
+  });
+
+  it('should handle response with invalid JSON in body', () => {
+    const invalidResponse = {
+      body: 'This is not valid JSON {',
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'invalid-json-tid',
+      },
+      status: 500,
+      statusText: 'Internal Server Error',
+      get: getStub,
+    };
+
+    authResponse.processResponse(invalidResponse);
+
+    expect(authResponse.json).to.be.null;
+    expect(authResponse.body).to.equal('This is not valid JSON {');
+    expect(authResponse.intuit_tid).to.equal('invalid-json-tid');
+  });
+
+  it('should handle response without data or body', () => {
+    const emptyResponse = {
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'empty-response-tid',
+      },
+      status: 204,
+      statusText: 'No Content',
+      get: getStub,
+    };
+
+    authResponse.processResponse(emptyResponse);
+
+    expect(authResponse.body).to.equal('');
+    expect(authResponse.json).to.be.null;
+    expect(authResponse.intuit_tid).to.equal('empty-response-tid');
+  });
+
+  it('should handle getJson with Fault object', () => {
+    const faultResponse = {
+      body: JSON.stringify({
+        Fault: {
+          Error: [{ Message: 'Test', Detail: 'Detail', code: '100' }],
+          type: 'TestFault',
+        },
+        time: '2025-12-15T14:00:00.000Z',
+      }),
+      headers: {
+        'content-type': 'application/json',
+        intuit_tid: 'getjson-fault-tid',
+      },
+      status: 400,
+      get: getStub,
+    };
+
+    authResponse.processResponse(faultResponse);
+    const json = authResponse.getJson();
+
+    expect(json).to.have.property('Fault');
+    expect(json.Fault.type).to.equal('TestFault');
+    expect(json.intuit_tid).to.equal('getjson-fault-tid');
+  });
+});
