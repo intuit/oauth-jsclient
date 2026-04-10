@@ -38,6 +38,7 @@ function Token(params) {
   this.refresh_token = params.refresh_token || '';
   this.expires_in = params.expires_in || 0;
   this.x_refresh_token_expires_in = params.x_refresh_token_expires_in || 0;
+  this.x_refresh_token_lifetime_expires_in = params.x_refresh_token_lifetime_expires_in || 0;
   this.id_token = params.id_token || '';
   this.latency = params.latency || 60 * 1000;
   this.createdAt = params.createdAt || Date.now();
@@ -75,7 +76,8 @@ Token.prototype.tokenType = function tokenType() {
  *  access_token: *,
  *  expires_in: *,
  *  refresh_token: *,
- *  x_refresh_token_expires_in: *
+ *  x_refresh_token_expires_in: *,
+ *  x_refresh_token_lifetime_expires_in: *
  * }}
  */
 Token.prototype.getToken = function getToken() {
@@ -85,6 +87,7 @@ Token.prototype.getToken = function getToken() {
     expires_in: this.expires_in,
     refresh_token: this.refresh_token,
     x_refresh_token_expires_in: this.x_refresh_token_expires_in,
+    x_refresh_token_lifetime_expires_in: this.x_refresh_token_lifetime_expires_in,
     realmId: this.realmId,
     id_token: this.id_token,
     createdAt: this.createdAt,
@@ -102,6 +105,7 @@ Token.prototype.setToken = function setToken(tokenData) {
   this.token_type = tokenData.token_type;
   this.expires_in = tokenData.expires_in;
   this.x_refresh_token_expires_in = tokenData.x_refresh_token_expires_in;
+  this.x_refresh_token_lifetime_expires_in = tokenData.x_refresh_token_lifetime_expires_in || 0;
   this.id_token = tokenData.id_token || '';
   this.createdAt = tokenData.createdAt || Date.now();
   return this;
@@ -118,6 +122,7 @@ Token.prototype.clearToken = function clearToken() {
   this.token_type = '';
   this.expires_in = 0;
   this.x_refresh_token_expires_in = 0;
+  this.x_refresh_token_lifetime_expires_in = 0;
   this.id_token = '';
   this.createdAt = 0;
   return this;

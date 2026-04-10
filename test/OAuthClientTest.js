@@ -429,6 +429,34 @@ describe('Tests for OAuthClient', () => {
         });
     });
 
+    it('Make API Call returns response.data for backward compatibility', () => {
+      oauthClient.getToken().realmId = '12345';
+      return oauthClient
+        .makeApiCall({
+          url:
+            'https://sandbox-quickbooks.api.intuit.com/v3/company/' +
+            '12345' +
+            '/companyinfo/' +
+            '12345',
+        })
+        .then((authResponse) => {
+          // Verify response.data exists for backward compatibility (4.2.0 and earlier)
+          expect(authResponse.data).to.exist;
+          expect(JSON.stringify(authResponse.data)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+          // Verify response.json also exists (4.2.1+)
+          expect(authResponse.json).to.exist;
+          expect(JSON.stringify(authResponse.json)).to.be.equal(
+            JSON.stringify(expectedMakeAPICall),
+          );
+          // Verify they are the same
+          expect(JSON.stringify(authResponse.data)).to.be.equal(
+            JSON.stringify(authResponse.json),
+          );
+        });
+    });
+
     it('Make API Call in Sandbox Environment using relative endpoint - starting slash', () => {
       oauthClient.environment = 'sandbox';
       oauthClient.getToken().realmId = '12345';
@@ -522,9 +550,8 @@ describe('Tests for OAuthClient', () => {
   });
 
   describe('Make API call in Production', () => {
-    before(() => {
+    beforeEach(() => {
       nock('https://quickbooks.api.intuit.com')
-        .persist()
         .get('/v3/company/12345/companyinfo/12345')
         .reply(200, expectedMakeAPICall, {
           'content-type': 'application/json',
@@ -938,7 +965,10 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
     it('throws an error when no params provided', () => {
       expect(() => { oauthClient.setAuthorizeURLs(null) }).to.throw("Provide the custom authorize URL's");
     });
-    it('sets the Authorise urls to custom ones - sandbox', async (done) => {
+    it('sets the Authorise urls to custom ones - sandbox', () => {
+      OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+      OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
+
       const customURLs = {
         authorizeEndpoint: "https://custom.Authorize.Endpoint",
         tokenEndpoint: "https://custom.Token.Endpoint",
@@ -948,15 +978,16 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
 
       oauthClient.environment = 'sandbox';
       oauthClient.setAuthorizeURLs(customURLs);
-      done();
       expect(OAuthClient.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
       expect(OAuthClient.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
       expect(OAuthClient.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
       expect(OAuthClient.userinfo_endpoint_sandbox).to.be.equal('https://custom.User.Info.Endpoint');
       expect(OAuthClient.userinfo_endpoint_production).to.be.equal('https://accounts.platform.intuit.com/v1/openid_connect/userinfo');
-
     });
-    it('sets the Authorise urls to custom ones - production', async (done) => {
+    it('sets the Authorise urls to custom ones - production', () => {
+      OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+      OAuthClient.userinfo_endpoint_production = 'https://accounts.platform.intuit.com/v1/openid_connect/userinfo';
+
       const customURLs = {
         authorizeEndpoint: "https://custom.Authorize.Endpoint",
         tokenEndpoint: "https://custom.Token.Endpoint",
@@ -966,13 +997,11 @@ describe('Tests for OAuthClient to set custom Authorization URIs', () => {
 
       oauthClient.environment = 'production';
       oauthClient.setAuthorizeURLs(customURLs);
-      done();
       expect(OAuthClient.authorizeEndpoint).to.be.equal('https://custom.Authorize.Endpoint');
       expect(OAuthClient.tokenEndpoint).to.be.equal('https://custom.Token.Endpoint');
       expect(OAuthClient.revokeEndpoint).to.be.equal('https://custom.Revoke.Endpoint');
       expect(OAuthClient.userinfo_endpoint_sandbox).to.be.equal('https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo');
       expect(OAuthClient.userinfo_endpoint_production).to.be.equal('https://custom.User.Info.Endpoint');
-
     });
   });
 });
@@ -1335,5 +1364,1024 @@ describe('Ensure 400 does not throw AxiosError', () => {
       expect(error.code).to.equal('400');
       expect(error.fault.type).to.equal('ValidationFault');
     }
+  });
+});
+
+describe('Test Additional HTTP Status Codes', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle 401 Unauthorized errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(401, {
+        error: 'unauthorized',
+        error_description: 'Invalid access token',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '401-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('401');
+      expect(error.intuitTid).to.equal('401-test-tid');
+    }
+  });
+
+  it('should handle 403 Forbidden errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(403, {
+        error: 'forbidden',
+        error_description: 'Access denied',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '403-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('403');
+      expect(error.intuitTid).to.equal('403-test-tid');
+    }
+  });
+
+  it('should handle 404 Not Found errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(404, {
+        error: 'not_found',
+        error_description: 'Resource not found',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '404-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('404');
+      expect(error.intuitTid).to.equal('404-test-tid');
+    }
+  });
+
+  it('should handle 500 Internal Server errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(500, {
+        error: 'internal_server_error',
+        error_description: 'Server error',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '500-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('INTERNAL_SERVER_ERROR');
+      expect(error.intuitTid).to.equal('500-test-tid');
+    }
+  });
+
+  it('should handle 502 Bad Gateway errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(502, {
+        error: 'bad_gateway',
+        error_description: 'Bad gateway',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '502-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('502');
+      expect(error.intuitTid).to.equal('502-test-tid');
+    }
+  });
+
+  it('should handle 503 Service Unavailable errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(503, {
+        error: 'service_unavailable',
+        error_description: 'Service temporarily unavailable',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '503-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('503');
+      expect(error.intuitTid).to.equal('503-test-tid');
+    }
+  });
+
+  it('should handle 504 Gateway Timeout errors', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/companyinfo/12345')
+      .reply(504, {
+        error: 'gateway_timeout',
+        error_description: 'Gateway timeout',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '504-test-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/companyinfo/12345',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('504');
+      expect(error.intuitTid).to.equal('504-test-tid');
+    }
+  });
+});
+
+describe('Test Fault Object Variations', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle Fault with multiple errors', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: 'First error',
+            Detail: 'First error detail',
+            code: '100',
+          },
+          {
+            Message: 'Second error',
+            Detail: 'Second error detail',
+            code: '200',
+          },
+        ],
+        type: 'ValidationFault',
+      },
+      time: '2025-12-15T12:00:00.000Z',
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/invoice')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'multi-error-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/invoice',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('First error');
+      expect(error.fault.errors).to.have.length(2);
+      expect(error.fault.errors[0].message).to.equal('First error');
+      expect(error.fault.errors[1].message).to.equal('Second error');
+    }
+  });
+
+  it('should handle Fault without time field', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [
+          {
+            Message: 'Error without time',
+            Detail: 'Detail without time',
+            code: '300',
+          },
+        ],
+        type: 'SystemFault',
+      },
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/customer')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'no-time-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/customer',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Error without time');
+      expect(error.fault.type).to.equal('SystemFault');
+      expect(error.fault.time).to.be.undefined;
+    }
+  });
+
+  it('should handle Fault with empty Error array', async () => {
+    const faultResponse = {
+      Fault: {
+        Error: [],
+        type: 'UnknownFault',
+      },
+      time: '2025-12-15T12:00:00.000Z',
+    };
+
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .post('/v3/company/12345/payment')
+      .reply(400, faultResponse, {
+        'content-type': 'application/json',
+        'intuit_tid': 'empty-error-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/payment',
+        method: 'POST',
+        body: { test: 'data' },
+      });
+      expect.fail('Should have thrown an error');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.message).to.equal('Bad Request');
+      expect(error.fault.errors).to.have.length(0);
+    }
+  });
+});
+
+describe('Test Error Object Creation Edge Cases', () => {
+  it('should create OAuthError with string status code', () => {
+    const error = new OAuthError('Test error', '400', 'Test description', 'test-tid');
+    expect(error.code).to.equal('400');
+    expect(error.message).to.equal('Test error');
+    expect(error.description).to.equal('Test description');
+    expect(error.intuitTid).to.equal('test-tid');
+  });
+
+  it('should create OAuthError with numeric status code', () => {
+    const error = new OAuthError('Test error', 401, 'Unauthorized', 'test-tid');
+    expect(error.code).to.equal('401');
+  });
+
+  it('should create OAuthError with non-standard code', () => {
+    const error = new OAuthError('Test error', 'CUSTOM_ERROR', 'Custom description');
+    expect(error.code).to.equal('CUSTOM_ERROR');
+  });
+
+  it('should create OAuthError without description', () => {
+    const error = new OAuthError('Test error', 'ERROR_CODE');
+    expect(error.message).to.equal('Test error');
+    expect(error.description).to.equal('Test error');
+    expect(error.code).to.equal('ERROR_CODE');
+  });
+
+  it('should create OAuthError without intuitTid', () => {
+    const error = new OAuthError('Test error', 'ERROR_CODE', 'Description');
+    expect(error.intuitTid).to.equal('');
+  });
+
+  it('should handle toString correctly', () => {
+    const error = new OAuthError('Test error', '500', 'Server error', 'tid-123');
+    const errorString = error.toString();
+    expect(errorString).to.include('OAuthError');
+    expect(errorString).to.include('Test error');
+    expect(errorString).to.include('500');
+    expect(errorString).to.include('Server error');
+    expect(errorString).to.include('tid-123');
+  });
+
+  it('should handle toJSON correctly', () => {
+    const error = new OAuthError('Test error', '400', 'Bad request', 'tid-456');
+    const json = error.toJSON();
+    expect(json.name).to.equal('OAuthError');
+    expect(json.message).to.equal('Test error');
+    expect(json.code).to.equal('400');
+    expect(json.description).to.equal('Bad request');
+    expect(json.intuitTid).to.equal('tid-456');
+    expect(json.stack).to.exist;
+  });
+});
+
+describe('Test validateResponse', () => {
+  it('should throw ValidationError for empty response', () => {
+    expect(() => oauthClient.validateResponse(null)).to.throw('Empty response received');
+  });
+
+  it('should throw ValidationError for response missing status', () => {
+    expect(() => oauthClient.validateResponse({ headers: {} })).to.throw('Response missing status code');
+  });
+
+  it('should throw OAuthError for 429 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 429, headers: { intuit_tid: 'tid-429' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('RATE_LIMIT_EXCEEDED');
+      expect(error.intuitTid).to.equal('tid-429');
+    }
+  });
+
+  it('should throw TokenError for 401 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 401, headers: { intuit_tid: 'tid-401' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(TokenError);
+      expect(error.code).to.equal('UNAUTHORIZED');
+      expect(error.intuitTid).to.equal('tid-401');
+    }
+  });
+
+  it('should throw OAuthError for 403 status', () => {
+    try {
+      oauthClient.validateResponse({ status: 403, headers: { intuit_tid: 'tid-403' } });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('FORBIDDEN');
+      expect(error.intuitTid).to.equal('tid-403');
+    }
+  });
+
+  it('should return true for valid response', () => {
+    expect(oauthClient.validateResponse({ status: 200, headers: {} })).to.be.true;
+  });
+});
+
+describe('Test shouldRetry', () => {
+  it('should return false when max retries exceeded', () => {
+    const error = { response: { status: 500 } };
+    expect(oauthClient.shouldRetry(error, 3)).to.be.false;
+    expect(oauthClient.shouldRetry(error, 5)).to.be.false;
+  });
+
+  it('should return true for retryable status codes', () => {
+    [408, 429, 500, 502, 503, 504].forEach((status) => {
+      const error = { response: { status } };
+      expect(oauthClient.shouldRetry(error, 0)).to.be.true;
+    });
+  });
+
+  it('should return true for retryable error codes', () => {
+    ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED'].forEach((code) => {
+      const error = { code };
+      expect(oauthClient.shouldRetry(error, 0)).to.be.true;
+    });
+  });
+
+  it('should return false for non-retryable errors', () => {
+    expect(oauthClient.shouldRetry({ response: { status: 404 } }, 0)).to.be.false;
+    expect(oauthClient.shouldRetry({ code: 'ENOENT' }, 0)).to.be.false;
+    expect(oauthClient.shouldRetry({}, 0)).to.be.false;
+  });
+});
+
+describe('Test OAuthClient constructor with logging', () => {
+  it('should initialize logger when logging is enabled', () => {
+    const client = new OAuthClient({
+      clientId: 'testId',
+      clientSecret: 'testSecret',
+      environment: 'sandbox',
+      redirectUri: 'http://localhost:8000/callback',
+      logging: true,
+    });
+    expect(client.logging).to.be.true;
+    expect(client.logger).to.not.be.null;
+  });
+});
+
+describe('Test log function with object data', () => {
+  it('should log with object data', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    oauthClient.log('info', 'Test message', { key: 'value' });
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    oauthClient.logger = null;
+  });
+
+  it('should log with currentRequest context', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    oauthClient.currentRequest = { url: 'http://test.com', method: 'GET', headers: { Accept: 'json' } };
+    oauthClient.log('info', 'Test message', { key: 'value' });
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    const loggedStr = oauthClient.logger.log.firstCall.args[1];
+    expect(loggedStr).to.include('http://test.com');
+    oauthClient.currentRequest = null;
+    oauthClient.logger = null;
+  });
+
+  it('should handle data that fails JSON.parse after safeStringify', () => {
+    oauthClient.logger = { log: sinon.spy() };
+    const badData = { toJSON() { return undefined; } };
+    oauthClient.log('info', 'Test message', badData);
+    expect(oauthClient.logger.log.calledOnce).to.be.true;
+    oauthClient.logger = null;
+  });
+});
+
+describe('Test makeApiCall 400 non-Fault response', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle 400 without Fault object', async () => {
+    nock('https://sandbox-quickbooks.api.intuit.com')
+      .get('/v3/company/12345/query')
+      .reply(400, {
+        error: 'invalid_request',
+        error_description: 'Missing required field',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': '400-no-fault-tid',
+      });
+
+    try {
+      await oauthClient.makeApiCall({
+        url: 'https://sandbox-quickbooks.api.intuit.com/v3/company/12345/query',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(OAuthError);
+      expect(error.code).to.equal('400');
+      expect(error.message).to.equal('invalid_request');
+      expect(error.intuitTid).to.equal('400-no-fault-tid');
+    }
+  });
+});
+
+describe('Test revoke and getUserInfo error paths', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+    OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
+    OAuthClient.userinfo_endpoint_sandbox = 'https://sandbox-accounts.platform.intuit.com/v1/openid_connect/userinfo';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should handle revoke network failure', async () => {
+    nock('https://developer.api.intuit.com')
+      .post('/v2/oauth2/tokens/revoke')
+      .replyWithError({ message: 'Network failure', code: 'ECONNREFUSED' });
+
+    oauthClient.getToken().x_refresh_token_expires_in = '4535995551112';
+    try {
+      await oauthClient.revoke();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+
+  it('should handle getUserInfo network failure', async () => {
+    nock('https://sandbox-accounts.platform.intuit.com')
+      .get('/v1/openid_connect/userinfo')
+      .replyWithError({ message: 'Network failure', code: 'ECONNREFUSED' });
+
+    try {
+      await oauthClient.getUserInfo();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+});
+
+describe('Test getTokenRequest with invalid response', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw OAuthError when response is not valid (status >= 300)', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(301, { error: 'moved' }, {
+        'content-type': 'application/json',
+        intuit_tid: '301-tid',
+      });
+
+    try {
+      await oauthClient.getTokenRequest({
+        url: 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer',
+        method: 'POST',
+        data: {},
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+});
+
+describe('Test createError edge cases', () => {
+  it('should handle authResponse with unparseable string body', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.body = 'not-valid-json{{{';
+    authResponse.response = { headers: { intuit_tid: 'parse-fail-tid' } };
+    const wrappedE = oauthClient.createError(new Error('test'), authResponse);
+    expect(wrappedE.error).to.equal('not-valid-json{{{');
+    expect(wrappedE.error_description).to.equal('not-valid-json{{{');
+  });
+
+  it('should handle string error argument', () => {
+    const wrappedE = oauthClient.createError('string error message', null);
+    expect(wrappedE.error).to.equal('string error message');
+    expect(wrappedE.message).to.equal('string error message');
+  });
+
+  it('should handle non-Error, non-string error argument', () => {
+    const wrappedE = oauthClient.createError(42, null);
+    expect(wrappedE.error).to.equal('42');
+    expect(wrappedE.message).to.equal('42');
+  });
+});
+
+describe('Test loadResponseFromJWKsURI', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should load response from JWK URI', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [] });
+
+    const response = await oauthClient.loadResponseFromJWKsURI('https://oauth.platform.intuit.com/op/v1/jwks');
+    expect(response.data).to.deep.equal({ keys: [] });
+  });
+});
+
+describe('Test validateIdToken', () => {
+  let jwtVerifyStub;
+
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    jwtVerifyStub = sinon.stub(jwt, 'verify').returns(true);
+  });
+
+  afterEach(() => {
+    jwtVerifyStub.restore();
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw if id_token is missing', async () => {
+    oauthClient.token.id_token = '';
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.equal('The bearer token does not have id_token');
+    }
+  });
+
+  it('should validate a properly formatted id_token', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid-123' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: (Date.now() / 1000) + 3600,
+      iat: Date.now() / 1000,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.signature';
+    oauthClient.token.id_token = mockIdToken;
+
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, {
+        keys: [{ kid: 'test-kid-123', n: 'test-modulus', e: 'AQAB' }],
+      });
+
+    const result = await oauthClient.validateIdToken();
+    expect(result).to.be.true;
+  });
+
+  it('should throw for invalid issuer', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://wrong-issuer.com',
+      exp: (Date.now() / 1000) + 3600,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('Invalid issuer');
+    }
+  });
+
+  it('should throw for invalid audience', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['wrong-client-id'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: (Date.now() / 1000) + 3600,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('Invalid audience');
+    }
+  });
+
+  it('should throw for expired token', async () => {
+    const header = { alg: 'RS256', kid: 'test-kid' };
+    const payload = {
+      sub: 'user-123',
+      aud: ['clientId'],
+      iss: 'https://oauth.platform.intuit.com/op/v1',
+      exp: 1000,
+    };
+    const mockIdToken = btoa(JSON.stringify(header)) + '.' + btoa(JSON.stringify(payload)) + '.sig';
+    oauthClient.token.id_token = mockIdToken;
+
+    try {
+      await oauthClient.validateIdToken();
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('expired');
+    }
+  });
+});
+
+describe('Test getKeyFromJWKsURI', () => {
+  let jwtVerifyStub;
+
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    jwtVerifyStub = sinon.stub(jwt, 'verify').returns(true);
+  });
+
+  afterEach(() => {
+    jwtVerifyStub.restore();
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should throw if JWK endpoint returns non-200', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(500, 'Server Error');
+
+    try {
+      await oauthClient.getKeyFromJWKsURI('fake-token', 'kid-1', {
+        url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error).to.be.instanceof(Error);
+    }
+  });
+
+  it('should throw if key with kid is not found', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [{ kid: 'other-kid', n: 'mod', e: 'exp' }] });
+
+    try {
+      await oauthClient.getKeyFromJWKsURI('fake-token', 'missing-kid', {
+        url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+        method: 'GET',
+      });
+      expect.fail('Should have thrown');
+    } catch (error) {
+      expect(error.message).to.include('missing-kid');
+    }
+  });
+
+  it('should verify token when key is found', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .get('/op/v1/jwks')
+      .reply(200, { keys: [{ kid: 'my-kid', n: 'modulus', e: 'AQAB' }] });
+
+    const result = await oauthClient.getKeyFromJWKsURI('fake-token', 'my-kid', {
+      url: 'https://oauth.platform.intuit.com/op/v1/jwks',
+      method: 'GET',
+    });
+    expect(result).to.be.true;
+    expect(jwtVerifyStub.calledOnce).to.be.true;
+  });
+});
+
+describe('Test OAuthError switch cases for status codes', () => {
+  it('should handle 502 status code', () => {
+    const error = new OAuthError('Bad Gateway', 502, 'Bad Gateway');
+    expect(error.code).to.equal('502');
+  });
+
+  it('should handle 503 status code', () => {
+    const error = new OAuthError('Service Unavailable', 503, 'Service Unavailable');
+    expect(error.code).to.equal('503');
+  });
+
+  it('should handle 504 status code', () => {
+    const error = new OAuthError('Gateway Timeout', 504, 'Gateway Timeout');
+    expect(error.code).to.equal('504');
+  });
+
+  it('should handle default numeric code', () => {
+    const error = new OAuthError('Custom Error', 418, 'I am a teapot');
+    expect(error.code).to.equal(418);
+  });
+});
+
+describe('Test AuthResponse isContentType and isJson', () => {
+  it('should check isContentType correctly', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    const getStub = sinon.stub().returns('application/json;charset=UTF-8');
+    authResponse.processResponse({
+      data: { test: true },
+      headers: { 'content-type': 'application/json;charset=UTF-8', intuit_tid: 'test' },
+      status: 200,
+      get: getStub,
+    });
+    expect(authResponse.isContentType('application/json')).to.be.true;
+    expect(authResponse.isContentType('text/html')).to.be.false;
+  });
+
+  it('should check isJson correctly', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.processResponse({
+      data: { test: true },
+      headers: { 'content-type': 'application/json', intuit_tid: 'test' },
+      status: 200,
+    });
+    expect(authResponse.isJson()).to.be.true;
+  });
+});
+
+describe('Test AuthResponse getJson with Fault in body', () => {
+  it('should handle getJson parsing body with Fault', () => {
+    const authResponse = new AuthResponse({ token: oauthClient.getToken() });
+    authResponse.json = null;
+    authResponse.body = JSON.stringify({
+      Fault: { Error: [{ Message: 'Test' }], type: 'TestFault' },
+      time: '2025-01-01',
+    });
+    authResponse.intuit_tid = 'test-tid';
+    const json = authResponse.getJson();
+    expect(json).to.have.property('Fault');
+    expect(json.Fault.type).to.equal('TestFault');
+  });
+});
+
+describe('Verify createToken does not return error objects', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+    nock.disableNetConnect();
+    nock.enableNetConnect('127.0.0.1');
+    
+    // Reset OAuth endpoints to defaults (in case previous tests changed them)
+    OAuthClient.authorizeEndpoint = 'https://appcenter.intuit.com/connect/oauth2';
+    OAuthClient.tokenEndpoint = 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
+    OAuthClient.revokeEndpoint = 'https://developer.api.intuit.com/v2/oauth2/tokens/revoke';
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+    nock.enableNetConnect();
+  });
+
+  it('should return AuthResponse on success, not an error object', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(200, {
+        access_token: 'test_access_token',
+        refresh_token: 'test_refresh_token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        x_refresh_token_expires_in: 8726400,
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'success-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=valid_code_12345';
+    const result = await oauthClient.createToken(parseRedirect);
+
+    // Verify result is an AuthResponse, not an error
+    expect(result).to.exist;
+    expect(result).to.not.be.instanceof(Error);
+    expect(result).to.have.property('token');
+    expect(result).to.have.property('getToken');
+    expect(typeof result.getToken).to.equal('function');
+    
+    // Verify it has the expected AuthResponse methods
+    expect(result).to.have.property('status');
+    expect(result).to.have.property('text');
+    expect(result).to.have.property('getIntuitTid');
+    
+    // Verify the token data is accessible
+    const token = result.getToken();
+    expect(token).to.have.property('access_token', 'test_access_token');
+    expect(token).to.have.property('refresh_token', 'test_refresh_token');
+    
+    // Verify it does NOT have error properties
+    expect(result).to.not.have.property('error');
+    expect(result).to.not.have.property('error_description');
+  });
+
+  it('should throw an error on failure, not return it', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(400, {
+        error: 'invalid_grant',
+        error_description: 'Authorization code expired',
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'error-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=expired_code';
+    
+    let caughtError = null;
+    let result = null;
+    
+    try {
+      result = await oauthClient.createToken(parseRedirect);
+    } catch (error) {
+      caughtError = error;
+    }
+
+    // Verify an error was thrown, not returned
+    expect(result).to.be.null;
+    expect(caughtError).to.exist;
+    expect(caughtError).to.be.instanceof(Error);
+    
+    // Verify error has the expected properties
+    expect(caughtError).to.have.property('error', 'invalid_grant');
+    expect(caughtError).to.have.property('error_description', 'Authorization code expired');
+    expect(caughtError).to.have.property('intuit_tid', 'error-tid');
+    
+    // Verify authResponse is attached to the error
+    expect(caughtError).to.have.property('authResponse');
+    expect(caughtError.authResponse).to.not.be.empty;
+  });
+
+  it('should handle network errors by throwing, not returning', async () => {
+    // Simulate network error
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .replyWithError({
+        message: 'Network connection failed',
+        code: 'ECONNREFUSED',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=test_code';
+    
+    let caughtError = null;
+    let result = null;
+    
+    try {
+      result = await oauthClient.createToken(parseRedirect);
+    } catch (error) {
+      caughtError = error;
+    }
+
+    // Verify an error was thrown, not returned
+    expect(result).to.be.null;
+    expect(caughtError).to.exist;
+    expect(caughtError).to.be.instanceof(Error);
+    
+    // Verify error message contains network error details
+    expect(caughtError.message).to.exist;
+  });
+
+  it('should never return a createError-wrapped object as success', async () => {
+    nock('https://oauth.platform.intuit.com')
+      .post('/oauth2/v1/tokens/bearer')
+      .reply(200, {
+        access_token: 'valid_token',
+        refresh_token: 'valid_refresh',
+        token_type: 'bearer',
+        expires_in: 3600,
+        x_refresh_token_expires_in: 8726400,
+      }, {
+        'content-type': 'application/json',
+        'intuit_tid': 'test-tid',
+      });
+
+    const parseRedirect = 'http://localhost:8000/callback?state=testState&code=valid_code';
+    const result = await oauthClient.createToken(parseRedirect);
+
+    // Verify result is NOT a createError-wrapped object
+    expect(result).to.not.have.property('originalMessage');
+    expect(result).to.not.have.property('error');
+    expect(result).to.not.have.property('error_description');
+    
+    // Verify result IS an AuthResponse
+    expect(result).to.have.property('token');
+    expect(result).to.have.property('response');
+    expect(result).to.have.property('body');
+    expect(result).to.have.property('json');
+    expect(result).to.have.property('intuit_tid');
   });
 });
