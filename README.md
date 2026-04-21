@@ -389,6 +389,7 @@ The Node.js client library is tested against the `Node 10` and newer versions.
 | [intuit-oauth@1.x.x](https://github.com/intuit/oauth-jsclient/tree/1.5.0)        | Node 6.x or higher                |
 | [intuit-oauth@2.x.x](https://github.com/intuit/oauth-jsclient/tree/2.0.0)        | Node 7.x or higher                |
 | [intuit-oauth@3.x.x](https://github.com/intuit/oauth-jsclient/tree/3.0.2)        | Node 8.x or Node 9.x and higher   |
+| [intuit-oauth@4.x.x](https://github.com/intuit/oauth-jsclient)                   | Node 10.x or higher               |
 
 **Note**: Older node versions are not supported.
 
