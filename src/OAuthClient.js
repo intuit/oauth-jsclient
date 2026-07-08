@@ -55,6 +55,10 @@ function OAuthClient(config) {
   this.clientSecret = config.clientSecret;
   this.redirectUri = config.redirectUri;
   this.token = new Token(config.token);
+  this.includeRefreshTokenHardExpiresIn = !!(
+    Object.prototype.hasOwnProperty.call(config, 'includeRefreshTokenHardExpiresIn')
+    && config.includeRefreshTokenHardExpiresIn === true
+  );
   this.logging = !!(
     Object.prototype.hasOwnProperty.call(config, 'logging') && config.logging === true
   );
@@ -234,13 +238,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
       url: OAuthClient.tokenEndpoint,
       data: body,
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-        'x-include-refresh-token-hard-expires-in': 'true',
-      },
+      headers: this._tokenRequestHeaders(),
     };
 
     resolve(this.getTokenRequest(request));
@@ -276,13 +274,7 @@ OAuthClient.prototype.refresh = function refresh() {
       url: OAuthClient.tokenEndpoint,
       data: body,
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-        'x-include-refresh-token-hard-expires-in': 'true',
-      },
+      headers: this._tokenRequestHeaders(),
     };
 
     resolve(this.getTokenRequest(request));
@@ -319,13 +311,7 @@ OAuthClient.prototype.refreshUsingToken = function refreshUsingToken(refresh_tok
       url: OAuthClient.tokenEndpoint,
       data: body,
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${this.authHeader()}`,
-        'Content-Type': AuthResponse._urlencodedContentType,
-        Accept: AuthResponse._jsonContentType,
-        'User-Agent': OAuthClient.user_agent,
-        'x-include-refresh-token-hard-expires-in': 'true',
-      },
+      headers: this._tokenRequestHeaders(),
     };
 
     resolve(this.getTokenRequest(request));
@@ -910,6 +896,26 @@ OAuthClient.prototype.setToken = function setToken(params) {
 OAuthClient.prototype.authHeader = function authHeader() {
   const apiKey = `${this.clientId}:${this.clientSecret}`;
   return typeof btoa === 'function' ? btoa(apiKey) : Buffer.from(apiKey).toString('base64');
+};
+
+/**
+ * Build the headers used on token endpoint requests (createToken, refresh,
+ * refreshUsingToken). The `x-include-refresh-token-hard-expires-in` header is
+ * only included when the client was constructed with
+ * `includeRefreshTokenHardExpiresIn: true`, so callers opt in explicitly.
+ * @returns {object} headers
+ */
+OAuthClient.prototype._tokenRequestHeaders = function _tokenRequestHeaders() {
+  const headers = {
+    Authorization: `Basic ${this.authHeader()}`,
+    'Content-Type': AuthResponse._urlencodedContentType,
+    Accept: AuthResponse._jsonContentType,
+    'User-Agent': OAuthClient.user_agent,
+  };
+  if (this.includeRefreshTokenHardExpiresIn) {
+    headers['x-include-refresh-token-hard-expires-in'] = 'true';
+  }
+  return headers;
 };
 
 /**
