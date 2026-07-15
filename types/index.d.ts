@@ -36,6 +36,7 @@ interface TokenData {
   refresh_token?: string;
   expires_in?: number;
   x_refresh_token_expires_in?: number;
+  x_refresh_token_hard_expires_in?: number;
   id_token?: string;
   latency?: number;
   createdAt?: number;
@@ -52,6 +53,7 @@ declare class Token {
   refresh_token: string;
   expires_in: number;
   x_refresh_token_expires_in: number;
+  x_refresh_token_hard_expires_in: number;
   id_token: string;
   latency: number;
   createdAt: number;
@@ -323,6 +325,14 @@ interface OAuthClientConfig {
    * Enable logging (optional, defaults to false)
    */
   logging?: boolean;
+
+  /**
+   * When true, the `x-include-refresh-token-hard-expires-in: true` header is
+   * sent on `createToken()`, `refresh()`, and `refreshUsingToken()` requests
+   * to opt in to the absolute refresh-token lifetime in the response
+   * (`x_refresh_token_hard_expires_in`). Optional, defaults to false.
+   */
+  includeRefreshTokenHardExpiresIn?: boolean;
 }
 
 /**
