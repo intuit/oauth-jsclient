@@ -1,12 +1,17 @@
 name: Publish to npm
 
 # Publishes the package to the npm registry when a GitHub Release is published.
-# Flow: create a Release (tag = version, e.g. 4.2.4) -> this workflow runs tests,
-# verifies the tag matches package.json, then runs `npm publish`.
 #
-# Requires repo secret: NPM_TOKEN
-#   - An npm Granular/Automation access token with publish rights on `intuit-oauth`.
-#   - Set at: Settings -> Secrets and variables -> Actions -> New repository secret.
+# Auth: npm Trusted Publisher (OIDC). No NPM_TOKEN secret required — npm trusts
+# this workflow directly. One-time setup on npmjs.com:
+#   Package -> Settings -> Trusted Publisher -> GitHub Actions
+#     Organization/user: intuit
+#     Repository:        oauth-jsclient
+#     Workflow filename: publish.yml
+#
+# Flow: bump version + CHANGELOG via PR -> create a GitHub Release (tag = version,
+# e.g. 4.2.4) -> this workflow runs tests, verifies the tag matches package.json,
+# then publishes via OIDC (with provenance).
 
 on:
   release:
@@ -14,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write   # required for npm Trusted Publisher (OIDC)
 
 jobs:
   publish:
@@ -25,8 +31,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
           registry-url: https://registry.npmjs.org
+
+      # OIDC/Trusted Publishing requires npm >= 11.5.1
+      - name: Upgrade npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm install
@@ -38,16 +48,14 @@ jobs:
 
       - name: Verify tag matches package.json version
         run: |
-          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
           TAG="${GITHUB_REF_NAME}"
           # Accept tag with or without a leading 'v'
-          if [ "$TAG" != "$PKG_VERSION" ] && [ "$TAG" != "${PKG_VERSION#v}" ]; then
-            echo "::error::Release tag ($TAG) does not match package.json version (${PKG_VERSION#v}). Aborting publish."
+          if [ "$TAG" != "$PKG_VERSION" ] && [ "$TAG" != "v$PKG_VERSION" ]; then
+            echo "::error::Release tag ($TAG) does not match package.json version ($PKG_VERSION). Aborting publish."
             exit 1
           fi
-          echo "Tag $TAG matches package.json version ${PKG_VERSION#v}."
+          echo "Tag $TAG matches package.json version $PKG_VERSION."
 
-      - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (OIDC, with provenance)
+        run: npm publish --access public --provenance
