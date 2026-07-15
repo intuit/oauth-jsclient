@@ -4,6 +4,14 @@
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "types": "./types/index.d.ts",
+  "files": [
+    "src/",
+    "types/",
+    "views/SDK.png",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "scripts": {
     "start": "node index.js",
     "karma": "karma start karma.conf.js",
