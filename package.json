@@ -1,6 +1,6 @@
 {
   "name": "intuit-oauth",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "description": "Intuit Node.js client for OAuth2.0 and OpenIDConnect",
   "main": "./src/OAuthClient.js",
   "types": "./types/index.d.ts",
@@ -70,7 +70,7 @@
   "homepage": "https://github.com/intuit/oauth-jsclient",
   "dependencies": {
     "atob": "2.1.2",
-    "axios": "^1.9.0",
+    "axios": "^1.18.1",
     "csrf": "^3.0.4",
     "jsonwebtoken": "^9.0.2",
     "query-string": "^6.12.1",
@@ -88,7 +88,7 @@
     "eslint-plugin-import": "^2.29.1",
     "mocha": "^11.7.5",
     "nock": "^9.2.3",
-    "nyc": "^15.0.1",
+    "nyc": "^18.0.0",
     "prettier": "^2.0.5",
     "sinon": "^9.0.2"
   },
