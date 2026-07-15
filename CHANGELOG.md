@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.2.5](https://github.com/intuit/oauth-jsclient/tree/4.2.5)
+#### Packaging
+- Added a `files` allowlist to `package.json` so the published tarball only contains
+  `src/`, `types/`, `views/SDK.png`, and docs — preventing build output and stray log
+  files from being published.
+- Publishing now runs via GitHub Actions using npm Trusted Publisher (OIDC) with provenance.
+
+_Note: 4.2.5 is the first published release to include the 4.2.4 changes below; 4.2.4 was
+tagged but never published to npm._
+
 ## [4.2.4](https://github.com/intuit/oauth-jsclient/tree/4.2.4)
 #### Features
 - Added `x_refresh_token_hard_expires_in` field to Token model to expose the five-year absolute refresh token lifetime
