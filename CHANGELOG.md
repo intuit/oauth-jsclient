@@ -4,8 +4,11 @@
 #### Features
 - Added `x_refresh_token_hard_expires_in` field to Token model to expose the five-year absolute refresh token lifetime
   - Updated Token constructor, `getToken()`, `setToken()`, and `clearToken()` to support the new field
-  - Added `x-include-refresh-token-hard-expires-in: true` header to `createToken()`, `refresh()`, and `refreshUsingToken()` requests
+  - Added `x-include-refresh-token-hard-expires-in: true` header to `createToken()`, `refresh()`, and `refreshUsingToken()` requests (opt-in via `includeRefreshTokenHardExpiresIn` config flag)
 - Added `SalesTax` scope (`indirect-tax.tax-calculation.quickbooks`) to `OAuthClient.scopes`
+#### Security
+- Bumped `axios` to `^1.18.1` to resolve high-severity advisories (prototype pollution, ReDoS, Proxy-Authorization credential leak on redirect)
+- Bumped `nyc` (dev) to `^18.0.0` to clear transitive advisories
 
 ## [4.2.3](https://github.com/intuit/oauth-jsclient/tree/4.2.3)
 #### Issues Fixed
