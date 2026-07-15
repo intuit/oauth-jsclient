@@ -1,0 +1,53 @@
+name: Publish to npm
+
+# Publishes the package to the npm registry when a GitHub Release is published.
+# Flow: create a Release (tag = version, e.g. 4.2.4) -> this workflow runs tests,
+# verifies the tag matches package.json, then runs `npm publish`.
+#
+# Requires repo secret: NPM_TOKEN
+#   - An npm Granular/Automation access token with publish rights on `intuit-oauth`.
+#   - Set at: Settings -> Secrets and variables -> Actions -> New repository secret.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true
+
+      - name: Verify tag matches package.json version
+        run: |
+          PKG_VERSION="v$(node -p "require('./package.json').version")"
+          TAG="${GITHUB_REF_NAME}"
+          # Accept tag with or without a leading 'v'
+          if [ "$TAG" != "$PKG_VERSION" ] && [ "$TAG" != "${PKG_VERSION#v}" ]; then
+            echo "::error::Release tag ($TAG) does not match package.json version (${PKG_VERSION#v}). Aborting publish."
+            exit 1
+          fi
+          echo "Tag $TAG matches package.json version ${PKG_VERSION#v}."
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
