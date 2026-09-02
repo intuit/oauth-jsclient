@@ -26,7 +26,6 @@
 
 const atob = require('atob');
 const Csrf = require('csrf');
-const queryString = require('query-string');
 const axios = require('axios');
 const os = require('os');
 const winston = require('winston');
@@ -169,13 +168,18 @@ OAuthClient.prototype.authorizeUri = function authorizeUri(params) {
   // check if the scopes is provided
   if (!params.scope) throw new Error('Provide the scopes');
 
-  const authUri = `${OAuthClient.authorizeEndpoint}?${queryString.stringify({
-    response_type: 'code',
-    redirect_uri: this.redirectUri,
+  // Keys are inserted in alphabetical order so URLSearchParams (which preserves
+  // insertion order) produces the same parameter ordering query-string did.
+  const authUriParams = new URLSearchParams({
     client_id: this.clientId,
+    redirect_uri: this.redirectUri,
+    response_type: 'code',
     scope: Array.isArray(params.scope) ? params.scope.join(' ') : params.scope,
     state: params.state || this.state.create(this.state.secretSync()),
-  })}`;
+  });
+  // URLSearchParams encodes spaces as "+" (application/x-www-form-urlencoded);
+  // use "%20" to match the percent-encoding query-string produced.
+  const authUri = `${OAuthClient.authorizeEndpoint}?${authUriParams.toString().replace(/\+/g, '%20')}`;
 
   this.log('info', 'The Authorize Uri is :', authUri);
   return authUri;
@@ -211,7 +215,7 @@ OAuthClient.prototype.createToken = function createToken(uri) {
     // Safely parse query string from URI
     const queryIndex = uri.indexOf('?');
     const queryPart = queryIndex !== -1 ? uri.substring(queryIndex + 1) : uri;
-    const params = queryString.parse(queryPart);
+    const params = Object.fromEntries(new URLSearchParams(queryPart));
     
     // Fix: Directly access token object instead of getToken() which returns a copy
     this.token.realmId = params.realmId || '';
