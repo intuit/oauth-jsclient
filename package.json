@@ -81,7 +81,7 @@
     "axios": "^1.18.1",
     "csrf": "^3.0.4",
     "jsonwebtoken": "^9.0.2",
-    "query-string": "^6.12.1",
+    "query-string": "^7.1.3",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "winston": "^3.1.0"
   },
